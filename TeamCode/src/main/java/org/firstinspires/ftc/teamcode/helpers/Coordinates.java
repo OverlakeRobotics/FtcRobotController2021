@@ -1,93 +1,68 @@
-//package org.firstinspires.ftc.teamcode.helpers;
-//
-//
-///**
-// *
-// */
-//public enum Coordinates {
-//    //TODO check and correct these coordinates
-//    //TODO See if the webcam will still work if the robot starts pressed against the left or right edge of the starting tile
-//    // 17 inches is the width of the robot
-//    STARTING_POSITION(2.5 * Constants.tileWidth, 17),
-//
-//    // Spline position to the left to avoid rings
-//    DETOUR_POSITION(2 * Constants.tileWidth, 2 * Constants.tileWidth),
-//
-//    // Wobblegoal dropoff boxes
-//    BOX_A(3.2 * Constants.tileWidth, 4.1 * Constants.tileWidth),
-//    BOX_B(2.25 * Constants.tileWidth, 5.1 * Constants.tileWidth),
-//    BOX_C(3.3 * Constants.tileWidth, 5.85 * Constants.tileWidth),
-//    BOX_A2(3.0 * Constants.tileWidth, 4.1 * Constants.tileWidth),
-//    BOX_B2(2.05 * Constants.tileWidth, 5.1 * Constants.tileWidth),
-//    BOX_C2(3.2 * Constants.tileWidth, 5.85 * Constants.tileWidth),
-//
-////    BOX_A(2.95 * Constants.tileWidth, 3.75 * Constants.tileWidth),
-////    BOX_B(2.0 * Constants.tileWidth, 5.1 * Constants.tileWidth),
-////    BOX_C(3.1 * Constants.tileWidth, 5.8 * Constants.tileWidth),
-////    BOX_A2(2.85 * Constants.tileWidth, 5.8 * Constants.tileWidth),
-////    BOX_B2(1.9 * Constants.tileWidth, 5.8 * Constants.tileWidth),
-////    BOX_C2(3.0 * Constants.tileWidth, 5.8 * Constants.tileWidth),
-//    // 82.25
-//    // 129.25
-//
-//    //Calibration
-//    CALIBRATION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-//
-//    /* ALLIANCE HUB
-//    RED_ALLIANCE_HUB(Constants.firstPowerShotCoordinates.getX(), Constants.firstPowerShotCoordinates.getY()),
-//    BLUE_ALLIANCE_HUB(Constants.secondPowerShotCoordinates.getX(), Constants.secondPowerShotCoordinates.getY()),
-//    SHARED_HUB(Constants.thirdPowerShotCoordinates.getX(), Constants.thirdPowerShotCoordinates.getY()),
-//
-//    Vector2d negativeFirstPowerShotCoordinates = new Vector2d(-4 * tileWidth - (23.5f * 2 + 4.25f - ((44 * 10) / Constants.mmPerInch / 2)), powerShotY);
-//    public static final Vector2d firstPowerShotCoordinates = new Vector2d(1.95 * tileWidth, powerShotY);
-//    public static final Vector2d secondPowerShotCoordinates = new Vector2d(1.65 * tileWidth, powerShotY);
-//    public static final Vector2d thirdPowerShotCoordinates = new Vector2d(1.35 * tileWidth, powerShotY); */
-//
-//    // Parking position
-//    RED_PARKING_POSITION(Constants.thirdPowerShotCoordinates.getX(), 3.75 * Constants.tileWidth),
-//    BLUE_PARKING_POSITION(Constants.thirdPowerShotCoordinates.getX(), 3.75 * Constants.tileWidth),
-//
-//    // Carousel
-//    RED_PARKING_POSITION(Constants.thirdPowerShotCoordinates.getX(), 3.75 * Constants.tileWidth),
-//    BLUE_PARKING_POSITION(Constants.thirdPowerShotCoordinates.getX(), 3.75 * Constants.tileWidth);
-//
-//
-//    private final double x;
-//    private final double y;
-//
-//    /**
-//     * Constructor
-//     * @param x (x-coordinate)
-//     * @param y (y-coordinate)
-//     *
-//     */
-//
-//    Coordinates(double x, double y) {
-//        this.x = x;
-//        this.y = y;
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public double getX() {
-//        return x;
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public double getY() {
-//        return y;
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector2d getCoordinates() {
-//        return new Vector2d(x, y);
-//    }
-//}
+package org.firstinspires.ftc.teamcode.helpers;
+
+
+/**
+ *
+ */
+public enum Coordinates {
+    //TODO check and correct these coordinates
+    //TODO See if the webcam will still work if the robot starts pressed against the left or right edge of the starting tile
+    // 17 inches is the width of the robot
+    STARTING_POSITION(2.5 * Constants.tileWidth, 17),
+
+    // Spline position to the left to avoid rings
+    DETOUR_POSITION(2 * Constants.tileWidth, 2 * Constants.tileWidth),
+
+    // 82.25
+    // 129.25
+
+    //Calibration
+    CALIBRATION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+
+    // WAREHOUSES
+    RED_WAREHOUSE(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    BLUE_WAREHOUSE(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+
+    //ALLIANCE HUB
+    RED_ALLIANCE_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    BLUE_ALLIANCE_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    SHARED_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+
+    // Parking position
+    RED_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    BLUE_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+
+    // Carousel
+    CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth);
+
+    private final double x;
+    private final double y;
+
+    /**
+     * Constructor
+     * @param x (x-coordinate)
+     * @param y (y-coordinate)
+     *
+     */
+
+    Coordinates(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public double getY() {
+        return y;
+    }
+}
