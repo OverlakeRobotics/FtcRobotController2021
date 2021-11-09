@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
+import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
@@ -28,17 +31,26 @@ public class AutonomousOpMode extends BaseOpMode {
     private static final String MOTOR_BACK_RIGHT = "motor-back-right";
     private static final String MOTOR_BACK_LEFT = "motor-back-left";
 
+    private static final String ELEVATOR_MOTOR = "elevator-motor";
+    private static final String RELEASER = "releaser";
+
+    private static final String SPIN_WHEEL = "spin-wheel";
+
     private GameState currentGameState;
     private RouteState routeState;
     private TeamState teamState;
 
     private ElapsedTime elapsedTime;
+    private double baseTime;
+    private double deltaTime;
     private boolean objectDetected;
+    private int level;
 
     // Systems
     private TensorFlow tensorflow;
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
+    private WheelSystem wheelSystem;
 
     @Override
     public void init() {
@@ -50,6 +62,10 @@ public class AutonomousOpMode extends BaseOpMode {
         elapsedTime.reset();
         driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
         driveSystem.initMotors();
+        armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
+        armSystem.initMotors();
+        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
+        wheelSystem.initMotors();
     }
 
     @Override
@@ -73,10 +89,8 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DETECT_BARCODE:
-                int i = 0;
-                float distance = 9.0f;
                 while (!objectDetected) {
-                    if (i == 1) {
+                    if (level == 1) {
                         if (teamState == TeamState.RED) {
                             double deltaTime = 2.0;
                             double baseTime = elapsedTime.seconds();
@@ -93,7 +107,7 @@ public class AutonomousOpMode extends BaseOpMode {
                             // move right
                         }
                     }
-                    if (i == 2) {
+                    if (level == 2) {
                         if (teamState == TeamState.RED) {
                             double deltaTime = 4.0;
                             double baseTime = elapsedTime.seconds();
@@ -110,14 +124,14 @@ public class AutonomousOpMode extends BaseOpMode {
                             // move left twice
                         }
                     }
-                    if (i == 3) {
+                    if (level == 3) {
                         stop();
                     }
                     for (Recognition recognition : tensorflow.getInference()) {
                         if (recognition.getLabel().equals("Marker")) {
                             objectDetected = true;
                         } else {
-                            i++;
+                            level++;
                         }
                     }
                 }
@@ -144,19 +158,94 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case PLACE_CUBE:
-                // do this
+                switch (level) {
+                    case 0:
+                        armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_MID);
+                        break;
+                    case 1:
+                        if (teamState == TeamState.RED) {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+                        } else {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+                        }
+                        break;
+                    case 2:
+                        if (teamState == TeamState.RED) {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+                        } else {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+                        }
+                        break;
+                }
+                armSystem.release(true);
                 newGameState(GameState.DRIVE_TO_CAROUSEL);
                 break;
 
             case DRIVE_TO_CAROUSEL:
+                if (teamState == TeamState.RED) {
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, -1, 0);
+                    }
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(1, 0, 0);
+                    }
+                    // move left, rotate right
+                } else {
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, 1, 0);
+                    }
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(-1, 0, 0);
+                    }
+                    // move right, rotate left
+                }
                 newGameState(GameState.SPIN_CAROUSEL);
                 break;
 
             case SPIN_CAROUSEL:
+                deltaTime = 5.0;
+                baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() < baseTime + deltaTime) {
+                    wheelSystem.spinTheWheelFully();
+                }
+                wheelSystem.stopWheel();
                 newGameState(GameState.PARK_IN_DEPOT);
                 break;
 
             case PARK_IN_DEPOT:
+                if (teamState == TeamState.RED) {
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(-1, 0, 0);
+                    }
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, 1, 0);
+                    }
+                    // rotate left, move right
+                } else {
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(1, 0, 0);
+                    }
+                    deltaTime = 5.0;
+                    baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, -1, 0);
+                    }
+                    // rotate right, move left
+                }
                 newGameState(GameState.COMPLETE);
                 break;
 
