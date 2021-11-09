@@ -7,6 +7,7 @@ import android.util.Range;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class DriveSystem {
 
@@ -27,7 +28,7 @@ public class DriveSystem {
     public enum Direction {
         FORWARD, BACKWARD, LEFT, RIGHT;
 
-        private static Direction getDirection(Direction direction) {
+        /*private static Direction getDirection(Direction direction) {
             if (direction == FORWARD){
 
             }
@@ -41,7 +42,7 @@ public class DriveSystem {
 
             }
             return direction;
-        }
+        }*/
     }
 
     //Other "settings"
@@ -49,10 +50,10 @@ public class DriveSystem {
 
     //Coordinates/Location
     // TODO - Set these equal to the actual coordinates relative to the field
-    private double x_coordinate;
-    private double y_coordinate;
-    private double driver_x_coordinate;
-    private double driver_y_coordinate;
+    public double x_coordinate;
+    public double y_coordinate;
+    public double driver_x_coordinate;
+    public double driver_y_coordinate;
 
     /**
      * Initializes the DriveSystem
@@ -64,7 +65,7 @@ public class DriveSystem {
         this.motorBackLeft = motorBackLeft;
     }
 
-    public void initMotors(boolean bool) {
+    public void initMotors() {
         this.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,6 +89,13 @@ public class DriveSystem {
      */
     private void setMotorPower (DcMotor motor, double power) {
         motor.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+    }
+
+    public void setAllMotorPower(double power) {
+        motorFrontLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorFrontRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorBackLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorBackRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
     }
 
     /**

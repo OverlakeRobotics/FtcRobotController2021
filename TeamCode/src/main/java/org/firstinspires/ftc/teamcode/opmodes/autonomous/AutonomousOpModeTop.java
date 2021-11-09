@@ -1,8 +1,3 @@
-package org.firstinspires.ftc.teamcode.opmodes.autonomous;
-
-public class AutonomousOpModeTop extends BaseOpMode{
-
-}
 //
 //package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 //
