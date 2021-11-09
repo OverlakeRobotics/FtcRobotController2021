@@ -17,7 +17,7 @@ public class WeightSystem extends LinearOpMode {
    * This function is executed when this Op Mode is selected from the Driver Station.
    */
 
-
+// TODO - ADD LIGHT LED THING AND LIGHT UP ACCORDING TO HEAVY MEDIUM LIGHT
 @Override
 public void runOpMode() {
     sensorAsAnalogInput0 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0");
@@ -46,12 +46,15 @@ public void runOpMode() {
             if(currentVoltage > 6){
                 //say nothing was found
                 telemetry.addData("LightBlock", currentVoltage);
+                // light up red
             }
             else if(currentVoltage > 5){
                 telemetry.addData("MediumBlock", currentVoltage);
+                // light up amber
             }
             else{
                 telemetry.addData("HeavyBlock", currentVoltage);
+                // light up green
             }
 
         }
