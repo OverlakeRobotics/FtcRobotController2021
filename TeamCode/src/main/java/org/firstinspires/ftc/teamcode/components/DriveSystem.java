@@ -64,7 +64,7 @@ public class DriveSystem {
         this.motorBackLeft = motorBackLeft;
     }
 
-    public void initMotors(boolean bool) {
+    public void initMotors() {
         this.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -81,6 +81,22 @@ public class DriveSystem {
         this.motorFrontRight.setPower(0);
     }
 
+    public DcMotor getMotorFrontRight() {
+        return motorFrontRight;
+    }
+
+    public DcMotor getMotorFrontLeft() {
+        return motorFrontLeft;
+    }
+
+    public DcMotor getMotorBackRight() {
+        return motorBackRight;
+    }
+
+    public DcMotor getMotorBackLeft() {
+        return motorBackLeft;
+    }
+
     /**
      * Sets the motor's power, taking speed into account.
      * @param motor The motor that will have a change in power
@@ -88,6 +104,13 @@ public class DriveSystem {
      */
     private void setMotorPower (DcMotor motor, double power) {
         motor.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+    }
+
+    public void setAllMotorPower(double power) {
+        motorFrontLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorFrontRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorBackLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        motorBackRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
     }
 
     /**

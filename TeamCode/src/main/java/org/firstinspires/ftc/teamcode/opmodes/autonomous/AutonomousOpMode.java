@@ -3,13 +3,16 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import android.util.Log;
 
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
+import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
@@ -18,29 +21,23 @@ import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 public class AutonomousOpMode extends BaseOpMode {
 
     // Variables
-    private GameState currentGameState;                         // Current GameState Machine GameState.
-    private static TargetDropBox targetRegion;
-    private boolean deliveredFirstWobble;
+    private GameState currentGameState;
     private ElapsedTime elapsedTime;
-    private int shotsLeft = 2;
-    boolean passedRed = false;
-
-    private int[] shotCount;
-    boolean pickedUpArm = false;
 
     // Systems
     private TensorFlow tensorflow;
+    private DriveSystem driveSystem;
 
     @Override
     public void init() {
         super.init();
-        deliveredFirstWobble = false;
         tensorflow = new TensorFlow();
         tensorflow.activate();
         elapsedTime = new ElapsedTime();
-        shotCount = new int[3];
         newGameState(GameState.INITIAL);
         elapsedTime.reset();
+        driveSystem = new DriveSystem();
+        driveSystem.initMotors();
     }
 
     @Override
@@ -48,15 +45,18 @@ public class AutonomousOpMode extends BaseOpMode {
         if (elapsedTime.milliseconds() > 1500) {
             switch (tensorflow.getObject()) {
                 case NADA:
-                    shotCount[0]++;
                     break;
 
-                case BLUE:
-                    shotCount[1]++;
+                case BALL:
                     break;
 
-                case BOX_C:
-                    shotCount[2]++;
+                case CUBE:
+                    break;
+
+                case DUCK:
+                    break;
+
+                case MARKER:
                     break;
             }
         }
@@ -107,110 +107,47 @@ public class AutonomousOpMode extends BaseOpMode {
         // Makes sure the trajectory is finished before doing anything else
         switch (currentGameState) {
             case INITIAL:
-                shootingSystem.warmUp(Target.TOWER_GOAL);
-                newGameState(GameState.SHOOT_UPPER);
+                newGameState(GameState.DRIVE_TO_BARCODE);
                 break;
 
-//                case AVOID_RINGS:
-//                    newGameState(GameState.SHOOT_UPPER);
-//                    break;
+            case DRIVE_TO_BARCODE:
+                while (elapsedTime.seconds() < 20) { // TODO: update this int
+                    driveSystem.setAllMotorPower(1);
+                }
+                driveSystem.setAllMotorPower(0);
+                newGameState(GameState.DETECT_BARCODE);
+                break;
 
-            case SHOOT_UPPER:
-                long initTime = System.currentTimeMillis();
-                boolean enoughTimeElapsed = false;
-                while (enoughTimeElapsed){
-                    if (System.currentTimeMillis() - initTime > Coordinates.RED_PARKING_POSITION/Constants.tileWidth * 0.55){ /* TODO: FIND TIME TO DELAY/GO DOWN */
-                        enoughTimeElapsed = true;
-                    }
-                    else{
+            case DETECT_BARCODE:
+                tensorflow
+                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+                break;
 
-                    }
-                }
-                if (trajectoryFinished) {
-                    intakeSystem.suck();
-                    if (shotsLeft == 2) {
-                        if (shootingSystem.shoot(1000)) {
-                            shotsLeft--;
-                        }
-                    } else {
-                        if (shootingSystem.shoot()) {
-                            if (shotsLeft < 1) {
-                                intakeSystem.stop();
-                                newGameState(GameState.DELIVER_WOBBLE);
-                                shootingSystem.shutDown();
-                            }
-                            shotsLeft--;
-                        }
-                    }
-                }
+            case DRIVE_TO_ALLIANCE_HUB:
+                newGameState(GameState.PLACE_CUBE);
                 break;
-            case RESET_ARM:
-                if (yeetSystem.pickedUp(false)) {
-                    newGameState(GameState.RETURN_TO_NEST);
-                }
+
+            case PLACE_CUBE:
+                newGameState(GameState.DRIVE_TO_CAROUSEL);
                 break;
-            case DRIVE_TO_SECOND_WOBBLE_MIDWAY:
-                if (trajectoryFinished) {
-                    newGameState(GameState.DRIVE_TO_SECOND_WOBBLE);
-                }
-            case DRIVE_TO_SECOND_WOBBLE:
-                if (trajectoryFinished) {
-                    if (yeetSystem.placed()) {
-                        newGameState(GameState.COLOR_SENSOR_TO_SECOND_WOBBLE);
-                    }
-                }
+
+            case DRIVE_TO_CAROUSEL:
+                newGameState(GameState.SPIN_CAROUSEL);
                 break;
-            case COLOR_SENSOR_TO_SECOND_WOBBLE:
-                Log.d("COLOR", colorSensor.red() + "");
-                Log.d("COLOR", passedRed + "");
-                if (colorSensor.red() > 2000) {
-                    roadRunnerDriveSystem.cancelFollowing();
-                    newGameState(GameState.PICK_UP_SECOND_WOBBLE);
-                }
+
+            case SPIN_CAROUSEL:
+                newGameState(GameState.PARK_IN_DEPOT);
                 break;
-            case PICK_UP_SECOND_WOBBLE:
-                if (yeetSystem.pickedUp(true)) {
-                    if (targetRegion == TargetDropBox.BOX_B) {
-                        newGameState(GameState.BOX_B_STRAFE);
-                    } else {
-                        newGameState(GameState.DELIVER_WOBBLE);
-                    }
-                }
+
+            case PARK_IN_DEPOT:
+                newGameState(GameState.COMPLETE);
                 break;
-            case BOX_B_STRAFE:
-                if (trajectoryFinished) {
-                    newGameState(GameState.DELIVER_WOBBLE);
-                }
-                break;
-            case STRAFE_OUT_FROM_WOBBLE:
-                if (trajectoryFinished) {
-                    if (!deliveredFirstWobble) {
-                        newGameState(GameState.DRIVE_TO_SECOND_WOBBLE_MIDWAY);
-                        deliveredFirstWobble = true;
-                    } else {
-                        newGameState(GameState.RETURN_TO_NEST);
-                        elapsedTime.reset();
-                    }
-                }
-                break;
-            case DELIVER_WOBBLE:
-                if (trajectoryFinished) {
-                    if (yeetSystem.placed()) {
-                        newGameState(GameState.STRAFE_OUT_FROM_WOBBLE);
-                        elapsedTime.reset();
-                    }
-                }
-                break;
-            case RETURN_TO_NEST:
-                if (trajectoryFinished) {
-                    newGameState(GameState.COMPLETE);
-                }
-                break;
+
             case COMPLETE:
-                if (pickedUpArm) {
-                    stop();
-                }
+                stop();
                 break;
+
+
         }
     }
 
