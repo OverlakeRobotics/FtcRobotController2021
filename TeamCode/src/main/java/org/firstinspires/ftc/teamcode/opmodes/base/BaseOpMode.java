@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.RoadRunnerDriveSystem;
 import org.firstinspires.ftc.teamcode.components.ShootingSystem;
+import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.components.VuforiaSystem;
 import org.firstinspires.ftc.teamcode.components.YeetSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
@@ -31,7 +32,7 @@ public abstract class BaseOpMode extends OpMode {
 
      Systems
     protected RoadRunnerDriveSystem roadRunnerDriveSystem;
-    protected VuforiaSystem vuforia;
+    protected Vuforia vuforia;
     protected ShootingSystem shootingSystem;
     protected YeetSystem yeetSystem;
     protected ColorSensor colorSensor;
@@ -40,14 +41,12 @@ public abstract class BaseOpMode extends OpMode {
     @Override
     public void init() {
 
-         Variables
         this.msStuckDetectInit = 20000;
         this.msStuckDetectInitLoop = 20000;
         currentPosition = new Pose2d(Coordinates.STARTING_POSITION.getX(), Coordinates.STARTING_POSITION.getY(), -Math.PI / 2);
         powerShotState = PowerShotState.IDLE;
         colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
-         Systems
         vuforia = VuforiaSystem.getInstance();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, "IntakeSystem"));
         roadRunnerDriveSystem = new RoadRunnerDriveSystem(hardwareMap);
@@ -67,7 +66,6 @@ public abstract class BaseOpMode extends OpMode {
     protected void vuforiaData() {
         VectorF translation = vuforia.vector();
 
-         only one of these two will be used
         if (translation != null) {
             telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                     translation.get(0) / Constants.mmPerInch, translation.get(1) / Constants.mmPerInch, translation.get(2) / Constants.mmPerInch);

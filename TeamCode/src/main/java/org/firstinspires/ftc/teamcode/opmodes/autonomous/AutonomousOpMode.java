@@ -3,17 +3,21 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import android.util.Log;
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
 import org.firstinspires.ftc.teamcode.helpers.GameState;
+import org.firstinspires.ftc.teamcode.helpers.RouteState;
+import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
+
+import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 
@@ -22,7 +26,11 @@ public class AutonomousOpMode extends BaseOpMode {
 
     // Variables
     private GameState currentGameState;
+    private RouteState routeState;
+    private TeamState teamState;
+
     private ElapsedTime elapsedTime;
+    private boolean objectDetected;
 
     // Systems
     private TensorFlow tensorflow;
@@ -41,68 +49,10 @@ public class AutonomousOpMode extends BaseOpMode {
     }
 
     @Override
-    public void init_loop() {
-        if (elapsedTime.milliseconds() > 1500) {
-            switch (tensorflow.getObject()) {
-                case NADA:
-                    break;
-
-                case BALL:
-                    break;
-
-                case CUBE:
-                    break;
-
-                case DUCK:
-                    break;
-
-                case MARKER:
-                    break;
-            }
-        }
-    }
-
-    private void updateTargetRegion() {
-        int max = shotCount[0];
-        max = Math.max(max, shotCount[1]);
-        max = Math.max(max, shotCount[2]);
-        if (shotCount[1] == max) {
-            targetRegion = TargetDropBox.BOX_B;
-        } else if (shotCount[2] == max) {
-            targetRegion = TargetDropBox.BOX_C;
-        } else {
-            targetRegion = TargetDropBox.BOX_A;
-        }
-        telemetry.addData("Target Region", targetRegion.name());
-        Log.d("COLOR", colorSensor.red() + "");
-        telemetry.update();
-    }
-
-    @Override
-    public void start() {
-        tensorflow.shutdown();
-        super.start();
-        updateTargetRegion();
-    }
-
-    @Override
     public void loop() {
-//        vuforiaData();
+        vuforiaData();
         telemetry.addData("GameState", currentGameState);
         telemetry.update();
-
-//        Log.d("POSITION", "STATE: " + currentGameState.name());
-//        Log.d("POSITION", "x: " + poseEstimate.getX());
-//        Log.d("POSITION","y: " + poseEstimate.getY());
-//        Log.d("POSITION", "heading: " + poseEstimate.getHeading());
-
-        trajectoryFinished = currentGameState == GameState.INITIAL || roadRunnerDriveSystem.update() || trajectory == null;
-
-        if (currentGameState == GameState.RETURN_TO_NEST || currentGameState == GameState.COMPLETE) {
-            if (elapsedTime.milliseconds() > 500 && !pickedUpArm) {
-                pickedUpArm = yeetSystem.pickedUp(false);
-            }
-        }
 
         // Makes sure the trajectory is finished before doing anything else
         switch (currentGameState) {
@@ -119,11 +69,45 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DETECT_BARCODE:
-                tensorflow
-                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+                int i = 0;
+                float distance = 9.0f;
+                while (!objectDetected) {
+                    if (i == 1) {
+                        if (teamState == TeamState.RED) {
+                            // move left
+                        } else {
+                            // move right
+                        }
+                    }
+                    if (i == 2) {
+                        if (teamState == TeamState.RED) {
+                            // move right twice
+                        } else {
+                            // move left twice
+                        }
+                    }
+                    if (i == 3) {
+                        stop();
+                    }
+                    for (Recognition recognition : tensorflow.getInference()) {
+                        if (recognition.getLabel().equals("Marker")) {
+                            objectDetected = true;
+                        } else {
+                            i++;
+                        }
+                    }
+                }
+                if (objectDetected) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+                }
                 break;
 
             case DRIVE_TO_ALLIANCE_HUB:
+                if (teamState == TeamState.RED) {
+                    // move right
+                } else {
+                    // move left
+                }
                 newGameState(GameState.PLACE_CUBE);
                 break;
 
@@ -165,17 +149,6 @@ public class AutonomousOpMode extends BaseOpMode {
      */
     protected void newGameState(GameState newGameState) {
         currentGameState = newGameState;
-        currentPosition = roadRunnerDriveSystem.getPositionEstimate();
-
-        if (currentGameState == GameState.DELIVER_WOBBLE) {
-            trajectory = Trajectories.getTrajectory(targetRegion, currentPosition, deliveredFirstWobble);
-        } else {
-            trajectory = Trajectories.getTrajectory(currentGameState, currentPosition);
-        }
-
-        if (trajectory != null) {
-            roadRunnerDriveSystem.followTrajectoryAsync(trajectory);
-        }
     }
 
     /**
