@@ -7,6 +7,7 @@ import android.util.Range;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class DriveSystem {
 
@@ -27,7 +28,7 @@ public class DriveSystem {
     public enum Direction {
         FORWARD, BACKWARD, LEFT, RIGHT;
 
-        private static Direction getDirection(Direction direction) {
+        /*private static Direction getDirection(Direction direction) {
             if (direction == FORWARD){
 
             }
@@ -41,7 +42,7 @@ public class DriveSystem {
 
             }
             return direction;
-        }
+        }*/
     }
 
     //Other "settings"
@@ -79,22 +80,6 @@ public class DriveSystem {
         this.motorBackRight.setPower(0);
         this.motorFrontLeft.setPower(0);
         this.motorFrontRight.setPower(0);
-    }
-
-    public DcMotor getMotorFrontRight() {
-        return motorFrontRight;
-    }
-
-    public DcMotor getMotorFrontLeft() {
-        return motorFrontLeft;
-    }
-
-    public DcMotor getMotorBackRight() {
-        return motorBackRight;
-    }
-
-    public DcMotor getMotorBackLeft() {
-        return motorBackLeft;
     }
 
     /**

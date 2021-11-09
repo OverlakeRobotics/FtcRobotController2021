@@ -1,12 +1,12 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
@@ -17,14 +17,17 @@ import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
-import java.util.List;
-
 import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 
 @Autonomous(name = "AutonomousOpMode", group = "Autonomous")
 public class AutonomousOpMode extends BaseOpMode {
 
     // Variables
+    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
+    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
+    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
+    private static final String MOTOR_BACK_LEFT = "motor-back-left";
+
     private GameState currentGameState;
     private RouteState routeState;
     private TeamState teamState;
@@ -35,6 +38,7 @@ public class AutonomousOpMode extends BaseOpMode {
     // Systems
     private TensorFlow tensorflow;
     private DriveSystem driveSystem;
+    private ArmSystem armSystem;
 
     @Override
     public void init() {
@@ -44,7 +48,7 @@ public class AutonomousOpMode extends BaseOpMode {
         elapsedTime = new ElapsedTime();
         newGameState(GameState.INITIAL);
         elapsedTime.reset();
-        driveSystem = new DriveSystem();
+        driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
         driveSystem.initMotors();
     }
 
@@ -62,9 +66,9 @@ public class AutonomousOpMode extends BaseOpMode {
 
             case DRIVE_TO_BARCODE:
                 while (elapsedTime.seconds() < 20) { // TODO: update this int
-                    driveSystem.setAllMotorPower(1);
+                    driveSystem.joystickDrive(0, 0, 1);
                 }
-                driveSystem.setAllMotorPower(0);
+                driveSystem.joystickDrive(0, 0, 0);
                 newGameState(GameState.DETECT_BARCODE);
                 break;
 
@@ -74,15 +78,35 @@ public class AutonomousOpMode extends BaseOpMode {
                 while (!objectDetected) {
                     if (i == 1) {
                         if (teamState == TeamState.RED) {
+                            double deltaTime = 2.0;
+                            double baseTime = elapsedTime.seconds();
+                            while (elapsedTime.seconds() < baseTime + deltaTime) {
+                                driveSystem.joystickDrive(0, -1, 0);
+                            }
                             // move left
                         } else {
+                            double deltaTime = 2.0;
+                            double baseTime = elapsedTime.seconds();
+                            while (elapsedTime.seconds() < baseTime + deltaTime) {
+                                driveSystem.joystickDrive(0, 1, 0);
+                            }
                             // move right
                         }
                     }
                     if (i == 2) {
                         if (teamState == TeamState.RED) {
+                            double deltaTime = 4.0;
+                            double baseTime = elapsedTime.seconds();
+                            while (elapsedTime.seconds() < baseTime + deltaTime) {
+                                driveSystem.joystickDrive(0, 1, 0);
+                            }
                             // move right twice
                         } else {
+                            double deltaTime = 4.0;
+                            double baseTime = elapsedTime.seconds();
+                            while (elapsedTime.seconds() < baseTime + deltaTime) {
+                                driveSystem.joystickDrive(0, -1, 0);
+                            }
                             // move left twice
                         }
                     }
@@ -104,14 +128,23 @@ public class AutonomousOpMode extends BaseOpMode {
 
             case DRIVE_TO_ALLIANCE_HUB:
                 if (teamState == TeamState.RED) {
-                    // move right
+                    double deltaTime = 2.0;
+                    double baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, 1, 0);
+                    }
                 } else {
-                    // move left
+                    double deltaTime = 2.0;
+                    double baseTime = elapsedTime.seconds();
+                    while (elapsedTime.seconds() < baseTime + deltaTime) {
+                        driveSystem.joystickDrive(0, -1, 0);
+                    }
                 }
                 newGameState(GameState.PLACE_CUBE);
                 break;
 
             case PLACE_CUBE:
+                // do this
                 newGameState(GameState.DRIVE_TO_CAROUSEL);
                 break;
 
@@ -159,6 +192,5 @@ public class AutonomousOpMode extends BaseOpMode {
     private void calibrateLocation() {
         double xUpdate = Coordinates.CALIBRATION.getX() - (vuforia.getYOffset() / Constants.mmPerInch - tileWidth);
         double yUpdate = Coordinates.CALIBRATION.getY() + vuforia.getXOffset() / Constants.mmPerInch;
-        roadRunnerDriveSystem.setPoseEstimate(new Pose2d(xUpdate, yUpdate));
     }
 }
