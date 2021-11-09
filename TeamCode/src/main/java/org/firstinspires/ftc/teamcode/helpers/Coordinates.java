@@ -10,8 +10,37 @@ public enum Coordinates {
     // 17 inches is the width of the robot
     STARTING_POSITION(2.5 * Constants.tileWidth, 17),
 
-    // Spline position to the left to avoid rings
-    DETOUR_POSITION(2 * Constants.tileWidth, 2 * Constants.tileWidth),
+    //FOR RED TOP
+    RED_STARTING_POSITION_TOP((3 * Constants.tileWidth) - 8.5, (0.5 * Constants.tileWidth)),
+    RED_TOP_CENTERBARCODE(2 * Constants.tileWidth,(0.5 * Constants.tileWidth) ),
+    RED_TOP_LEFTBARCODE(2 * Constants.tileWidth, ()),
+
+
+
+    //FOR RED BOTTOM
+    RED_STARTING_POSITION_BOTTOM((3 * Constants.tileWidth) - 8.5, (-1.5 * Constants.tileWidth)),
+    RED_BOTTOM_CENTERBARCODE(2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
+    RED_BOTTOM_RIGHTBARCODE(2 * Constants.tileWidth, ()),
+
+
+    //FOR BLUE TOP
+
+
+    //FOR BLUE BOTTOM
+    BLUE_STARTING_POSITION_BOTTOM((-3 * Constants.tileWidth) + 8.5, (-1.5 * Constants.tileWidth)),
+    BLUE_BOTTOM_CENTERBARCODE(-2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
+    BLUE_BOTTOM_LEFTBARCODE(-2 * Constants.tileWidth, ()),
+
+
+
+
+
+    RED_STARTING_POSITION2(),
+    BLUE_STARTING_POSITION1(),
+    BLUE_STARTING_POSITION2(),
+
+
+
 
     // 82.25
     // 129.25
@@ -19,9 +48,9 @@ public enum Coordinates {
     //Calibration
     CALIBRATION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
 
-    // WAREHOUSES
-    RED_WAREHOUSE(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    BLUE_WAREHOUSE(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    // WAREHOUSES DONE!
+    RED_WAREHOUSE((3 * Constants.tileWidth) - (8.5), 1.7 * Constants.tileWidth),
+    BLUE_WAREHOUSE((-3 * Constants.tileWidth) + (8.5), 1.7 * Constants.tileWidth),
 
     //ALLIANCE HUB
     RED_ALLIANCE_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
@@ -32,8 +61,14 @@ public enum Coordinates {
     RED_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
     BLUE_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
 
-    // Carousel
-    CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth);
+    // Carousel LOOK AT FIELD
+    RED_CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    BLUE_CAROUSEL(),
+
+    //Storage Units DONE!
+    BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
+    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
+
 
     private final double x;
     private final double y;
