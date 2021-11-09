@@ -49,10 +49,10 @@ public class DriveSystem {
 
     //Coordinates/Location
     // TODO - Set these equal to the actual coordinates relative to the field
-    private double x_coordinate;
-    private double y_coordinate;
-    private double driver_x_coordinate;
-    private double driver_y_coordinate;
+    public double x_coordinate;
+    public double y_coordinate;
+    public double driver_x_coordinate;
+    public double driver_y_coordinate;
 
     /**
      * Initializes the DriveSystem
