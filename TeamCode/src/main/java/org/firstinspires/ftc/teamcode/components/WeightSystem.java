@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.LED;
 
 @TeleOp(name = "WeightSystem_TEST", group = "TeleOp")
 public class WeightSystem extends LinearOpMode {
@@ -11,6 +11,9 @@ public class WeightSystem extends LinearOpMode {
     private AnalogInput sensorAsAnalogInput1;
     private AnalogInput sensorAsAnalogInput2;
     private AnalogInput sensorAsAnalogInput3;
+    private LED weightIndicatorRed;
+    private LED weightIndicatorGreen;
+
 
 
   /*
@@ -24,6 +27,11 @@ public void runOpMode() {
     sensorAsAnalogInput1 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1");
     sensorAsAnalogInput2 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2");
     sensorAsAnalogInput3 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3");
+    weightIndicatorRed = hardwareMap.get(LED.class,"weightIndicatorRed");
+    weightIndicatorGreen = hardwareMap.get(LED.class,"weightIndicatorGreen");
+
+    weightIndicatorGreen.enableLight(false); // light should be off at start
+    weightIndicatorRed.enableLight(false);
 
     // Configure digital pin for input mode.
     telemetry.addData("DigitalTouchSensor", "Press start to continue...");
@@ -46,14 +54,20 @@ public void runOpMode() {
             if(currentVoltage > 6){
                 //say nothing was found
                 telemetry.addData("LightBlock", currentVoltage);
-                // light up red
+                weightIndicatorGreen.enableLight(true);
+                weightIndicatorRed.enableLight(false);
+                // the light should be off when there is a light block
             }
             else if(currentVoltage > 5){
                 telemetry.addData("MediumBlock", currentVoltage);
-                // light up amber
+                weightIndicatorRed.enableLight(true);
+                weightIndicatorGreen.enableLight(false);
+                // red light is on when there is a
             }
             else{
                 telemetry.addData("HeavyBlock", currentVoltage);
+                weightIndicatorRed.enableLight(true);
+                weightIndicatorGreen.enableLight(false);
                 // light up green
             }
 
