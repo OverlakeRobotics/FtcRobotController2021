@@ -70,7 +70,7 @@ public class AutonomousOpMode extends BaseOpMode {
             case DRIVE_TO_BARCODE_CENTER:
                 if (teamState == TeamState.RED){
                     if (routeState == RouteState.TOP){
-                        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[0];
+                        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[0];
                         int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[2];
                         double baseTime = elapsedTime.seconds();
                         while (elapsedTime.seconds() < baseTime + deltaTime) {
