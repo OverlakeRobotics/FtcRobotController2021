@@ -23,8 +23,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.teamcode.helpers.Constants.*;
-import static org.firstinspires.ftc.teamcode.helpers.Constants.halfTile;
-import static org.firstinspires.ftc.teamcode.helpers.Constants.oneAndHalfTile;
 
 /** Teddy, trust my code, you blasphemer. */
 public class Vuforia {
