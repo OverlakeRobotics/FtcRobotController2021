@@ -100,7 +100,9 @@ public class Constants {
 
     //Vuforia
     public static final float mmTargetHeight = 6.25f * mmPerInch;          // the height of the center of the target image above the floor
-    public static final float halfField = 72 * mmPerInch;                  // constants for perimeter targets
+    public static final float halfField        = 72 * mmPerInch;
+    public static final float halfTile         = 12 * mmPerInch;
+    public static final float oneAndHalfTile   = 36 * mmPerInch;
     public static final float quadField = 36 * mmPerInch;
 
     //Shooter Constants

@@ -11,19 +11,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.helpers.BuildConfig;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.teamcode.helpers.Constants.*;
 
 /** Teddy, trust my code, you blasphemer. */
 public class Vuforia {
 
     private VuforiaLocalizer vuforiaLocalizer;
     private OpenGLMatrix lastLocation; // class members
-    public static VuforiaTrackables trackables;
-    public static VuforiaTrackable redAllianceTarget; // declare objects that need
+    public static VuforiaTrackables targets;
+    public static VuforiaTrackable redAllianceTarget;
     private VuforiaTrackableDefaultListener listener;
     private static Vuforia instance;
     private static final VuforiaLocalizer.CameraDirection CAMERA_DIRECTION = VuforiaLocalizer.CameraDirection.BACK;
@@ -32,8 +39,17 @@ public class Vuforia {
      * @param webcamName to use for vuforia
      * @return instance of vuforia singleton
      */
+    public static Vuforia getInstance(WebcamName webcamName, int identifier) {
+        if (instance == null) instance = new Vuforia(webcamName, identifier);
+        return instance;
+    }
+
+    /**
+     * @param webcamName to use for vuforia
+     * @return instance of vuforia singleton
+     */
     public static Vuforia getInstance(WebcamName webcamName) {
-        if (instance == null) instance = new Vuforia(webcamName);
+        if (instance == null) instance = new Vuforia(webcamName, 1);
         return instance;
     }
 
@@ -41,7 +57,7 @@ public class Vuforia {
      * @return instance of vuforia singleton
      */
     public static Vuforia getInstance() {
-        if (instance == null) instance = new Vuforia(null);
+        if (instance == null) instance = new Vuforia(null, 1);
         return instance;
     }
 
@@ -49,18 +65,15 @@ public class Vuforia {
      * Constructor
      * @param webcamName to use for init
      */
-    private Vuforia(WebcamName webcamName) {
-        initVuforiaLocalizer(webcamName);
-        initUltsGoal(webcamName);
-    }
+    private Vuforia(WebcamName webcamName, int identifier) {
 
-    /**
-     * Initializes the vuforia localizer
-     * @param webcamName to use for init
-     */
-    private void initVuforiaLocalizer(WebcamName webcamName) {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "Ad0Srbr/////AAABmdpa0/j2K0DPhXQjE2Hyum9QUQXZO8uAVCNpwlogfxiVmEaSuqHoTMWcV9nLlQpEnh5bwTlQG+T35Vir8IpdrSdk7TctIqH3QBuJFdHsx5hlcn74xa7AiQSJgUD/n7JJ2zJ/Er5Hc+b+r616Jf1YU6RO63Ajk5+TFB9N3a85NjMD6eDm+C6f14647ELnmGC03poSOeczbX7hZpIEObtYdVyKZ2NQ/26xDfSwwJuyMgUHwWY6nl6mk0GMnIGvu0/HoGNgyR5EkUQWyx9XlmxSrldY7BIEVkiKmracvD7W9hEGZ2nPied6DTY5RFNuFX07io6+I59/d7291NXKVMDnFAqSt4a2JYsECv+j7b25S0mD";
+        VuforiaLocalizer.Parameters parameters;
+        if (identifier != 1) {
+            parameters = new VuforiaLocalizer.Parameters();
+        } else {
+            parameters = new VuforiaLocalizer.Parameters(identifier);
+        }
+        parameters.vuforiaLicenseKey = BuildConfig.NOCTURNAL_VUFORIA_KEY;
         parameters.useExtendedTracking = true;
         if (webcamName != null) {
             parameters.cameraName = webcamName;
@@ -68,13 +81,8 @@ public class Vuforia {
             parameters.cameraDirection = CAMERA_DIRECTION;
         }
         vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
-    }
 
-    /**
-     * Initializes the UltsGoal
-     * @param webcamName of the webcam to use
-     */
-    private void initUltsGoal(WebcamName webcamName) {
+
         // TODO most likely will need to end up establishing precise positions in the future
         // Next, translate the camera lens to where it is on the robot.
         // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
@@ -87,23 +95,26 @@ public class Vuforia {
                 .translation(Constants.CAMERA_FORWARD_DISPLACEMENT, Constants.CAMERA_LEFT_DISPLACEMENT, Constants.CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
-//        targetsUltGoal = vuforiaLocalizer.loadTrackablesFromAsset("UltimateGoal");
-//
-//        redAllianceTarget = targetsUltGoal.get(2);
-//        redAllianceTarget.setName("Red Alliance");
-//        listener = ((VuforiaTrackableDefaultListener)redAllianceTarget.getListener());
-//        if (webcamName == null) {
-//            listener.setPhoneInformation(robotFromCamera, VuforiaLocalizer.CameraDirection.BACK);
-//        } else {
-//            listener.setCameraLocationOnRobot(webcamName, robotFromCamera);
-//        }
-//
-//        redAllianceTarget.setLocation(OpenGLMatrix
-//                .translation(0, 0, mmTargetHeight)
-//                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
-//
-//        lastLocation = listener.getUpdatedRobotLocation();
+        targets = vuforiaLocalizer.loadTrackablesFromAsset("FreightFrenzy");
 
+        // For convenience, gather together all the trackable objects in one easily-iterable collection */
+        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables.addAll(targets);
+
+        // Name and locate each trackable object
+        identifyTarget(0, "Blue Storage",       -halfField,  oneAndHalfTile, mmTargetHeight, 90, 0, 90);
+        identifyTarget(1, "Blue Alliance Wall",  halfTile,   halfField,      mmTargetHeight, 90, 0, 0);
+        identifyTarget(2, "Red Storage",        -halfField, -oneAndHalfTile, mmTargetHeight, 90, 0, 90);
+        identifyTarget(3, "Red Alliance Wall",   halfTile,  -halfField,      mmTargetHeight, 90, 0, 180);
+
+        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+
+        /**  Let all the trackable listeners know where the camera is.  */
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+        }
     }
 
     /**
@@ -117,14 +128,14 @@ public class Vuforia {
      * Activates vuforia and sets up targetsUltGoal
      */
     public void activate() {
-        trackables.activate();
+        targets.activate();
     }
 
     /**
      * Deactivates vuforia completely
      */
     public void deactivate() {
-        trackables.deactivate();
+        targets.deactivate();
         instance = null;
     }
 
@@ -184,5 +195,27 @@ public class Vuforia {
         if (proposedPosition != null) {
             lastLocation = proposedPosition;
         }
+    }
+
+    public VuforiaTrackables getTargets() {
+        if (targets != null) {
+            return targets;
+        } else {
+            return null;
+        }
+    }
+
+    /***
+     * Identify a target by naming it, and setting its position and orientation on the field
+     * @param targetIndex
+     * @param targetName
+     * @param dx, dy, dz  Target offsets in x,y,z axes
+     * @param rx, ry, rz  Target rotations in x,y,z axes
+     */
+    void    identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
+        VuforiaTrackable aTarget = targets.get(targetIndex);
+        aTarget.setName(targetName);
+        aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }
 }
