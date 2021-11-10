@@ -25,30 +25,19 @@ import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 @Autonomous(name = "AutonomousOpMode", group = "Autonomous")
 public class AutonomousOpMode extends BaseOpMode {
 
-    // Variables
-    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
-    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
-    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
-    private static final String MOTOR_BACK_LEFT = "motor-back-left";
-
     private static final String ELEVATOR_MOTOR = "elevator-motor";
     private static final String RELEASER = "releaser";
 
     private static final String SPIN_WHEEL = "spin-wheel";
 
     private GameState currentGameState;
-    private RouteState routeState;
-    private TeamState teamState;
+    protected TeamState teamState;
 
-    public ElapsedTime elapsedTime;
-    private double baseTime;
-    private double deltaTime;
     private boolean objectDetected;
     private int level;
 
     // Systems
     private TensorFlow tensorflow;
-    private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private WheelSystem wheelSystem;
 
@@ -57,11 +46,7 @@ public class AutonomousOpMode extends BaseOpMode {
         super.init();
         tensorflow = new TensorFlow();
         tensorflow.activate();
-        elapsedTime = new ElapsedTime();
         newGameState(GameState.INITIAL);
-        elapsedTime.reset();
-        driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
-        driveSystem.initMotors();
         armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
         armSystem.initMotors();
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
@@ -70,7 +55,6 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
-        vuforiaData();
         telemetry.addData("GameState", currentGameState);
         telemetry.update();
 
