@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.LED;
 
-@TeleOp(name = "WeightSystem_TEST", group = "TeleOp")
-public class WeightSystem extends LinearOpMode {
+
+public class WeightSystem {
 
     private AnalogInput sensorAsAnalogInput0;
     private AnalogInput sensorAsAnalogInput1;
@@ -15,67 +15,39 @@ public class WeightSystem extends LinearOpMode {
     private LED weightIndicatorGreen;
 
 
+    public WeightSystem(AnalogInput input0, AnalogInput input1, AnalogInput input2, AnalogInput input3, LED red, LED green){
+        sensorAsAnalogInput0 = input0; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0")
+        sensorAsAnalogInput1 = input1; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1")
+        sensorAsAnalogInput2 = input2; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2")
+        sensorAsAnalogInput3 = input3; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3")
+        weightIndicatorRed = red; // hardwareMap.get(LED.class,"weightIndicatorRed")
+        weightIndicatorGreen = green; // hardwareMap.get(LED.class,"weightIndicatorGreen")
 
-  /*
-   * This function is executed when this Op Mode is selected from the Driver Station.
-   */
-
-// TODO - ADD LIGHT LED THING AND LIGHT UP ACCORDING TO HEAVY MEDIUM LIGHT
-@Override
-public void runOpMode() {
-    sensorAsAnalogInput0 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0");
-    sensorAsAnalogInput1 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1");
-    sensorAsAnalogInput2 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2");
-    sensorAsAnalogInput3 = hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3");
-    weightIndicatorRed = hardwareMap.get(LED.class,"weightIndicatorRed");
-    weightIndicatorGreen = hardwareMap.get(LED.class,"weightIndicatorGreen");
-
-    weightIndicatorGreen.enableLight(false); // light should be off at start
-    weightIndicatorRed.enableLight(false);
-
-    // Configure digital pin for input mode.
-    telemetry.addData("DigitalTouchSensor", "Press start to continue...");
-    telemetry.update();
-    waitForStart();
-    if (opModeIsActive()) {
-        // Put run blocks here.
-        while (opModeIsActive()) {
-            // button is pressed if value returned is LOW or false.
-            telemetry.addData("Voltage0", sensorAsAnalogInput0.getVoltage());
-            telemetry.addData("Voltage1", sensorAsAnalogInput1.getVoltage());
-            telemetry.addData("Voltage2", sensorAsAnalogInput2.getVoltage());
-            telemetry.addData("Voltage3", sensorAsAnalogInput3.getVoltage());
-            telemetry.update();
-
-            double currentVoltage = sensorAsAnalogInput0.getVoltage() + sensorAsAnalogInput1.getVoltage() + sensorAsAnalogInput2.getVoltage() + sensorAsAnalogInput3.getVoltage();
-
-
-            // through testing - found that voltage reads 1.7 when theres nothing, 0 when there is something, hence the following classifications
-            if(currentVoltage > 6){
-                //say nothing was found
-                telemetry.addData("LightBlock", currentVoltage);
-                weightIndicatorGreen.enableLight(true);
-                weightIndicatorRed.enableLight(false);
-                // the light should be off when there is a light block
-            }
-            else if(currentVoltage > 5){
-                telemetry.addData("MediumBlock", currentVoltage);
-                weightIndicatorRed.enableLight(true);
-                weightIndicatorGreen.enableLight(false);
-                // red light is on when there is a
-            }
-            else{
-                telemetry.addData("HeavyBlock", currentVoltage);
-                weightIndicatorRed.enableLight(true);
-                weightIndicatorGreen.enableLight(false);
-                // light up green
-            }
-
-        }
-
-
+        weightIndicatorGreen.enableLight(false); // light should be off at start
+        weightIndicatorRed.enableLight(false);
     }
 
-}
+    public void checkWeight(){
+        double currentVoltage = sensorAsAnalogInput0.getVoltage() + sensorAsAnalogInput1.getVoltage() + sensorAsAnalogInput2.getVoltage() + sensorAsAnalogInput3.getVoltage();
+
+
+        // through testing - found that voltage reads 1.7 when theres nothing, 0 when there is something, hence the following classifications
+        if(currentVoltage > 6){ // Light Block
+            weightIndicatorGreen.enableLight(true);
+            weightIndicatorRed.enableLight(false);
+            // the light should be off when there is a light block
+        }
+        else if(currentVoltage > 5){ // Medium Block
+            weightIndicatorRed.enableLight(true);
+            weightIndicatorGreen.enableLight(false);
+            // red light is on when there is a
+        }
+        else{ // Light Block
+            weightIndicatorRed.enableLight(true);
+            weightIndicatorGreen.enableLight(false);
+            // light up green
+        }
+
+    }
 }
 
