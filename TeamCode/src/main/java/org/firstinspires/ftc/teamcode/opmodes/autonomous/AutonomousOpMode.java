@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
+import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
@@ -41,6 +42,7 @@ public class AutonomousOpMode extends BaseOpMode {
     private TensorFlow tensorflow;
     private ArmSystem armSystem;
     private WheelSystem wheelSystem;
+    private Vuforia vuforia;
 
     @Override
     public void init() {
@@ -62,13 +64,26 @@ public class AutonomousOpMode extends BaseOpMode {
         // Makes sure the trajectory is finished before doing anything else
         switch (currentGameState) {
             case INITIAL:
-                newGameState(GameState.DRIVE_TO_BARCODE);
+                newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
                 break;
 
-            case DRIVE_TO_BARCODE:
+            case DRIVE_TO_BARCODE_CENTER:
                 if (teamState == TeamState.RED){
                     if (routeState == RouteState.TOP){
-
+                        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[0];
+                        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[2];
+                        double baseTime = elapsedTime.seconds();
+                        while (elapsedTime.seconds() < baseTime + deltaTime) {
+                            driveSystem.joystickDrive(0, xPower, 0);
+                        }
+                        Coordinates.updateX(Coordinates.RED_TOP_CENTERBARCODE.getX());
+                        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[1];
+                        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[3];
+                        baseTime = elapsedTime.seconds();
+                        while (elapsedTime.seconds() < baseTime + deltaTime) {
+                            driveSystem.joystickDrive(0, 0, yPower);
+                        }
+                        Coordinates.updateY(Coordinates.RED_TOP_CENTERBARCODE.getY());
                     }
                     else if (routeState == RouteState.BOTTOM){
 
@@ -82,10 +97,6 @@ public class AutonomousOpMode extends BaseOpMode {
 
                     }
                 }
-                while (elapsedTime.seconds() < TimeCoordinate(, Coordinates.get)) { // TODO: update this int
-                    driveSystem.joystickDrive(0, 0, 1);
-                }
-                driveSystem.joystickDrive(0, 0, 0);
                 newGameState(GameState.DETECT_BARCODE);
                 break;
 

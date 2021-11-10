@@ -126,7 +126,7 @@ public class DriveSystem {
         setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
     }
 
-    public double[] TimeCoordinate (Coordinates robotCoordinate, Coordinates newCoordinate) {
+    public static double[] TimeCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {
         double deltaX = newCoordinate.getX() - robotCoordinate.getX();
         double deltaY = newCoordinate.getY() - robotCoordinate.getY();
         double Xtime = (deltaX/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
