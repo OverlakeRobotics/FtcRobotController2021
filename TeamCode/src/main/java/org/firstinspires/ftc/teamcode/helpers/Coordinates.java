@@ -63,10 +63,10 @@ public enum Coordinates {
 
     // Carousel LOOK AT FIELD
     RED_CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    BLUE_CAROUSEL(),
+    //BLUE_CAROUSEL(),
     //Storage Units DONE!
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
-    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
+    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
 
     private final double x;

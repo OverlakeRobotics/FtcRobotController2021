@@ -263,7 +263,7 @@ public class AutonomousOpMode extends BaseOpMode {
      * Vuforia is in millimeters and everything else is in inches
      */
     private void calibrateLocation() {
-        double xUpdate = Coordinates.CALIBRATION.getX() - (vuforia.getYOffset() / Constants.mmPerInch - tileWidth);
-        double yUpdate = Coordinates.CALIBRATION.getY() + vuforia.getXOffset() / Constants.mmPerInch;
+        //double xUpdate = Coordinates.CALIBRATION.getX() - (vuforia.getYOffset() / Constants.mmPerInch - tileWidth);
+        //double yUpdate = Coordinates.CALIBRATION.getY() + vuforia.getXOffset() / Constants.mmPerInch;
     }
 }
