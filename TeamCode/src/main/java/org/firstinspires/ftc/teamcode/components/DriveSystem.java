@@ -133,22 +133,7 @@ public class DriveSystem {
         double Ytime = (deltaY/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
         double xMagnitude = deltaX/Math.abs(deltaX); //goes in drivesystem params
         double yMagnitude = deltaY/Math.abs(deltaY); // goes in drivesystem params
-
-        if (Math.abs(rx) < 0.01) {
-            rx = 0;
-        }
-        if (Math.abs(ly) < 0.01) {
-            ly = 0;
-        }
-        if (Math.abs(lx) < 0.01) {
-            lx = 0;
-        }
-
-        //Powers assume robot forward is forward for motor as well
-        setMotorPower(motorBackLeft,  lx + ly - rx);
-        setMotorPower(motorFrontLeft, - lx + ly - rx);
-        setMotorPower(motorBackRight, (- lx + ly + rx) * -1);
-        setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
+        return new double[]{Xtime, Ytime, xMagnitude, yMagnitude};
     }
 
     //Todo Add functionality for gyro assisted strafe
@@ -156,17 +141,17 @@ public class DriveSystem {
     //Todo God mode
     //Drive with GodMode Enabled
     //Angles are relative to the vertical axis, with 90 being right and -90 being left
-    private void godDrive (float rx, float lx, float ly) {
-        double gyroAngle = Math.atan2(y_coordinate - driver_y_coordinate, x_coordinate - driver_x_coordinate);
-        double joystickAngle = Math.atan(lx/ly);
-        double angleToDrive = joystickAngle - gyroAngle;
-
-        double vectorDriveMagnitude = Math.sqrt(ly*ly+lx*lx);
-
-        float horizontalVectorDrive = (float) vectorDriveMagnitude * (float) Math.sin(angleToDrive);
-        float verticalVectorDrive = (float) vectorDriveMagnitude * (float)  Math.cos(angleToDrive);
-
-        joystickDrive(rx, horizontalVectorDrive, verticalVectorDrive);
-
-    }
+//    private void godDrive (float rx, float lx, float ly) {
+//        double gyroAngle = Math.atan2(y_coordinate - driver_y_coordinate, x_coordinate - driver_x_coordinate);
+//        double joystickAngle = Math.atan(lx/ly);
+//        double angleToDrive = joystickAngle - gyroAngle;
+//
+//        double vectorDriveMagnitude = Math.sqrt(ly*ly+lx*lx);
+//
+//        float horizontalVectorDrive = (float) vectorDriveMagnitude * (float) Math.sin(angleToDrive);
+//        float verticalVectorDrive = (float) vectorDriveMagnitude * (float)  Math.cos(angleToDrive);
+//
+//        joystickDrive(rx, horizontalVectorDrive, verticalVectorDrive);
+//
+//    }
 }

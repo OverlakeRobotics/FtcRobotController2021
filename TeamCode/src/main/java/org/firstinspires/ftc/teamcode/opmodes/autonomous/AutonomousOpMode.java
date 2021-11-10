@@ -31,6 +31,7 @@ public class AutonomousOpMode extends BaseOpMode {
     private static final String SPIN_WHEEL = "spin-wheel";
 
     private GameState currentGameState;
+    protected RouteState routeState;
     protected TeamState teamState;
 
     private boolean objectDetected;
@@ -65,7 +66,23 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DRIVE_TO_BARCODE:
-                while (elapsedTime.seconds() < 20) { // TODO: update this int
+                if (teamState == TeamState.RED){
+                    if (routeState == RouteState.TOP){
+
+                    }
+                    else if (routeState == RouteState.BOTTOM){
+
+                    }
+                }
+                else if (teamState == TeamState.BLUE){
+                    if (routeState == RouteState.TOP){
+
+                    }
+                    else if (routeState == RouteState.BOTTOM){
+
+                    }
+                }
+                while (elapsedTime.seconds() < TimeCoordinate(, Coordinates.get)) { // TODO: update this int
                     driveSystem.joystickDrive(0, 0, 1);
                 }
                 driveSystem.joystickDrive(0, 0, 0);
