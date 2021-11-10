@@ -42,7 +42,7 @@ public class ArmSystem {
 
     private ElevatorState currentArmState;
 
-    private void initMotors() {
+    public void initMotors() {
         elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotor.setVelocity(0);
         releaser.setPosition(CLOSED_POSITION);
@@ -57,7 +57,7 @@ public class ArmSystem {
         mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 8);
     }
 
-    private void goToLevel(ElevatorState state){
+    public void goToLevel(ElevatorState state){
         releaser.setPosition(CLOSED_POSITION);
         elevatorMotor.setPower(0);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
@@ -66,7 +66,7 @@ public class ArmSystem {
         //elevatorMotor.setPower(0);
     }
 
-    private void release(boolean bool){
+    public void release(boolean bool){
         if (bool){
             releaser.setPosition(CLOSED_POSITION);
         }

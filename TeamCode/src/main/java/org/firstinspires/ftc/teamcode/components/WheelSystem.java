@@ -17,7 +17,7 @@ public class WheelSystem {
     // this should be the fastest possible speed that we can go without causing the duck to fly off the wheel
 
 
-    private void initMotors(){
+    public void initMotors(){
         wheelToSpin.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelToSpin.setPower(0.0);
     }
@@ -32,6 +32,10 @@ public class WheelSystem {
         wheelToSpin.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         wheelToSpin.setPower(optimalSpinningSpeed);
         //wheelToSpin.setPower(0.0);
+    }
+
+    public void stopWheel() {
+        wheelToSpin.setPower(0.0);
     }
 
     private void delay(){
