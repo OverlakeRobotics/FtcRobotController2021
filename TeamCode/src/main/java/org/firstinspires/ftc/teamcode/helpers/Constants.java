@@ -19,6 +19,7 @@ public class Constants {
 
     public static final float mmPerInch = 25.4f;                    // constant for converting measurements from inches to millimeters
     public static int TICKS_PER_REV = 2400;
+    public static int FULL_POWER_TILE_TIME = 2400; // TODO TEST THIS VALUE
     public static int TICKS_PER_REV_SHOOTER = 103;
     public static double WHEEL_RADIUS = 1; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed

@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.helpers.Constants;
+import org.firstinspires.ftc.teamcode.helpers.Coordinates;
+import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousOpMode;
+
 public class DriveSystem {
 
     //Constants
@@ -50,10 +54,10 @@ public class DriveSystem {
 
     //Coordinates/Location
     // TODO - Set these equal to the actual coordinates relative to the field
-    public double x_coordinate;
-    public double y_coordinate;
-    public double driver_x_coordinate;
-    public double driver_y_coordinate;
+//    public double x_coordinate;
+//    public double y_coordinate;
+//    public double driver_x_coordinate;
+//    public double driver_y_coordinate;
 
     /**
      * Initializes the DriveSystem
@@ -122,6 +126,31 @@ public class DriveSystem {
         setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
     }
 
+    public double[] TimeCoordinate (Coordinates robotCoordinate, Coordinates newCoordinate) {
+        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
+        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
+        double Xtime = (deltaX/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
+        double Ytime = (deltaY/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
+        double xMagnitude = deltaX/Math.abs(deltaX); //goes in drivesystem params
+        double yMagnitude = deltaY/Math.abs(deltaY); // goes in drivesystem params
+
+        if (Math.abs(rx) < 0.01) {
+            rx = 0;
+        }
+        if (Math.abs(ly) < 0.01) {
+            ly = 0;
+        }
+        if (Math.abs(lx) < 0.01) {
+            lx = 0;
+        }
+
+        //Powers assume robot forward is forward for motor as well
+        setMotorPower(motorBackLeft,  lx + ly - rx);
+        setMotorPower(motorFrontLeft, - lx + ly - rx);
+        setMotorPower(motorBackRight, (- lx + ly + rx) * -1);
+        setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
+    }
+
     //Todo Add functionality for gyro assisted strafe
 
     //Todo God mode
@@ -140,36 +169,4 @@ public class DriveSystem {
         joystickDrive(rx, horizontalVectorDrive, verticalVectorDrive);
 
     }
-
-    /* Old Code from TankDrive
-    //Constants
-    private static final String[] MOTOR_LEFT_NAME = {"treadLeftRear", "treadLeftFront"};
-    private static final String[] MOTOR_RIGHT_NAME = {"treadRightRear", "treadLeftRear"};
-    private static final double MAIN_SPEED_COEFFICIENT = 1.0;
-    private static final double SLOWDRIVE_SPEED_COEFFICIENT = 0.25;
-
-    //Motors use arrays because we do not know if the robot will have one or two
-    private DcMotor[] motorsTreadLeft = new DcMotor[MOTOR_LEFT_NAME.length];
-    private DcMotor[] motorsTreadRight = new DcMotor[MOTOR_RIGHT_NAME.length];
-
-    public DriveSystem() {
-        for (int i = 0; i < MOTOR_LEFT_NAME.length; i++) {
-             motorsTreadLeft[i] = hardwareMap.get(DcMotor.class, MOTOR_LEFT_NAME[i]);
-        }
-        for (int i = 0; i < MOTOR_RIGHT_NAME.length; i++) {
-            motorsTreadLeft[i] = hardwareMap.get(DcMotor.class, MOTOR_RIGHT_NAME[i]);
-        }
-    }
-
-    //Moves all motors in the array with the specified value.
-    private void driveAllMotors(DcMotor[] motorSet, double speed) {
-        for (DcMotor motor : motorSet) {
-            motor.setPower(speed);
-        }
-    }
-
-    private void tankDrive(double leftPower, double rightPower) {
-        driveAllMotors(motorsTreadLeft, leftPower);
-        driveAllMotors(motorsTreadRight, rightPower);
-    }*/
 }

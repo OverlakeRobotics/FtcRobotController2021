@@ -40,7 +40,7 @@ public class AutonomousOpMode extends BaseOpMode {
     private RouteState routeState;
     private TeamState teamState;
 
-    private ElapsedTime elapsedTime;
+    public ElapsedTime elapsedTime;
     private double baseTime;
     private double deltaTime;
     private boolean objectDetected;
