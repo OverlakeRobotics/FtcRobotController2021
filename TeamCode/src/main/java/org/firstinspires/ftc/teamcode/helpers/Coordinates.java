@@ -13,31 +13,31 @@ public enum Coordinates {
     //FOR RED TOP
     RED_STARTING_POSITION_TOP((3 * Constants.tileWidth) - 8.5, (0.5 * Constants.tileWidth)),
     RED_TOP_CENTERBARCODE(2 * Constants.tileWidth,(0.5 * Constants.tileWidth) ),
-    RED_TOP_LEFTBARCODE(2 * Constants.tileWidth, ()),
+    RED_TOP_LEFTBARCODE(2 * Constants.tileWidth, 3),
 
 
 
     //FOR RED BOTTOM
     RED_STARTING_POSITION_BOTTOM((3 * Constants.tileWidth) - 8.5, (-1.5 * Constants.tileWidth)),
     RED_BOTTOM_CENTERBARCODE(2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
-    RED_BOTTOM_RIGHTBARCODE(2 * Constants.tileWidth, ()),
+    RED_BOTTOM_RIGHTBARCODE(2 * Constants.tileWidth, -((1 * Constants.tileWidth) + 3)),
 
 
     //FOR BLUE TOP
-
+    BLUE_STARTING_POSITION_TOP((-3 * Constants.tileWidth) + 8.5, (0.5 * Constants.tileWidth)),
+    BLUE_TOP_CENTERBARCODE(2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
+    BLUE_TOP_RIGHTBARCODE(2 * Constants.tileWidth, 3),
 
     //FOR BLUE BOTTOM
     BLUE_STARTING_POSITION_BOTTOM((-3 * Constants.tileWidth) + 8.5, (-1.5 * Constants.tileWidth)),
     BLUE_BOTTOM_CENTERBARCODE(-2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
-    BLUE_BOTTOM_LEFTBARCODE(-2 * Constants.tileWidth, ()),
+    BLUE_BOTTOM_LEFTBARCODE(-2 * Constants.tileWidth, -((1 * Constants.tileWidth) + 3)),
 
 
 
 
 
-    RED_STARTING_POSITION2(),
-    BLUE_STARTING_POSITION1(),
-    BLUE_STARTING_POSITION2(),
+
 
 
 
@@ -64,7 +64,6 @@ public enum Coordinates {
     // Carousel LOOK AT FIELD
     RED_CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
     BLUE_CAROUSEL(),
-
     //Storage Units DONE!
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
