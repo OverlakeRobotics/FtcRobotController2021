@@ -9,7 +9,6 @@ public enum Coordinates {
     //TODO See if the webcam will still work if the robot starts pressed against the left or right edge of the starting tile
     // 17 inches is the width of the robot
     STARTING_POSITION(2.5 * Constants.tileWidth, 17),
-    CURRENT_POSITION(2.5 * Constants.tileWidth, 17),
 
     //FOR RED TOP
     RED_STARTING_POSITION_TOP((3 * Constants.tileWidth) - 8.5, (0.5 * Constants.tileWidth)),
@@ -23,12 +22,18 @@ public enum Coordinates {
     RED_BOTTOM_CENTERBARCODE(2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
     RED_BOTTOM_RIGHTBARCODE(2 * Constants.tileWidth, ()),
 
+
     //FOR BLUE TOP
+
 
     //FOR BLUE BOTTOM
     BLUE_STARTING_POSITION_BOTTOM((-3 * Constants.tileWidth) + 8.5, (-1.5 * Constants.tileWidth)),
     BLUE_BOTTOM_CENTERBARCODE(-2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
     BLUE_BOTTOM_LEFTBARCODE(-2 * Constants.tileWidth, ()),
+
+
+
+
 
     RED_STARTING_POSITION2(),
     BLUE_STARTING_POSITION1(),
@@ -62,11 +67,11 @@ public enum Coordinates {
 
     //Storage Units DONE!
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
-    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
+    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
 
 
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
     /**
      * Constructor
@@ -88,21 +93,6 @@ public enum Coordinates {
         return x;
     }
 
-    /**
-     *
-     * @return
-     */
-    public static void updateX(double doubles) {
-        CURRENT_POSITION.x = doubles;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static void updateY(double doubles) {
-        CURRENT_POSITION.y = doubles;
-    }
     /**
      *
      * @return
