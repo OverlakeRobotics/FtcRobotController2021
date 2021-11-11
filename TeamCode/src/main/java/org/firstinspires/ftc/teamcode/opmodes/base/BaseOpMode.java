@@ -27,7 +27,13 @@ public abstract class BaseOpMode extends OpMode {
     public void init() {
         driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
         driveSystem.initMotors();
-        weightSystem = new WeightSystem(hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0"), hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1"), hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2"), hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3"), hardwareMap.get(LED.class,"weightIndicatorRed"), hardwareMap.get(LED.class,"weightIndicatorGreen"));
+        weightSystem = new WeightSystem(
+                hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0"),
+                hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1"),
+                hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2"),
+                hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3"),
+                hardwareMap.get(LED.class,"weightIndicatorRed"),
+                hardwareMap.get(LED.class,"weightIndicatorGreen"));
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
     }

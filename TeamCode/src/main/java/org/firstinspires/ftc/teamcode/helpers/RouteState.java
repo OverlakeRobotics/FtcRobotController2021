@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.helpers;
 
-public class RouteState {
+public enum RouteState {
+    TOP, BOTTOM
 }

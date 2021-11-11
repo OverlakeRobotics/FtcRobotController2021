@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.helpers.BuildConfig;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
+import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,6 +196,11 @@ public class Vuforia {
         if (proposedPosition != null) {
             lastLocation = proposedPosition;
         }
+    }
+
+    public void getLastLocation() {
+        Coordinates.updateX(lastLocation.getTranslation().get(0)/Constants.mmPerInch);
+        Coordinates.updateY(lastLocation.getTranslation().get(1)/Constants.mmPerInch);
     }
 
     public VuforiaTrackables getTargets() {
