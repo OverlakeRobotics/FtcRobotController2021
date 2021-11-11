@@ -46,6 +46,7 @@ public class AutonomousOpMode extends BaseOpMode {
     public void init() {
         newGameState(GameState.INITIAL);
         super.init();
+        driveSystem.initMotors();
         vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
         tensorflow = new TensorFlow(vuforia);
         armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
@@ -66,7 +67,11 @@ public class AutonomousOpMode extends BaseOpMode {
 
         switch (currentGameState) {
             case DRIVE_TO_BARCODE_CENTER:
-                move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
+                if (driveSystem.getTicks() < 543){
+                    driveSystem.setAllMotorPower(0);
+                    newGameState(GameState.DETECT_BARCODE);
+                }
+                //move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
                 newGameState(GameState.DETECT_BARCODE);
                 break;
 

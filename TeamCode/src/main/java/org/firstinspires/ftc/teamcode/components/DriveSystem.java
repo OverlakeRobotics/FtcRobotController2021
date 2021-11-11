@@ -71,15 +71,11 @@ public class DriveSystem {
 
     public void initMotors() {
         this.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         this.motorBackLeft.setPower(0);
         this.motorBackRight.setPower(0);
         this.motorFrontLeft.setPower(0);
@@ -124,6 +120,12 @@ public class DriveSystem {
         setMotorPower(motorFrontLeft, - lx + ly - rx);
         setMotorPower(motorBackRight, (- lx + ly + rx) * -1);
         setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
+    }
+
+    public int getTicks() {
+        int num = 0;
+        num += motorBackLeft.getCurrentPosition() + motorBackRight.getCurrentPosition() + motorFrontLeft.getCurrentPosition() + motorFrontRight.getCurrentPosition();
+        return num;
     }
 
     public static double[] TimeCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {
