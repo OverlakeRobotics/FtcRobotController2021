@@ -68,34 +68,20 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DRIVE_TO_BARCODE_CENTER:
-                if (teamState == TeamState.RED){
-                    if (routeState == RouteState.TOP){
-                        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[0];
-                        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[2];
-                        double baseTime = elapsedTime.seconds();
-                        while (elapsedTime.seconds() < baseTime + deltaTime) {
-                            driveSystem.joystickDrive(0, xPower, 0);
-                        }
-                        Coordinates.updateX(Coordinates.RED_TOP_CENTERBARCODE.getX());
-                        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[1];
-                        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, Coordinates.RED_TOP_CENTERBARCODE)[3];
-                        baseTime = elapsedTime.seconds();
-                        while (elapsedTime.seconds() < baseTime + deltaTime) {
-                            driveSystem.joystickDrive(0, 0, yPower);
-                        }
-                        Coordinates.updateY(Coordinates.RED_TOP_CENTERBARCODE.getY());
-                    }
-                    else if (routeState == RouteState.BOTTOM){
-
-                    }
+                double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[0];
+                int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[2];
+                double baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() < baseTime + deltaTime) {
+                    driveSystem.joystickDrive(0, xPower, 0);
                 }
-                else if (teamState == TeamState.BLUE){
-                    if (routeState == RouteState.TOP){
-
-                    }
-                    else if (routeState == RouteState.BOTTOM){
-
-                    }
+                Coordinates.updateX(teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE.getX() : Coordinates.BLUE_BOTTOM_CENTERBARCODE.getX());
+                deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[1];
+                int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE : Coordinates.BLUE_BOTTOM_CENTERBARCODE)[3];
+                baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() < baseTime + deltaTime) {
+                    driveSystem.joystickDrive(0, 0, yPower);
+                }
+                Coordinates.updateY(teamState == TeamState.RED ? Coordinates.RED_BOTTOM_CENTERBARCODE.getY() : Coordinates.BLUE_BOTTOM_CENTERBARCODE.getY());
                 }
                 newGameState(GameState.DETECT_BARCODE);
                 break;
