@@ -23,8 +23,7 @@ public class TensorFlow {
     /**
      * Constructor for TensorFlow
      */
-    public TensorFlow() {
-        Vuforia vuforiaSystem = Vuforia.getInstance();
+    public TensorFlow(Vuforia vuforiaSystem) {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(); //creating parameters
         tfodParameters.minResultConfidence = 0.3f; //minimumConfidenceNecessaryForActingOnDetection
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforiaSystem.getVuforiaLocalizer()); //create objectDetector

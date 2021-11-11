@@ -66,8 +66,8 @@ public enum Coordinates {
     BLUE_CAROUSEL(),
 
     //Storage Units DONE!
-    BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
-    RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
+    BLUE_DEPOT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
+    RED_DEPOT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     ;
 
 
