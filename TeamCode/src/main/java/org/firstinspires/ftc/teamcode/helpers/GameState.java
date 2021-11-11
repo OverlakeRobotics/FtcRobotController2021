@@ -10,5 +10,6 @@ public enum GameState {
     DRIVE_TO_CAROUSEL,
     SPIN_CAROUSEL,
     PARK_IN_DEPOT,
+    PARK_IN_WAREHOUSE,
     COMPLETE
 }

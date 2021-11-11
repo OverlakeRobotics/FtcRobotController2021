@@ -23,8 +23,10 @@ public enum Coordinates {
     RED_BOTTOM_RIGHTBARCODE(2 * Constants.tileWidth, ()),
 
 
-    //FOR BLUE TOP
-
+    //FOR BLUE TOP - TODO - This are placeholder values (same as red top)
+    BLUE_STARTING_POSITION_TOP((3 * Constants.tileWidth) - 8.5, (0.5 * Constants.tileWidth)),
+    BLUE_TOP_CENTERBARCODE(2 * Constants.tileWidth,(0.5 * Constants.tileWidth) ),
+    BLUE_TOP_LEFTBARCODE(2 * Constants.tileWidth, ()),
 
     //FOR BLUE BOTTOM
     BLUE_STARTING_POSITION_BOTTOM((-3 * Constants.tileWidth) + 8.5, (-1.5 * Constants.tileWidth)),

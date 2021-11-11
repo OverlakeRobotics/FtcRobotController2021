@@ -1,254 +1,171 @@
-//
-//package org.firstinspires.ftc.teamcode.opmodes.autonomous;
-//
-//import android.util.Log;
-//
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.util.ElapsedTime;
-//
-//import org.firstinspires.ftc.teamcode.components.TensorFlow;
-//import org.firstinspires.ftc.teamcode.helpers.Constants;
-//import org.firstinspires.ftc.teamcode.helpers.Coordinates;
-//
-//import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
-//
-//import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
-//
-//@Autonomous(name = "AutonomousOpMode", group = "Autonomous")
-//public class AutonomousOpModeTop extends BaseOpMode {
-//
-//    // Variables
-//    private GameState currentGameState;                         // Current GameState Machine GameState.
-//    private static TargetDropBox targetRegion;
-//    private boolean deliveredFirstWobble;
-//    private ElapsedTime elapsedTime;
-//    private int shotsLeft = 2;
-//    boolean passedRed = false;
-//
-//    private int[] shotCount;
-//    boolean pickedUpArm = false;
-//
-//    // Systems
-//    private TensorFlow tensorflow;
-//
-//    @Override
-//    public void init() {
-//        super.init();
-//        deliveredFirstWobble = false;
-//        tensorflow = new TensorFlow();
-//        tensorflow.activate();
-//        elapsedTime = new ElapsedTime();
-//        shotCount = new int[3];
-//        newGameState(GameState.INITIAL);
-//        elapsedTime.reset();
-//    }
-//
-//    @Override
-//    public void init_loop() {
-//        if (elapsedTime.milliseconds() > 1500) {
-//            switch (tensorflow.getObject()) {
-//                case NADA:
-//                    shotCount[0]++;
-//                    break;
-//
-//                case BLUE:
-//                    shotCount[1]++;
-//                    break;
-//
-//                case BOX_C:
-//                    shotCount[2]++;
-//                    break;
-//            }
-//        }
-//    }
-//
-//    private void updateTargetRegion() {
-//        int max = shotCount[0];
-//        max = Math.max(max, shotCount[1]);
-//        max = Math.max(max, shotCount[2]);
-//        if (shotCount[1] == max) {
-//            targetRegion = TargetDropBox.BOX_B;
-//        } else if (shotCount[2] == max) {
-//            targetRegion = TargetDropBox.BOX_C;
-//        } else {
-//            targetRegion = TargetDropBox.BOX_A;
-//        }
-//        telemetry.addData("Target Region", targetRegion.name());
-//        Log.d("COLOR", colorSensor.red() + "");
-//        telemetry.update();
-//    }
-//
-//    @Override
-//    public void start() {
-//        tensorflow.shutdown();
-//        super.start();
-//        updateTargetRegion();
-//    }
-//
-//    @Override
-//    public void loop() {
-////        vuforiaData();
-//        telemetry.addData("GameState", currentGameState);
-//        telemetry.update();
-//
-////        Log.d("POSITION", "STATE: " + currentGameState.name());
-////        Log.d("POSITION", "x: " + poseEstimate.getX());
-////        Log.d("POSITION","y: " + poseEstimate.getY());
-////        Log.d("POSITION", "heading: " + poseEstimate.getHeading());
-//
-//        trajectoryFinished = currentGameState == GameState.INITIAL || roadRunnerDriveSystem.update() || trajectory == null;
-//
-//        if (currentGameState == GameState.RETURN_TO_NEST || currentGameState == GameState.COMPLETE) {
-//            if (elapsedTime.milliseconds() > 500 && !pickedUpArm) {
-//                pickedUpArm = yeetSystem.pickedUp(false);
-//            }
-//        }
-//
-//        // Makes sure the trajectory is finished before doing anything else
-//        switch (currentGameState) {
-//            case INITIAL:
-//                shootingSystem.warmUp(Target.TOWER_GOAL);
-//                newGameState(GameState.SHOOT_UPPER);
-//                break;
-//
-////                case AVOID_RINGS:
-////                    newGameState(GameState.SHOOT_UPPER);
-////                    break;
-//
-//            case SHOOT_UPPER:
-//                long initTime = System.currentTimeMillis();
-//                boolean enoughTimeElapsed = false;
-//                while (enoughTimeElapsed){
-//                    if (System.currentTimeMillis() - initTime > Coordinates.RED_PARKING_POSITION/Constants.tileWidth * 0.55){ /* TODO: FIND TIME TO DELAY/GO DOWN */
-//                        enoughTimeElapsed = true;
-//                    }
-//                    else{
-//
-//                    }
-//                }
-//                if (trajectoryFinished) {
-//                    intakeSystem.suck();
-//                    if (shotsLeft == 2) {
-//                        if (shootingSystem.shoot(1000)) {
-//                            shotsLeft--;
-//                        }
-//                    } else {
-//                        if (shootingSystem.shoot()) {
-//                            if (shotsLeft < 1) {
-//                                intakeSystem.stop();
-//                                newGameState(GameState.DELIVER_WOBBLE);
-//                                shootingSystem.shutDown();
-//                            }
-//                            shotsLeft--;
-//                        }
-//                    }
-//                }
-//                break;
-//            case RESET_ARM:
-//                if (yeetSystem.pickedUp(false)) {
-//                    newGameState(GameState.RETURN_TO_NEST);
-//                }
-//                break;
-//            case DRIVE_TO_SECOND_WOBBLE_MIDWAY:
-//                if (trajectoryFinished) {
-//                    newGameState(GameState.DRIVE_TO_SECOND_WOBBLE);
-//                }
-//            case DRIVE_TO_SECOND_WOBBLE:
-//                if (trajectoryFinished) {
-//                    if (yeetSystem.placed()) {
-//                        newGameState(GameState.COLOR_SENSOR_TO_SECOND_WOBBLE);
-//                    }
-//                }
-//                break;
-//            case COLOR_SENSOR_TO_SECOND_WOBBLE:
-//                Log.d("COLOR", colorSensor.red() + "");
-//                Log.d("COLOR", passedRed + "");
-//                if (colorSensor.red() > 2000) {
-//                    roadRunnerDriveSystem.cancelFollowing();
-//                    newGameState(GameState.PICK_UP_SECOND_WOBBLE);
-//                }
-//                break;
-//            case PICK_UP_SECOND_WOBBLE:
-//                if (yeetSystem.pickedUp(true)) {
-//                    if (targetRegion == TargetDropBox.BOX_B) {
-//                        newGameState(GameState.BOX_B_STRAFE);
-//                    } else {
-//                        newGameState(GameState.DELIVER_WOBBLE);
-//                    }
-//                }
-//                break;
-//            case BOX_B_STRAFE:
-//                if (trajectoryFinished) {
-//                    newGameState(GameState.DELIVER_WOBBLE);
-//                }
-//                break;
-//            case STRAFE_OUT_FROM_WOBBLE:
-//                if (trajectoryFinished) {
-//                    if (!deliveredFirstWobble) {
-//                        newGameState(GameState.DRIVE_TO_SECOND_WOBBLE_MIDWAY);
-//                        deliveredFirstWobble = true;
-//                    } else {
-//                        newGameState(GameState.RETURN_TO_NEST);
-//                        elapsedTime.reset();
-//                    }
-//                }
-//                break;
-//            case DELIVER_WOBBLE:
-//                if (trajectoryFinished) {
-//                    if (yeetSystem.placed()) {
-//                        newGameState(GameState.STRAFE_OUT_FROM_WOBBLE);
-//                        elapsedTime.reset();
-//                    }
-//                }
-//                break;
-//            case RETURN_TO_NEST:
-//                if (trajectoryFinished) {
-//                    newGameState(GameState.COMPLETE);
-//                }
-//                break;
-//            case COMPLETE:
-//                if (pickedUpArm) {
-//                    stop();
-//                }
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public void stop() {
-//        super.stop();
-//        if (tensorflow != null) {
-//            tensorflow.shutdown();
-//        }
-//    }
-//
-//    /**
-//     * Updates the state of the system and updates RoadRunner trajectory
-//     * @param newGameState to switch to
-//     */
-//    protected void newGameState(GameState newGameState) {
-//        currentGameState = newGameState;
-//        currentPosition = roadRunnerDriveSystem.getPositionEstimate();
-//
-//        if (currentGameState == GameState.DELIVER_WOBBLE) {
-//            trajectory = Trajectories.getTrajectory(targetRegion, currentPosition, deliveredFirstWobble);
-//        } else {
-//            trajectory = Trajectories.getTrajectory(currentGameState, currentPosition);
-//        }
-//
-//        if (trajectory != null) {
-//            roadRunnerDriveSystem.followTrajectoryAsync(trajectory);
-//        }
-//    }
-//
-//    /**
-//     * Calibrates RoadRunner using Vuforia data
-//     * Because camera is sideways, the x offset corresponds to y coordinates and visa versa
-//     * Vuforia is in millimeters and everything else is in inches
-//     */
-//    private void calibrateLocation() {
-//        double xUpdate = Coordinates.CALIBRATION.getX() - (vuforia.getYOffset() / Constants.mmPerInch - tileWidth);
-//        double yUpdate = Coordinates.CALIBRATION.getY() + vuforia.getXOffset() / Constants.mmPerInch;
-//        roadRunnerDriveSystem.setPoseEstimate(new Pose2d(xUpdate, yUpdate));
-//    }
-//}
+
+package org.firstinspires.ftc.teamcode.opmodes.autonomous;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.components.ArmSystem;
+import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.TensorFlow;
+import org.firstinspires.ftc.teamcode.components.Vuforia;
+import org.firstinspires.ftc.teamcode.components.WheelSystem;
+import org.firstinspires.ftc.teamcode.helpers.Constants;
+import org.firstinspires.ftc.teamcode.helpers.Coordinates;
+
+import org.firstinspires.ftc.teamcode.helpers.GameState;
+import org.firstinspires.ftc.teamcode.helpers.RouteState;
+import org.firstinspires.ftc.teamcode.helpers.TeamState;
+import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
+
+import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
+
+@Autonomous(name = "AutonomousOpMode", group = "Autonomous")
+public class AutonomousOpModeTop extends BaseOpMode {
+
+    private static final String ELEVATOR_MOTOR = "elevator-motor";
+    private static final String RELEASER = "releaser";
+
+    private static final String SPIN_WHEEL = "spin-wheel";
+    private static final String WEBCAM = "Webcam 1";
+
+    private GameState currentGameState;
+    protected TeamState teamState;
+
+    private int level;
+
+    // Systems
+    private TensorFlow tensorflow;
+    private Vuforia vuforia;
+
+    @Override
+    public void init() {
+        newGameState(GameState.INITIAL);
+        super.init();
+        driveSystem.initMotors();
+        vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
+        tensorflow = new TensorFlow(vuforia);
+        armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
+        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        vuforia.activate();
+        tensorflow.activate();
+        newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
+    }
+
+    @Override
+    public void loop() {
+        telemetry.addData("GameState", currentGameState);
+
+        switch (currentGameState) {
+            case DRIVE_TO_BARCODE_CENTER:
+                if (driveSystem.getTicks() < 543){
+                    driveSystem.setAllMotorPower(0);
+                    newGameState(GameState.DETECT_BARCODE);
+                }
+                //move(Coordinates.RED_TOP_CENTERBARCODE, Coordinates.BLUE_TOP_CENTERBARCODE);
+                newGameState(GameState.DETECT_BARCODE);
+                break;
+
+            case DETECT_BARCODE:
+                if (level == 1) {
+                    //move(Coordinates.RED_TOP_LEFTBARCODE, Coordinates.BLUE_TOP_RIGHTBARCODE);
+                }
+                if (level == 2) {
+                    move(Coordinates.RED_TOP_LEFTBARCODE, Coordinates.BLUE_TOP_LEFTBARCODE);
+                }
+                if (level == 3) {
+                    stop();
+                }
+                for (Recognition recognition : tensorflow.getInference()) {
+                    if (recognition.getLabel().equals("Marker")) {
+                        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+                    } else {
+                        level++;
+                    }
+                }
+                break;
+
+            case DRIVE_TO_ALLIANCE_HUB:
+                move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
+                newGameState(GameState.PLACE_CUBE);
+                break;
+
+            case PLACE_CUBE:
+                switch (level) {
+                    case 0:
+                        armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_MID);
+                        break;
+                    case 1:
+                        if (teamState == TeamState.RED) {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+                        } else {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+                        }
+                        break;
+                    case 2:
+                        if (teamState == TeamState.RED) {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+                        } else {
+                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+                        }
+                        break;
+                }
+                armSystem.release(true);
+                newGameState(GameState.PARK_IN_WAREHOUSE);
+                break;
+
+            case PARK_IN_WAREHOUSE:
+                move(Coordinates.RED_WAREHOUSE, Coordinates.BLUE_WAREHOUSE);
+                newGameState(GameState.COMPLETE);
+                break;
+
+            case COMPLETE:
+                stop();
+                break;
+        }
+        telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        if (tensorflow != null) {
+            tensorflow.shutdown();
+        }
+    }
+
+    /**
+     * Updates the state of the system and updates RoadRunner trajectory
+     * @param newGameState to switch to
+     */
+    protected void newGameState(GameState newGameState) {
+        currentGameState = newGameState;
+    }
+
+    protected void move(Coordinates redTeamCoords, Coordinates blueTeamCoords) {
+        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[2];
+        double baseTime = elapsedTime.seconds();
+        while (elapsedTime.seconds() < baseTime + deltaTime) {
+            driveSystem.joystickDrive(0, xPower, 0);
+        }
+        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+
+        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[3];
+        baseTime = elapsedTime.seconds();
+        while (elapsedTime.seconds() < baseTime + deltaTime) {
+            driveSystem.joystickDrive(0, 0, yPower);
+        }
+        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+    }
+}
