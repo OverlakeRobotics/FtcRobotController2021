@@ -13,7 +13,7 @@ public class BasicTeleDrive extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        driveSystem.joystickDrive(rx, lx, ly);
+        //driveSystem.joystickDrive(rx, lx, ly);
 
         telemetry.addData("rx", rx);
         telemetry.addData("lx", lx);

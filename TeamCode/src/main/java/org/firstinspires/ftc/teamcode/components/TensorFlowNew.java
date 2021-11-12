@@ -8,14 +8,12 @@ import org.firstinspires.ftc.teamcode.helpers.ObjectEnums;
 import java.util.EnumMap;
 import java.util.List;
 
-public class TensorFlow {
+public class TensorFlowNew {
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
-            "Ball",
             "Cube",
             "Duck",
-            "Marker"
     };
 
     private TFObjectDetector tfod; //declaring objectDetector
@@ -23,11 +21,11 @@ public class TensorFlow {
     /**
      * Constructor for TensorFlow
      */
-    public TensorFlow(Vuforia vuforiaSystem) {
+    public TensorFlowNew(Vuforia vuforiaSystem) {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(); //creating parameters
         tfodParameters.minResultConfidence = 0.3f; //minimumConfidenceNecessaryForActingOnDetection
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforiaSystem.getVuforiaLocalizer()); //create objectDetector
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS[0], LABELS[1], LABELS[2], LABELS[3]); //loading models
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS[0], LABELS[1]); //loading models
         tfod.activate(); //turnOn
     }
 
@@ -72,30 +70,44 @@ public class TensorFlow {
         }
     }
 
-    /**
-     * Returns the target region currently selected
-     * @return the target region currently selected
-     */
-    public ObjectEnums getObject() {
-        if (tfod == null) {
-            return ObjectEnums.NADA;
-        }
+
+    public ArmSystem.ElevatorState getObjectNew() {
         List<Recognition> recognitionList = getInference();
-        if (recognitionList.size() == 1 && recognitionList.get(0).getConfidence() >= 0.4) {
-            if (recognitionList.get(0).getLabel().equals(LABELS[0])){
-                return ObjectEnums.BALL;
-            }
-            if (recognitionList.get(0).getLabel().equals(LABELS[1])){
-                return ObjectEnums.CUBE;
-            }
-            if (recognitionList.get(0).getLabel().equals(LABELS[2])){
-                return ObjectEnums.DUCK;
-            }
-            if (recognitionList.get(0).getLabel().equals(LABELS[3])){
-                return ObjectEnums.MARKER;
+//        int qDuck = -1;
+//        int qCube = -1;
+//        int type = -1;
+//        int i = -1;
+        if (recognitionList.size() >= 1){
+            for (Recognition recognitions : recognitionList){
+                if (recognitions.getConfidence() >= 0.4 && recognitions.getHeight() < 5.3){ /* TODO CHANGE */
+                    if (recognitions.getLeft() < 12){ // TODO VALUES CHANGE
+                        // DO NOTHING
+                    }
+                    if (recognitions.getLeft() < 34){
+                        return ArmSystem.ElevatorState.LEVEL_TOP;
+                    }
+                    else if (recognitions.getLeft() < 53){
+                        return ArmSystem.ElevatorState.LEVEL_MID;
+                    }
+                    else if (recognitions.getLeft() < 89){
+                        return ArmSystem.ElevatorState.LEVEL_BOTTOM;
+                    }
+                    else{
+
+                    }
+                }
             }
         }
-        return ObjectEnums.NADA;
+        double giveUpHope = Math.random();
+        if (giveUpHope < 0.33){
+            return ArmSystem.ElevatorState.LEVEL_BOTTOM;
+        }
+        if (giveUpHope < 0.66){
+            return ArmSystem.ElevatorState.LEVEL_MID;
+        }
+        else{
+            return ArmSystem.ElevatorState.LEVEL_TOP;
+        }
     }
 }
 

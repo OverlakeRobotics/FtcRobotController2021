@@ -16,12 +16,12 @@ public class WeightSystem {
 
 
     public WeightSystem(AnalogInput input0, AnalogInput input1, AnalogInput input2, AnalogInput input3, LED red, LED green){
-        sensorAsAnalogInput0 = input0; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput0")
-        sensorAsAnalogInput1 = input1; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput1")
-        sensorAsAnalogInput2 = input2; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput2")
-        sensorAsAnalogInput3 = input3; // hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3")
-        weightIndicatorRed = red; // hardwareMap.get(LED.class,"weightIndicatorRed")
-        weightIndicatorGreen = green; // hardwareMap.get(LED.class,"weightIndicatorGreen")
+        sensorAsAnalogInput0 = input0;
+        sensorAsAnalogInput1 = input1;
+        sensorAsAnalogInput2 = input2;
+        sensorAsAnalogInput3 = input3;
+        weightIndicatorRed = red;
+        weightIndicatorGreen = green;
 
         weightIndicatorGreen.enableLight(false); // light should be off at start
         weightIndicatorRed.enableLight(false);
