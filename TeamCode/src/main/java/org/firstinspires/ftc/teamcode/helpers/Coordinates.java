@@ -59,7 +59,7 @@ public enum Coordinates {
 
     // Parking position
     RED_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    BLUE_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    BLUE_PARKING_POSITION(-2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
 
     // Carousel LOOK AT FIELD
     RED_CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
