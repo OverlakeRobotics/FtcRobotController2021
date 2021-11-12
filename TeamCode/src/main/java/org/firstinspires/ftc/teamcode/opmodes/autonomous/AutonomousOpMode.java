@@ -12,12 +12,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
+import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
 import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
 import org.firstinspires.ftc.teamcode.helpers.GameState;
+import org.firstinspires.ftc.teamcode.helpers.ObjectEnums;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
@@ -29,6 +31,7 @@ public class AutonomousOpMode extends BaseOpMode {
 
     private static final String ELEVATOR_MOTOR = "elevator-motor";
     private static final String RELEASER = "releaser";
+    private ArmSystem.ElevatorState elevatorState;
 
     private static final String SPIN_WHEEL = "spin-wheel";
     private static final String WEBCAM = "Webcam 1";
@@ -40,6 +43,7 @@ public class AutonomousOpMode extends BaseOpMode {
 
     // Systems
     private TensorFlow tensorflow;
+    private TensorFlowNew tensorflowNew;
     private Vuforia vuforia;
 
     @Override
@@ -49,6 +53,7 @@ public class AutonomousOpMode extends BaseOpMode {
         driveSystem.initMotors();
         vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
         tensorflow = new TensorFlow(vuforia);
+        tensorflowNew = new TensorFlowNew(vuforia);
         armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
     }
@@ -58,6 +63,7 @@ public class AutonomousOpMode extends BaseOpMode {
         super.start();
         vuforia.activate();
         tensorflow.activate();
+        tensorflowNew.activate();
         newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
     }
 
@@ -76,7 +82,9 @@ public class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DETECT_BARCODE:
-                if (level == 1) {
+                elevatorState = tensorflowNew.getObjectNew();
+                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+                /*if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
                 }
                 if (level == 2) {
@@ -85,22 +93,24 @@ public class AutonomousOpMode extends BaseOpMode {
                 if (level == 3) {
                     stop();
                 }
-                for (Recognition recognition : tensorflow.getInference()) {
-                    if (recognition.getLabel().equals("Marker")) {
-                        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                    } else {
-                        level++;
-                    }
+                if (tensorflow.getObject() == ObjectEnums.DUCK){
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
                 }
+                else {
+                    level++;
+                }*/
                 break;
-
             case DRIVE_TO_ALLIANCE_HUB:
                 move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
                 newGameState(GameState.PLACE_CUBE);
                 break;
 
             case PLACE_CUBE:
-                switch (level) {
+                armSystem.goToLevel(elevatorState);
+                armSystem.release(true);
+                newGameState(GameState.DRIVE_TO_CAROUSEL);
+                break;
+                /*switch (level) {
                     case 0:
                         armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_MID);
                         break;
@@ -121,7 +131,7 @@ public class AutonomousOpMode extends BaseOpMode {
                 }
                 armSystem.release(true);
                 newGameState(GameState.DRIVE_TO_CAROUSEL);
-                break;
+                break;*/
 
             case DRIVE_TO_CAROUSEL:
                 move(Coordinates.RED_CAROUSEL, Coordinates.BLUE_CAROUSEL);
