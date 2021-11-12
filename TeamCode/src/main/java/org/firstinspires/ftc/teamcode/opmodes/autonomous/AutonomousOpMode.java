@@ -262,8 +262,8 @@ public class AutonomousOpMode extends BaseOpMode {
      * Because camera is sideways, the x offset corresponds to y coordinates and visa versa
      * Vuforia is in millimeters and everything else is in inches
      */
-    private void calibrateLocation() {
+    /*private void calibrateLocation() {
         double xUpdate = Coordinates.CALIBRATION.getX() - (vuforia.getYOffset() / Constants.mmPerInch - tileWidth);
         double yUpdate = Coordinates.CALIBRATION.getY() + vuforia.getXOffset() / Constants.mmPerInch;
-    }
+    }*/
 }
