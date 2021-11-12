@@ -1,4 +1,4 @@
-
+/*
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -147,6 +147,7 @@ public class AutonomousOpModeTop extends BaseOpMode {
      * Updates the state of the system and updates RoadRunner trajectory
      * @param newGameState to switch to
      */
+/*
     protected void newGameState(GameState newGameState) {
         currentGameState = newGameState;
     }
@@ -169,3 +170,4 @@ public class AutonomousOpModeTop extends BaseOpMode {
         Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }
+*/

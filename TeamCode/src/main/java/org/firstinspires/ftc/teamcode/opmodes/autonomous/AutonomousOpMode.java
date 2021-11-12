@@ -37,6 +37,7 @@ public class AutonomousOpMode extends BaseOpMode {
     private static final String WEBCAM = "Webcam 1";
 
     private GameState currentGameState;
+    private RouteState currentRouteState;
     protected TeamState teamState;
 
     private int level;
@@ -108,7 +109,7 @@ public class AutonomousOpMode extends BaseOpMode {
             case PLACE_CUBE:
                 armSystem.goToLevel(elevatorState);
                 armSystem.release(true);
-                newGameState(GameState.DRIVE_TO_CAROUSEL);
+                newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 break;
                 /*switch (level) {
                     case 0:
@@ -149,6 +150,11 @@ public class AutonomousOpMode extends BaseOpMode {
 
             case PARK_IN_DEPOT:
                 move(Coordinates.RED_DEPOT, Coordinates.BLUE_DEPOT);
+                newGameState(GameState.COMPLETE);
+                break;
+
+            case PARK_IN_WAREHOUSE:
+                move(Coordinates.RED_WAREHOUSE, Coordinates.BLUE_WAREHOUSE);
                 newGameState(GameState.COMPLETE);
                 break;
 
