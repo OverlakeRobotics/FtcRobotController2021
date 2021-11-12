@@ -139,6 +139,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("left_position (%d)", i), recognition.getLeft());
+                            telemetry.addData(String.format("right_position (%d)", i), recognition.getRight());
+                            telemetry.addData(String.format("height (%d)", i), recognition.getHeight());
                             telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                             telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                     recognition.getLeft(), recognition.getTop());
