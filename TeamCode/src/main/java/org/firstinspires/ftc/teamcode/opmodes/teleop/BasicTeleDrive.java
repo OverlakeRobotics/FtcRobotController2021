@@ -46,7 +46,7 @@ public class BasicTeleDrive extends BaseOpMode {
 
         weightSystem.checkWeight();
 
-        driveSystem.joystickDrive(rx, lx, ly);
+        driveSystem.drive(rx, lx, ly);
 
         telemetry.addData("rx", rx);
         telemetry.addData("lx", lx);

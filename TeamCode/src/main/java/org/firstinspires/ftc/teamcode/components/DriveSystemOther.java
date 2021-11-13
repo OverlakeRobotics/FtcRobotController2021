@@ -6,6 +6,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.helpers.Constants;
+import org.firstinspires.ftc.teamcode.helpers.Coordinates;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -48,20 +52,11 @@ public class DriveSystemOther {
     private double mTargetHeading;
     public boolean mSlowDrive;
 
-    /**
-     * Handles the data for the abstract creation of a drive system with four wheels
-     */
-    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors, BNO055IMU imu) {
+    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors, ImuSystem imuSystem) {
         this.motors = motors;
         mTargetTicks = 0;
         initMotors();
-        imuSystem = new ImuSystem(imu);
-    }
-
-    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors) {
-        this.motors = motors;
-        mTargetTicks = 0;
-        initMotors();
+        this.imuSystem = imuSystem;
     }
 
     /**
@@ -254,6 +249,14 @@ public class DriveSystemOther {
         return turn(diffFromAbs(degrees), maxPower);
     }
 
+    public static double[] TicksMM(Coordinates robotCoordinate, Coordinates newCoordinate) {
+        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
+        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
+        double XMM = (deltaX/ Constants.tileWidth) * Constants.MM_IN_TILE;
+        double YMM = (deltaY/Constants.tileWidth) * Constants.MM_IN_TILE;
+        return new double[]{XMM, YMM};
+    }
+
     /**
      * Turns the robot by a given number of degrees
      * @param degrees The degrees to turn the robot by
@@ -342,7 +345,7 @@ public class DriveSystemOther {
      * @param leftPower sets the left side power of the robot
      * @param rightPower sets the right side power of the robot
      */
-    private void tankDrive(double leftPower, double rightPower) {
+    public void tankDrive(double leftPower, double rightPower) {
         for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
             MotorNames name = entry.getKey();
             DcMotor motor = entry.getValue();
