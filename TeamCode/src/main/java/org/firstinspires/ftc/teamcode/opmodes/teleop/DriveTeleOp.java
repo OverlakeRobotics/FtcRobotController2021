@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
+import org.firstinspires.ftc.teamcode.components.WeightSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
-import org.firstinspires.ftc.teamcode.helpers.Target;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 import java.util.ArrayList;
@@ -21,21 +21,6 @@ import java.util.Set;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Real Teleop", group="TeleOp")
 public class DriveTeleOp extends BaseOpMode {
-
-    private ArmSystem armSystem;
-    private DriveSystem driveSystem;
-    private TurnTableSystem turnTableSystem;
-    private IntakeSystem intakeSystem;
-
-
-    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
-    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
-    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
-    private static final String MOTOR_BACK_LEFT = "motor-back-left";
-
-
-
-    private static final String MOTOR_TURNTABLE = "motor-turn-table";
 
 
     // FunctionsList

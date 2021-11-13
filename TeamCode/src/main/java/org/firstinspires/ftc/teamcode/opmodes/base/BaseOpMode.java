@@ -19,6 +19,10 @@ public abstract class BaseOpMode extends OpMode {
     private static final String MOTOR_BACK_RIGHT = "motor-back-right";
     private static final String MOTOR_BACK_LEFT = "motor-back-left";
 
+    private static final String WHEEL_MOTOR = "wheelMotor";
+    private static final String INTAKE_MOTOR = "intakeMotor";
+
+
     protected DriveSystem driveSystem;
     protected WeightSystem weightSystem;
     protected ArmSystem armSystem;

@@ -35,6 +35,7 @@ public class ArmSystem {
     private EnumMap <ElevatorState, Integer> mapToPosition;
 
     public enum ElevatorState {
+        LEVEL_NADA,
         LEVEL_TOP,
         LEVEL_MID,
         LEVEL_BOTTOM

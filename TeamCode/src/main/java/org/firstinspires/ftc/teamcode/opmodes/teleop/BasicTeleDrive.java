@@ -6,10 +6,6 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 @TeleOp(name = "BasicTeleDrive_TEST", group = "TeleOp")
 public class BasicTeleDrive extends BaseOpMode {
-    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
-    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
-    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
-    private static final String MOTOR_BACK_LEFT = "motor-back-left";
 
     @Override
     public void loop() {

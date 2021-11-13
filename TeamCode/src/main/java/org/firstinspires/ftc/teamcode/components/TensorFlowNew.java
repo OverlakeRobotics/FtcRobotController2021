@@ -70,6 +70,17 @@ public class TensorFlowNew {
         }
     }
 
+    public ArmSystem.ElevatorState getObjectNew(int num) {
+        if (num == 1){
+            return ArmSystem.ElevatorState.LEVEL_TOP;
+        }
+        if (num == 2){
+            return ArmSystem.ElevatorState.LEVEL_MID;
+        }
+        if (num == 3){
+            return ArmSystem.ElevatorState.LEVEL_BOTTOM
+        }
+    }
 
     public ArmSystem.ElevatorState getObjectNew() {
         List<Recognition> recognitionList = getInference();
@@ -93,12 +104,12 @@ public class TensorFlowNew {
                         return ArmSystem.ElevatorState.LEVEL_BOTTOM;
                     }
                     else{
-
                     }
                 }
             }
         }
-        double giveUpHope = Math.random();
+        return ArmSystem.ElevatorState.LEVEL_NADA;
+        /*double giveUpHope = Math.random();
         if (giveUpHope < 0.33){
             return ArmSystem.ElevatorState.LEVEL_BOTTOM;
         }
@@ -107,7 +118,7 @@ public class TensorFlowNew {
         }
         else{
             return ArmSystem.ElevatorState.LEVEL_TOP;
-        }
+        }*/
     }
 }
 

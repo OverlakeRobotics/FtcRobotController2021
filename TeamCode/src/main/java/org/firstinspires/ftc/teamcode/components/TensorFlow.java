@@ -57,6 +57,7 @@ public class TensorFlow {
      * Activates TensorFlow
      */
     public void activate() {
+
         if (tfod != null) {
             tfod.activate();
         }

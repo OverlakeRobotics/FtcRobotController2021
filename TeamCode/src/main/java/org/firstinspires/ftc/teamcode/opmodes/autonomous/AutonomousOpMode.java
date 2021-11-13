@@ -31,6 +31,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     private static final String ELEVATOR_MOTOR = "elevator-motor";
     private static final String RELEASER = "releaser";
     private ArmSystem.ElevatorState elevatorState;
+    boolean[] barcodes;
 
     private static final String SPIN_WHEEL = "spin-wheel";
     private static final String WEBCAM = "Webcam 1";
@@ -56,6 +57,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         tensorflowNew = new TensorFlowNew(vuforia);
         armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
+        barcodes = new boolean[3];
     }
 
     @Override
@@ -63,7 +65,15 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.start();
         vuforia.activate();
         //tensorflow.activate();
-        tensorflowNew.activate();
+        for (int x = 1; x <= 3; x++){
+            tensorflowNew.activate(x);
+            barcodes[x] = (tensorflowNew.getInference().size() > 0);
+        }
+        for (int x = 1; x <= 3; x++){
+            if (barcodes[x] == true){
+                elevatorState = tensorflowNew.getObjectNew(x);
+            }
+        }
         newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
     }
 
