@@ -65,7 +65,6 @@ public enum Coordinates {
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
-
     private double x;
     private double y;
 
