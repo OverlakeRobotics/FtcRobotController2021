@@ -9,7 +9,7 @@ public class WheelSystem {
 
 
     // TODO - TEST AND FIND THIS NUMBER
-    private static final double optimalSpinningSpeed = 0.75;
+    public static final double optimalSpinningSpeed = 0.75;
     // this should be the fastest possible speed that we can go without causing the duck to fly off the wheel (on edge of carousel)
 
 

@@ -16,7 +16,8 @@ public class IntakeSystem {
     // IntakeState
     private enum IntakeState {
         IDLE,
-        TAKE_IN
+        TAKE_IN,
+        SPIT_OUT
     }
     private IntakeState currentState;
 
@@ -48,6 +49,26 @@ public class IntakeSystem {
         if (currentState != IntakeState.TAKE_IN) {
             currentState = IntakeState.TAKE_IN;
             motor.setPower(1);
+        }
+    }
+
+    /**
+     * Intakes rings
+     */
+    public void spit_out() {
+        if (currentState != IntakeState.SPIT_OUT) {
+            currentState = IntakeState.SPIT_OUT;
+            motor.setPower(-1);
+        }
+    }
+
+    /**
+     * Intakes rings
+     */
+    public void Carousel() {
+        if (currentState != IntakeState.SPIT_OUT) {
+            currentState = IntakeState.SPIT_OUT;
+            motor.setPower(-1 * WheelSystem.optimalSpinningSpeed);
         }
     }
 
