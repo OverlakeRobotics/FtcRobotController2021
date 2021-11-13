@@ -198,4 +198,22 @@ public class AutonomousOpMode extends BaseOpMode {
         }
         Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
+
+    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords) {
+        double deltaTicks = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[2];
+        double baseTime = elapsedTime.seconds();
+        while (elapsedTime.seconds() < baseTime + deltaTime) {
+            driveSystem.joystickDrive(0, xPower, 0);
+        }
+        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+
+        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[3];
+        baseTime = elapsedTime.seconds();
+        while (elapsedTime.seconds() < baseTime + deltaTime) {
+            driveSystem.joystickDrive(0, 0, yPower);
+        }
+        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+    }
 }

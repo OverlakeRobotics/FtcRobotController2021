@@ -138,6 +138,15 @@ public class DriveSystem {
         return new double[]{Xtime, Ytime, xMagnitude, yMagnitude};
     }
 
+    public static double[] TicksCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {
+        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
+        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
+        double XTicks = (deltaX/Constants.tileWidth) * Constants.TICKS_IN_TILE;
+        double YTicks = (deltaY/Constants.tileWidth) * Constants.TICKS_IN_TILE;
+        return new double[]{XTicks, YTicks};
+    }
+
+
     //Todo Add functionality for gyro assisted strafe
 
     //Todo God mode
