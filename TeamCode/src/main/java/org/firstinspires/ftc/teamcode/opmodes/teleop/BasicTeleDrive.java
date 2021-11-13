@@ -37,10 +37,10 @@ public class BasicTeleDrive extends BaseOpMode {
             turnTableSystem.moveCounter();
         }
 
-        while (gamepad1.dpad_up){
+        if (gamepad1.dpad_up){
             armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
         }
-        while (gamepad1.dpad_down){
+        if (gamepad1.dpad_down){
             armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
         }
 
