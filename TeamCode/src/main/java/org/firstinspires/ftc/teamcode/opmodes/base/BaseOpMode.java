@@ -36,6 +36,7 @@ public abstract class BaseOpMode extends OpMode {
                 hardwareMap.get(AnalogInput.class, "sensorAsAnalogInput3"),
                 hardwareMap.get(LED.class,"weightIndicatorRed"),
                 hardwareMap.get(LED.class,"weightIndicatorGreen"));
+        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, "wheelMotor"));
         elapsedTime = new ElapsedTime();
     }
 
