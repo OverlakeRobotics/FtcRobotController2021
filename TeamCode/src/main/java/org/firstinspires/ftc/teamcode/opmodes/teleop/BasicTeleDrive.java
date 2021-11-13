@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
@@ -35,6 +36,15 @@ public class BasicTeleDrive extends BaseOpMode {
         while (gamepad1.left_bumper){
             turnTableSystem.moveCounter();
         }
+
+        while (gamepad1.dpad_up){
+            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+        }
+        while (gamepad1.dpad_down){
+            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+        }
+
+        weightSystem.checkWeight();
 
         driveSystem.joystickDrive(rx, lx, ly);
 
