@@ -65,8 +65,10 @@ public enum Coordinates {
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
-    private double x;
-    private double y;
+
+    public static Coordinates CURRENT_POSITION;
+    private static double x;
+    private static double y;
 
     /**
      * Constructor
@@ -96,11 +98,11 @@ public enum Coordinates {
         return y;
     }
 
-    public void updateX(double x) {
+    public static void updateX(double x) {
         this.x = x;
     }
 
-    public void updateY(double y) {
+    public static void updateY(double y) {
         this.y = y;
     }
 }
