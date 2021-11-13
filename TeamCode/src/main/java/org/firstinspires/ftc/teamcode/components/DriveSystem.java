@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.components;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
-import android.util.Range;
+import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
@@ -18,12 +19,25 @@ public class DriveSystem {
     //Constants
     private static final double MAIN_SPEED_COEFFICIENT = 1;
     private static final double SLOW_DRIVE_SPEED_COEFFICIENT = 0.25;
+    private static final double MIN_SPEED = 0.37;
+    private final double TICKS_IN_MM = 3.51;
+    public static final double STRAFE_COEFF = 0.09;
+    public static final String TAG = "DriveSystem";
+    public static final double P_TURN_COEFF = 0.012;     // Larger is more responsive, but also less stable
+    public static final double HEADING_THRESHOLD = 1 ;      // As tight as we can make it with an integer gyro
 
     //Motors
     private DcMotor motorFrontRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorBackRight;
     private DcMotor motorBackLeft;
+
+    public ImuSystem imuSystem;
+
+    private int mTargetTicks;
+    private double mTargetHeading;
+    public boolean mSlowDrive;
+
 
     //IMUs (for Gyros)
     private BNO055IMU IMUSystemOne;
@@ -83,6 +97,64 @@ public class DriveSystem {
     }
 
     /**
+     * Turns the robot by a given number of degrees
+     * @param degrees The degrees to turn the robot by
+     * @param maxPower The maximum power of the motors
+     */
+    public boolean turn(double degrees, double maxPower) {
+        // Since controller hub is vertical, use pitch instead of heading
+        double heading = imuSystem.getHeading();
+        // if controller hub is flat: double heading = imuSystem.getHeading();
+        if(mTargetHeading == 0) {
+            mTargetHeading = (heading + degrees) % 360;
+            Log.d(TAG, "Setting Heading -- Target: " + mTargetHeading);
+
+            Log.d(TAG, "Degrees: " + degrees);
+        }
+        double difference = mTargetHeading - heading;
+        Log.d(TAG,"Difference: " + difference);
+        return onHeading(maxPower, heading);
+
+    }
+
+
+    private double computeDegreesDiff() {
+        double diff = mTargetHeading - imuSystem.getHeading();
+        return Math.abs(diff) == 180 ? diff : diff % 180;
+    }
+
+    public boolean onHeading(double speed, double heading) {
+        double leftSpeed;
+
+        // determine turn power based on +/- error
+        double error = computeDegreesDiff();
+
+        // If it gets there: stop
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            mTargetHeading = 0;
+            setAllMotorPower(0.0);
+            return true;
+        }
+
+        // Go full speed until 60% there
+        leftSpeed = Math.abs(error) / 125.0;
+
+        Log.d(TAG, "Left Speed: " + leftSpeed);
+        leftSpeed = Range.clip(leftSpeed, MIN_SPEED, 1.0);
+
+        // Send desired speeds to motors.
+        tankDrive(leftSpeed * Math.signum(error), -leftSpeed * Math.signum(error));
+        return false;
+    }
+    
+
+    private void tankDrive(double leftPower, double rightPower) {
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(leftPower);
+        motorBackRight.setPower(rightPower);
+        motorBackLeft.setPower(0);
+    }
+    /**
      * Sets the motor's power, taking speed into account.
      * @param motor The motor that will have a change in power
      * @param power The speed of the motor, from -1 to 1
@@ -126,6 +198,13 @@ public class DriveSystem {
         int num = 0;
         num += motorBackLeft.getCurrentPosition() + motorBackRight.getCurrentPosition() + motorFrontLeft.getCurrentPosition() + motorFrontRight.getCurrentPosition();
         return num;
+    }
+
+    public void driveTicks(int ticks) {
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getTargetPosition() + ticks);
+        motorFrontRight.setTargetPosition(motorFrontRight.getTargetPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getTargetPosition() + ticks);
+        motorBackRight.setTargetPosition(motorBackRight.getTargetPosition() + ticks);
     }
 
     public static double[] TimeCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {

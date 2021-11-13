@@ -17,6 +17,10 @@ public class Constants {
 
     private final static int CPS_STEP = 0x10000;
 
+    public final double TICKS_IN_MM = 3.51;
+    public final double MM_IN_TILE = mmPerInch * 24;
+    public static final double TICKS_IN_TILE = TICKS_IN_MM * MM_IN_TILE;
+
     public static final float mmPerInch = 25.4f;                    // constant for converting measurements from inches to millimeters
     public static int TICKS_PER_REV = 2400;
     public static int FULL_POWER_TILE_TIME = 2400; // TODO TEST THIS VALUE
