@@ -68,9 +68,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         for (int x = 1; x <= 3; x++){
             tensorflowNew.activate(x);
             barcodes[x] = (tensorflowNew.getInference().size() > 0);
-        }
-        for (int x = 1; x <= 3; x++){
-            if (barcodes[x] == true){
+            if (barcodes[x]){
                 elevatorState = tensorflowNew.getObjectNew(x);
             }
         }
@@ -92,7 +90,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DETECT_BARCODE:
-                elevatorState = tensorflowNew.getObjectNew();
+                //elevatorState = tensorflowNew.getObjectNew();
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
                 /*if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
