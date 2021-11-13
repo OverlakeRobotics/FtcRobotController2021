@@ -113,7 +113,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         if (tfod != null) {
             //tfod.setClippingMargins(0, 0, 720, 1300);
             tfod.setClippingMargins(100, 50, 100, 2 * 433);
+            //tfod.setClippingMargins(100, 50 + 433, 100, 1 * 433);
+            //tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
             //tfod.setClippingMargins(100, 380, 400, 380);
+            //tfod.setZoom(4.0, 16/9);
             tfod.activate();
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
@@ -122,6 +125,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
         }
+        initTfod();
+
+        initTfod();
 
 
         /** Wait for the game to begin */

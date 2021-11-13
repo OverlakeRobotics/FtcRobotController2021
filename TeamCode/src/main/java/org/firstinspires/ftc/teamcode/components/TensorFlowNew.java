@@ -54,8 +54,17 @@ public class TensorFlowNew {
     /**
      * Activates TensorFlow
      */
-    public void activate() {
+    public void activate(int x) {
         if (tfod != null) {
+            if(x == 1){
+                tfod.setClippingMargins(100, 50, 100, 2 * 433);
+            }
+            else if (x == 2){
+                tfod.setClippingMargins(100, 50 + 433, 100, 1 * 433);
+            }
+            else if (x == 3){
+                tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
+            }
             tfod.activate();
         }
 
@@ -71,54 +80,29 @@ public class TensorFlowNew {
     }
 
     public ArmSystem.ElevatorState getObjectNew(int num) {
-        if (num == 1){
+        if (num == 1) {
             return ArmSystem.ElevatorState.LEVEL_TOP;
         }
-        if (num == 2){
+        if (num == 2) {
             return ArmSystem.ElevatorState.LEVEL_MID;
         }
-        if (num == 3){
-            return ArmSystem.ElevatorState.LEVEL_BOTTOM
-        }
-    }
-
-    public ArmSystem.ElevatorState getObjectNew() {
-        List<Recognition> recognitionList = getInference();
-//        int qDuck = -1;
-//        int qCube = -1;
-//        int type = -1;
-//        int i = -1;
-        if (recognitionList.size() >= 1){
-            for (Recognition recognitions : recognitionList){
-                if (recognitions.getConfidence() >= 0.4 && recognitions.getHeight() < 5.3){ /* TODO CHANGE */
-                    if (recognitions.getLeft() < 12){ // TODO VALUES CHANGE
-                        // DO NOTHING
-                    }
-                    if (recognitions.getLeft() < 34){
-                        return ArmSystem.ElevatorState.LEVEL_TOP;
-                    }
-                    else if (recognitions.getLeft() < 53){
-                        return ArmSystem.ElevatorState.LEVEL_MID;
-                    }
-                    else if (recognitions.getLeft() < 89){
-                        return ArmSystem.ElevatorState.LEVEL_BOTTOM;
-                    }
-                    else{
-                    }
-                }
+        if (num == 3) {
+            return ArmSystem.ElevatorState.LEVEL_BOTTOM;
+        } else {
+            double giveUpHope = Math.random();
+            if (giveUpHope < 0.33) {
+                return ArmSystem.ElevatorState.LEVEL_BOTTOM;
+            }
+            if (giveUpHope < 0.66) {
+                return ArmSystem.ElevatorState.LEVEL_MID;
+            } else {
+                return ArmSystem.ElevatorState.LEVEL_TOP;
             }
         }
-        return ArmSystem.ElevatorState.LEVEL_NADA;
-        /*double giveUpHope = Math.random();
-        if (giveUpHope < 0.33){
-            return ArmSystem.ElevatorState.LEVEL_BOTTOM;
-        }
-        if (giveUpHope < 0.66){
-            return ArmSystem.ElevatorState.LEVEL_MID;
-        }
-        else{
-            return ArmSystem.ElevatorState.LEVEL_TOP;
-        }*/
+    }
+    }
+
+        /*
     }
 }
 
