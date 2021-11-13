@@ -15,7 +15,7 @@ import java.util.EnumMap;
 public class TurnTableSystem {
     // TODO
 
-    private final DcMotorEx rotatorMotor;
+    private final DcMotor rotatorMotor;
 
     //TODO - TEST + CHANGE THESE NUMBERS
     private static final double CLOSED_POSITION = 0.3;
@@ -34,11 +34,11 @@ public class TurnTableSystem {
 
     private void initMotors() {
         rotatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rotatorMotor.setVelocity(0);
+        rotatorMotor.setPower(0);
 
     }
 
-    public TurnTableSystem(DcMotorEx rotatorMotor){
+    public TurnTableSystem(DcMotor rotatorMotor){
         this.rotatorMotor = rotatorMotor;
         mapToPosition.put(CircleState.LEVEL_BACK, 32);
         mapToPosition.put(CircleState.LEVEL_FORWARD, 16);
@@ -52,6 +52,14 @@ public class TurnTableSystem {
         rotatorMotor.setTargetPosition((this.mapToPosition.get(state)));
         rotatorMotor.setPower(0.75);
         //rotatorMotor.setPower(0);
+    }
+
+    public void moveCounter(){
+        rotatorMotor.setPower(0.5);
+    }
+
+    public void moveClock(){
+        rotatorMotor.setPower(-0.5);
     }
 
     private void goToPosition(int pos){

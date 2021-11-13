@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
+import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.components.WeightSystem;
 import org.firstinspires.ftc.teamcode.components.WheelSystem;
 
@@ -20,7 +21,8 @@ public abstract class BaseOpMode extends OpMode {
     private static final String MOTOR_BACK_LEFT = "motor-back-left";
 
     private static final String WHEEL_MOTOR = "wheelMotor";
-    private static final String INTAKE_MOTOR = "intakeMotor";
+
+    private static final String ROTATOR_MOTOR = "rotatorMotor";
 
 
     protected DriveSystem driveSystem;
@@ -28,6 +30,7 @@ public abstract class BaseOpMode extends OpMode {
     protected ArmSystem armSystem;
     protected WheelSystem wheelSystem;
     protected IntakeSystem intakeSystem;
+    protected TurnTableSystem turnTableSystem;
 
     protected ElapsedTime elapsedTime;
 
@@ -44,6 +47,7 @@ public abstract class BaseOpMode extends OpMode {
                 hardwareMap.get(LED.class,"weightIndicatorGreen"));
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, "wheelMotor"));
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, "intakeMotor"));
+        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, ROTATOR_MOTOR));
         elapsedTime = new ElapsedTime();
     }
 
