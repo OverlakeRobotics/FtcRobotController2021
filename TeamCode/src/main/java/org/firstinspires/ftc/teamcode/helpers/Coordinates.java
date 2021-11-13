@@ -10,6 +10,8 @@ public enum Coordinates {
     // 17 inches is the width of the robot
     STARTING_POSITION(2.5 * Constants.tileWidth, 17),
 
+    CURRENT_POSITION(2.5 * Constants.tileWidth, 17),
+
     //FOR RED TOP
     RED_STARTING_POSITION_TOP((3 * Constants.tileWidth) - 8.5, (0.5 * Constants.tileWidth)),
     RED_TOP_CENTERBARCODE(2 * Constants.tileWidth,(0.5 * Constants.tileWidth) ),
@@ -33,16 +35,6 @@ public enum Coordinates {
     BLUE_BOTTOM_CENTERBARCODE(-2 * Constants.tileWidth,(-1.5 * Constants.tileWidth) ),
     BLUE_BOTTOM_LEFTBARCODE(-2 * Constants.tileWidth, -((1 * Constants.tileWidth) + 3)),
 
-
-
-
-
-
-
-
-
-
-
     // WAREHOUSES DONE!
     RED_WAREHOUSE((3 * Constants.tileWidth) - (8.5), 1.7 * Constants.tileWidth),
     BLUE_WAREHOUSE((-3 * Constants.tileWidth) + (8.5), 1.7 * Constants.tileWidth),
@@ -65,8 +57,6 @@ public enum Coordinates {
     BLUE_DEPOT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_DEPOT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
-
-    public static Coordinates CURRENT_POSITION;
     private static double x;
     private static double y;
 
@@ -99,10 +89,10 @@ public enum Coordinates {
     }
 
     public static void updateX(double x) {
-        this.x = x;
+        CURRENT_POSITION.x = x;
     }
 
     public static void updateY(double y) {
-        this.y = y;
+        CURRENT_POSITION.y = y;
     }
 }

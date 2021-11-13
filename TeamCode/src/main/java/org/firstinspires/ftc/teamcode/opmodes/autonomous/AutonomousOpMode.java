@@ -42,7 +42,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     private int level;
 
     // Systems
-    private TensorFlow tensorflow;
+    //private TensorFlow tensorflow;
     private TensorFlowNew tensorflowNew;
     private Vuforia vuforia;
 
@@ -52,7 +52,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.init();
         driveSystem.initMotors();
         vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
-        tensorflow = new TensorFlow(vuforia);
+        //tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
         armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
@@ -62,7 +62,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     public void start() {
         super.start();
         vuforia.activate();
-        tensorflow.activate();
+        //tensorflow.activate();
         tensorflowNew.activate();
         newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
     }
@@ -101,7 +101,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 }*/
                 break;
             case DRIVE_TO_ALLIANCE_HUB:
-                move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
+                move(Coordinates.RED_ALLIANCE_HUB_BOTTOM, Coordinates.BLUE_ALLIANCE_HUB_BOTTOM);
                 newGameState(GameState.PLACE_CUBE);
                 break;
 
