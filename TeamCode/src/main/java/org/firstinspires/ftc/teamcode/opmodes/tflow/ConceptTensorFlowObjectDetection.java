@@ -51,7 +51,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@TeleOp(name = "NOOOOO PLZ", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
      * the following 4 detectable objects
@@ -111,8 +111,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
         if (tfod != null) {
+            //tfod.setClippingMargins(0, 0, 720, 1300);
+            tfod.setClippingMargins(100, 50, 100, 2 * 433);
+            //tfod.setClippingMargins(100, 380, 400, 380);
             tfod.activate();
-
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
             // If your target is at distance greater than 50 cm (20") you can adjust the magnification value

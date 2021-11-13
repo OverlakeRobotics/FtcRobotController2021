@@ -73,7 +73,7 @@ public class AutonomousTest extends OpMode {
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB:
-                move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
+                move(Coordinates.RED_ALLIANCE_HUB_BOTTOM, Coordinates.BLUE_ALLIANCE_HUB_BOTTOM);
                 newGameState(GameState.PLACE_CUBE);
                 break;
 

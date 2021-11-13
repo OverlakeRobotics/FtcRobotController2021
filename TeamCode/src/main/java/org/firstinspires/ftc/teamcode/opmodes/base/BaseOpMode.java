@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.WeightSystem;
 import org.firstinspires.ftc.teamcode.components.WheelSystem;
 
@@ -22,6 +23,7 @@ public abstract class BaseOpMode extends OpMode {
     protected WeightSystem weightSystem;
     protected ArmSystem armSystem;
     protected WheelSystem wheelSystem;
+    protected IntakeSystem intakeSystem;
 
     protected ElapsedTime elapsedTime;
 
@@ -37,6 +39,7 @@ public abstract class BaseOpMode extends OpMode {
                 hardwareMap.get(LED.class,"weightIndicatorRed"),
                 hardwareMap.get(LED.class,"weightIndicatorGreen"));
         wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, "wheelMotor"));
+        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, "intakeMotor"));
         elapsedTime = new ElapsedTime();
     }
 

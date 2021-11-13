@@ -57,8 +57,8 @@ public enum Coordinates {
     BLUE_DEPOT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_DEPOT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
-    private static double x;
-    private static double y;
+    private double x;
+    private double y;
 
     /**
      * Constructor
