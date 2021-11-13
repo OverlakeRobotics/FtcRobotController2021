@@ -42,28 +42,25 @@ public enum Coordinates {
 
 
 
-    // 82.25
-    // 129.25
-
-    //Calibration
-    CALIBRATION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
 
     // WAREHOUSES DONE!
     RED_WAREHOUSE((3 * Constants.tileWidth) - (8.5), 1.7 * Constants.tileWidth),
     BLUE_WAREHOUSE((-3 * Constants.tileWidth) + (8.5), 1.7 * Constants.tileWidth),
 
     //ALLIANCE HUB
-    RED_ALLIANCE_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    BLUE_ALLIANCE_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    SHARED_HUB(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
+    RED_ALLIANCE_HUB_TOP(1 * Constants.tileWidth,  0.3 * Constants.tileWidth),
+    RED_ALLIANCE_HUB_BOTTOM(1 * Constants.tileWidth, -1.3 * Constants.tileWidth),
+    BLUE_ALLIANCE_HUB_TOP(-1 * Constants.tileWidth, 0.3 * Constants.tileWidth),
+    BLUE_ALLIANCE_HUB_BOTTOM(-1 * Constants.tileWidth, -1.3 * Constants.tileWidth),
+    SHARED_HUB(0, 2.5 * Constants.tileWidth),
 
     // Parking position
     RED_PARKING_POSITION(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
     BLUE_PARKING_POSITION(-2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
 
     // Carousel LOOK AT FIELD
-    RED_CAROUSEL(2.5 * Constants.tileWidth, 3 * Constants.tileWidth),
-    BLUE_CAROUSEL(1,2),
+    RED_CAROUSEL((2.5 * Constants.tileWidth) - 2, (-3 * Constants.tileWidth) + 8.5),
+    BLUE_CAROUSEL((-2.5 * Constants.tileWidth) + 2,(-3 * Constants.tileWidth) + 8.5),
     //Storage Units DONE!
     BLUE_STORAGE_UNIT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
