@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.ImuSystem;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
@@ -25,6 +26,7 @@ public class AutonomousTest extends OpMode {
 
     private GameState currentGameState;
     private RouteState currentRouteState;
+    private Coordinates CURRENT_POSITION;
     protected TeamState teamState;
 
     private int level;
@@ -34,13 +36,14 @@ public class AutonomousTest extends OpMode {
         elapsedTime = new ElapsedTime();
         driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
         driveSystem.initMotors();
+        CURRENT_POSITION = Coordinates.BLUE_STARTING_POSITION_BOTTOM;
     }
 
     @Override
     public void start() {
         super.start();
         elapsedTime.reset();
-        newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
+        newGameState(GameState.DETECT_BARCODE);
     }
 
     @Override
@@ -48,82 +51,12 @@ public class AutonomousTest extends OpMode {
         telemetry.addData("GameState", currentGameState);
 
         switch (currentGameState) {
-            case DRIVE_TO_BARCODE_CENTER:
-                if (driveSystem.getTicks() < 543){
-                    driveSystem.setAllMotorPower(0);
-                    newGameState(GameState.DETECT_BARCODE);
-                }
-                move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
-                newGameState(GameState.DETECT_BARCODE);
-                break;
-
             case DETECT_BARCODE:
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                if (level == 1) {
-                    //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
-                }
-                if (level == 2) {
-                    //move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
-                }
-                if (level == 3) {
-                    stop();
-                }
-                else {
-                    level++;
-                }
                 break;
             case DRIVE_TO_ALLIANCE_HUB:
-                move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
+                moveTicks(Coordinates.RED_ALLIANCE_HUB_BOTTOM, Coordinates.BLUE_ALLIANCE_HUB_BOTTOM, 90);
                 newGameState(GameState.PLACE_CUBE);
-                break;
-
-            case PLACE_CUBE:
-                newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                break;
-                /*switch (level) {
-                    case 0:
-                        armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_MID);
-                        break;
-                    case 1:
-                        if (teamState == TeamState.RED) {
-                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
-                        } else {
-                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
-                        }
-                        break;
-                    case 2:
-                        if (teamState == TeamState.RED) {
-                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
-                        } else {
-                            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
-                        }
-                        break;
-                }
-                armSystem.release(true);
-                newGameState(GameState.DRIVE_TO_CAROUSEL);
-                break;*/
-
-            case DRIVE_TO_CAROUSEL:
-                //move(Coordinates.RED_CAROUSEL, Coordinates.BLUE_CAROUSEL);
-                newGameState(GameState.SPIN_CAROUSEL);
-                break;
-
-            case SPIN_CAROUSEL:
-                newGameState(GameState.PARK_IN_DEPOT);
-                break;
-
-            case PARK_IN_DEPOT:
-                move(Coordinates.RED_DEPOT, Coordinates.BLUE_DEPOT);
-                newGameState(GameState.COMPLETE);
-                break;
-
-            case PARK_IN_WAREHOUSE:
-                move(Coordinates.RED_WAREHOUSE, Coordinates.BLUE_WAREHOUSE);
-                newGameState(GameState.COMPLETE);
-                break;
-
-            case COMPLETE:
-                stop();
                 break;
         }
         telemetry.update();
@@ -137,21 +70,15 @@ public class AutonomousTest extends OpMode {
         currentGameState = newGameState;
     }
 
-    protected void move(Coordinates redTeamCoords, Coordinates blueTeamCoords) {
-        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[2];
-        double baseTime = elapsedTime.seconds();
-        while (elapsedTime.seconds() < baseTime + deltaTime) {
-            driveSystem.joystickDrive(0, xPower, 0);
-        }
-        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int heading) {
+        int deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+        driveSystem.driveTicks(deltaTicks);
+        CURRENT_POSITION.x = (teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
 
-        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
-        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[3];
-        baseTime = elapsedTime.seconds();
-        while (elapsedTime.seconds() < baseTime + deltaTime) {
-            driveSystem.joystickDrive(0, 0, yPower);
-        }
-        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+        driveSystem.turn(heading, 0.75);
+
+        deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+        driveSystem.driveTicks(deltaTicks);
+        CURRENT_POSITION.y = (teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }

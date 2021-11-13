@@ -65,10 +65,8 @@ public enum Coordinates {
     BLUE_DEPOT(-1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth),
     RED_DEPOT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
-
-    public static Coordinates CURRENT_POSITION;
-    private static double x;
-    private static double y;
+    public double x;
+    public double y;
 
     /**
      * Constructor
@@ -96,13 +94,5 @@ public enum Coordinates {
      */
     public double getY() {
         return y;
-    }
-
-    public static void updateX(double x) {
-        this.x = x;
-    }
-
-    public static void updateY(double y) {
-        this.y = y;
     }
 }

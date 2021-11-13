@@ -37,6 +37,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private GameState currentGameState;
     private RouteState currentRouteState;
+    private Coordinates CURRENT_POSITION;
     protected TeamState teamState;
 
     private int level;
@@ -51,6 +52,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         newGameState(GameState.INITIAL);
         super.init();
         driveSystem.initMotors();
+        CURRENT_POSITION = Coordinates.BLUE_STARTING_POSITION_BOTTOM;
         vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
         tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
@@ -64,7 +66,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         vuforia.activate();
         tensorflow.activate();
         tensorflowNew.activate();
-        newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
+        newGameState(GameState.DETECT_BARCODE);
     }
 
     @Override
@@ -72,39 +74,15 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         telemetry.addData("GameState", currentGameState);
 
         switch (currentGameState) {
-            case DRIVE_TO_BARCODE_CENTER:
-                if (driveSystem.getTicks() < 543){
-                    driveSystem.setAllMotorPower(0);
-                    newGameState(GameState.DETECT_BARCODE);
-                }
-                //move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
-                newGameState(GameState.DETECT_BARCODE);
-                break;
-
             case DETECT_BARCODE:
                 elevatorState = tensorflowNew.getObjectNew();
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                /*if (level == 1) {
-                    //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
-                }
-                if (level == 2) {
-                    move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
-                }
-                if (level == 3) {
-                    stop();
-                }
-                if (tensorflow.getObject() == ObjectEnums.DUCK){
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                }
-                else {
-                    level++;
-                }*/
                 break;
             case DRIVE_TO_ALLIANCE_HUB:
-                move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
+                moveTicks(Coordinates.RED_ALLIANCE_HUB_BOTTOM, Coordinates.BLUE_ALLIANCE_HUB_BOTTOM, 90);
                 newGameState(GameState.PLACE_CUBE);
                 break;
-
+/*
             case PLACE_CUBE:
                 armSystem.goToLevel(elevatorState);
                 armSystem.release(true);
@@ -131,7 +109,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 }
                 armSystem.release(true);
                 newGameState(GameState.DRIVE_TO_CAROUSEL);
-                break;*/
+                break;
 
             case DRIVE_TO_CAROUSEL:
                 //move(Coordinates.RED_CAROUSEL, Coordinates.BLUE_CAROUSEL);
@@ -160,6 +138,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
             case COMPLETE:
                 stop();
                 break;
+*/
         }
         telemetry.update();
     }
@@ -180,34 +159,15 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         currentGameState = newGameState;
     }
 
-    protected void move(Coordinates redTeamCoords, Coordinates blueTeamCoords) {
-        double deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-        int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[2];
-        double baseTime = elapsedTime.seconds();
-        while (elapsedTime.seconds() < baseTime + deltaTime) {
-            driveSystem.joystickDrive(0, xPower, 0);
-        }
-        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
-
-        deltaTime = DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
-        int yPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[3];
-        baseTime = elapsedTime.seconds();
-        while (elapsedTime.seconds() < baseTime + deltaTime) {
-            driveSystem.joystickDrive(0, 0, yPower);
-        }
-        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
-    }
-
-    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords) {
-        int deltaTicks = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-        //int xPower = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[2];
+    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int heading) {
+        int deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
         driveSystem.driveTicks(deltaTicks);
-        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+        CURRENT_POSITION.x = (teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
 
-        driveSystem.turn(90, 0.75);
+        driveSystem.turn(heading, 0.75);
 
-        deltaTicks = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+        deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
         driveSystem.driveTicks(deltaTicks);
-        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+        CURRENT_POSITION.y = (teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }

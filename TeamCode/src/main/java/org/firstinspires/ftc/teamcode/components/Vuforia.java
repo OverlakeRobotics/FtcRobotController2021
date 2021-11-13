@@ -197,11 +197,11 @@ public class Vuforia {
             lastLocation = proposedPosition;
         }
     }
-
+/*
     public void getLastLocation() {
         Coordinates.updateX(lastLocation.getTranslation().get(0)/Constants.mmPerInch);
         Coordinates.updateY(lastLocation.getTranslation().get(1)/Constants.mmPerInch);
-    }
+    } */
 
     public VuforiaTrackables getTargets() {
         if (targets != null) {

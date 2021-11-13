@@ -17,10 +17,9 @@ import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousOpMode;
 public class DriveSystem {
 
     //Constants
-    private static final double MAIN_SPEED_COEFFICIENT = 1;
-    private static final double SLOW_DRIVE_SPEED_COEFFICIENT = 0.25;
-    private static final double MIN_SPEED = 0.37;
-    private final double TICKS_IN_MM = 3.51;
+    public static final double MAIN_SPEED_COEFFICIENT = 1;
+    public static final double SLOW_DRIVE_SPEED_COEFFICIENT = 0.25;
+    public static final double MIN_SPEED = 0.37;
     public static final double STRAFE_COEFF = 0.09;
     public static final String TAG = "DriveSystem";
     public static final double P_TURN_COEFF = 0.012;     // Larger is more responsive, but also less stable
@@ -76,11 +75,12 @@ public class DriveSystem {
     /**
      * Initializes the DriveSystem
      */
-    public DriveSystem(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft) {
+    public DriveSystem(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft, ImuSystem imuSystem) {
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
         this.motorBackLeft = motorBackLeft;
+        this.imuSystem = imuSystem;
     }
 
     public void initMotors() {
