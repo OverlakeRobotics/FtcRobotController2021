@@ -1,31 +1,29 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 import org.firstinspires.ftc.teamcode.components.ImuSystem;
+import org.firstinspires.ftc.teamcode.components.WeightSystem;
+import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
+import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 @Autonomous(name = "AutonomousTest", group = "Autonomous")
-public class AutonomousTest extends OpMode {
-
-    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
-    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
-    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
-    private static final String MOTOR_BACK_LEFT = "motor-back-left";
-
-    protected DriveSystem driveSystem;
-
-    protected ElapsedTime elapsedTime;
+public class AutonomousTest extends BaseOpMode {
 
     private GameState currentGameState;
-    private RouteState currentRouteState;
+    private RouteState currentRouteState = RouteState.BOTTOM;
     private Coordinates CURRENT_POSITION;
     protected TeamState teamState;
 
@@ -33,33 +31,96 @@ public class AutonomousTest extends OpMode {
 
     @Override
     public void init() {
-        elapsedTime = new ElapsedTime();
-        driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
-        driveSystem.initMotors();
+        newGameState(GameState.INITIAL);
+        imuSystem = new ImuSystem(hardwareMap.get(BNO055IMU.class, "imu"));
+
         CURRENT_POSITION = Coordinates.BLUE_STARTING_POSITION_BOTTOM;
+        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT));
+        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT));
+        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT));
+        motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
+
+        driveSystemOther = new DriveSystemOther(motors, imuSystem);
+        elapsedTime = new ElapsedTime();
     }
 
     @Override
     public void start() {
-        super.start();
         elapsedTime.reset();
-        newGameState(GameState.DETECT_BARCODE);
+        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
     }
 
     @Override
     public void loop() {
         telemetry.addData("GameState", currentGameState);
-
+        telemetry.update();
         switch (currentGameState) {
-            case DETECT_BARCODE:
-                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+            case DRIVE_TO_ALLIANCE_HUB_ONE:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+
+                if (driveSystemOther.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
+                }
                 break;
-            case DRIVE_TO_ALLIANCE_HUB:
-                moveTicks(Coordinates.RED_ALLIANCE_HUB_BOTTOM, Coordinates.BLUE_ALLIANCE_HUB_BOTTOM, 90);
-                newGameState(GameState.PLACE_CUBE);
+            case DRIVE_TO_ALLIANCE_HUB_TWO:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+
+                if (driveSystemOther.turn(currentRouteState == RouteState.TOP ? -85 : 85, 1.0)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_THREE:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+
+                if (driveSystemOther.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+                    if (currentRouteState == RouteState.TOP) {
+                        newGameState(GameState.PARK_IN_WAREHOUSE_ONE);
+                    } else {
+                        newGameState(GameState.DRIVE_TO_CAROUSEL_ONE);
+                    }
+                }
+                break;
+
+            case DRIVE_TO_CAROUSEL_ONE:
+                if (driveSystemOther.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                    newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
+                }
+                break;
+
+            case DRIVE_TO_CAROUSEL_TWO:
+                if (driveSystemOther.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
+                    newGameState(GameState.PARK_IN_DEPOT);
+                }
+                break;
+
+            case PARK_IN_DEPOT:
+                if (driveSystemOther.driveToPosition(700, DriveSystemOther.Direction.LEFT, 0.75)) {
+                    newGameState(GameState.COMPLETE);
+                }
+                break;
+
+            case PARK_IN_WAREHOUSE_ONE:
+                if (driveSystemOther.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
+                    newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
+                }
+                break;
+
+            case PARK_IN_WAREHOUSE_TWO:
+                if (driveSystemOther.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                    newGameState(GameState.COMPLETE);
+                }
+                break;
+
+            case COMPLETE:
+                stop();
                 break;
         }
-        telemetry.update();
     }
 
     /**
@@ -70,15 +131,27 @@ public class AutonomousTest extends OpMode {
         currentGameState = newGameState;
     }
 
-    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int heading) {
-        int deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-        driveSystem.driveTicks(deltaTicks);
-        CURRENT_POSITION.x = (teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+    protected boolean move(int ticksX, int ticksY, int rotation) {
+        driveSystemOther.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75);
+        return true;
+        /*if (driveSystemOther.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75)) {
+            if (driveSystemOther.turn(rotation, 1.0)) {
+                return driveSystemOther.driveToPositionTicks(ticksY, DriveSystemOther.Direction.FORWARD, 0.75);
+            }
+        }
+        return false;*/
+    }
 
-        driveSystem.turn(heading, 0.75);
 
-        deltaTicks = (int) DriveSystem.TimeCoordinate(CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
-        driveSystem.driveTicks(deltaTicks);
-        CURRENT_POSITION.y = (teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int degrees) {
+        int deltaMM = (int) DriveSystemOther.TicksMM(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+        driveSystemOther.driveToPosition(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+
+        driveSystemOther.turn(degrees, 1.0);
+
+        deltaMM = (int) DriveSystem.TicksCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+        driveSystemOther.driveToPositionTicks(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }

@@ -9,8 +9,7 @@ public class AutonomousOpModeBlue extends AutonomousOpMode {
 
     @Override
     public void init() {
-        teamState = TeamState.BLUE;
-        super.init();
+        super.init(TeamState.BLUE);
     }
 
 }
