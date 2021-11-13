@@ -69,8 +69,8 @@ public enum Coordinates {
     RED_STORAGE_UNIT(1.5 * Constants.tileWidth, -2.5 * Constants.tileWidth);
 
 
-    private final double x;
-    private final double y;
+    private double x;
+    private double y;
 
     /**
      * Constructor
@@ -98,5 +98,13 @@ public enum Coordinates {
      */
     public double getY() {
         return y;
+    }
+
+    public void updateX(double x) {
+        this.x = x;
+    }
+
+    public void updateY(double y) {
+        this.y = y;
     }
 }

@@ -1,39 +1,27 @@
-
-package org.firstinspires.ftc.teamcode.opmodes.autonomous;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
-import org.firstinspires.ftc.teamcode.components.TensorFlow;
-import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
-import org.firstinspires.ftc.teamcode.components.Vuforia;
-import org.firstinspires.ftc.teamcode.components.WheelSystem;
-import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
-
 import org.firstinspires.ftc.teamcode.helpers.GameState;
-import org.firstinspires.ftc.teamcode.helpers.ObjectEnums;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
-import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
-import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
+@Autonomous(name = "AutonomousTest", group = "Autonomous")
+public class AutonomousTest extends OpMode {
 
-public abstract class AutonomousOpMode extends BaseOpMode {
+    private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
+    private static final String MOTOR_FRONT_LEFT = "motor-front-left";
+    private static final String MOTOR_BACK_RIGHT = "motor-back-right";
+    private static final String MOTOR_BACK_LEFT = "motor-back-left";
 
-    private static final String ELEVATOR_MOTOR = "elevator-motor";
-    private static final String RELEASER = "releaser";
-    private ArmSystem.ElevatorState elevatorState;
+    protected DriveSystem driveSystem;
 
-    private static final String SPIN_WHEEL = "spin-wheel";
-    private static final String WEBCAM = "Webcam 1";
+    protected ElapsedTime elapsedTime;
 
     private GameState currentGameState;
     private RouteState currentRouteState;
@@ -41,29 +29,17 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private int level;
 
-    // Systems
-    private TensorFlow tensorflow;
-    private TensorFlowNew tensorflowNew;
-    private Vuforia vuforia;
-
     @Override
     public void init() {
-        newGameState(GameState.INITIAL);
-        super.init();
+        elapsedTime = new ElapsedTime();
+        driveSystem = new DriveSystem(hardwareMap.get(DcMotor.class, MOTOR_FRONT_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_FRONT_LEFT), hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT), hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
         driveSystem.initMotors();
-        vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
-        tensorflow = new TensorFlow(vuforia);
-        tensorflowNew = new TensorFlowNew(vuforia);
-        armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
-        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
     }
 
     @Override
     public void start() {
         super.start();
-        vuforia.activate();
-        tensorflow.activate();
-        tensorflowNew.activate();
+        elapsedTime.reset();
         newGameState(GameState.DRIVE_TO_BARCODE_CENTER);
     }
 
@@ -77,28 +53,24 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                     driveSystem.setAllMotorPower(0);
                     newGameState(GameState.DETECT_BARCODE);
                 }
-                //move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
+                move(Coordinates.RED_BOTTOM_CENTERBARCODE, Coordinates.BLUE_BOTTOM_CENTERBARCODE);
                 newGameState(GameState.DETECT_BARCODE);
                 break;
 
             case DETECT_BARCODE:
-                elevatorState = tensorflowNew.getObjectNew();
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                /*if (level == 1) {
+                if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
                 }
                 if (level == 2) {
-                    move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
+                    //move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
                 }
                 if (level == 3) {
                     stop();
                 }
-                if (tensorflow.getObject() == ObjectEnums.DUCK){
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                }
                 else {
                     level++;
-                }*/
+                }
                 break;
             case DRIVE_TO_ALLIANCE_HUB:
                 move(Coordinates.RED_ALLIANCE_HUB, Coordinates.BLUE_ALLIANCE_HUB);
@@ -106,8 +78,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case PLACE_CUBE:
-                armSystem.goToLevel(elevatorState);
-                armSystem.release(true);
                 newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 break;
                 /*switch (level) {
@@ -139,11 +109,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case SPIN_CAROUSEL:
-                double baseTime = elapsedTime.seconds();
-                while (elapsedTime.seconds() < baseTime + 5.0) {
-                    wheelSystem.spinTheWheelFully();
-                }
-                wheelSystem.stopWheel();
                 newGameState(GameState.PARK_IN_DEPOT);
                 break;
 
@@ -162,14 +127,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
         }
         telemetry.update();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        if (tensorflow != null) {
-            tensorflow.shutdown();
-        }
     }
 
     /**
