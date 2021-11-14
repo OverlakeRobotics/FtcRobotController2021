@@ -16,8 +16,7 @@ public abstract class TestOfSpinningSpeedCarouselIntake extends BaseOpMode {
 
       private static final String INTAKE_MOTOR1 = "intakeMotor1";
       private static final String INTAKE_MOTOR2 = "intakeMotor2";
-
-
+      private double dub = 0.1;
 
       @Override
       public void init(){
@@ -33,7 +32,10 @@ public abstract class TestOfSpinningSpeedCarouselIntake extends BaseOpMode {
       @Override
       public void loop(){
           if(gamepad1.a) {
-              intakeSystem.Carousel();
+              dub++;
+//              intakeSystem.Carousel();
+              intakeSystem.Carousel(dub);
+              telemetry.addData("carouselPower %d", dub);
           }
       }
 

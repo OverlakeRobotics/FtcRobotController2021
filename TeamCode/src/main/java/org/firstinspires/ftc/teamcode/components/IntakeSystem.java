@@ -83,6 +83,14 @@ public class IntakeSystem {
         }
     }
 
+    public void Carousel(double speed) {
+        if (currentState != IntakeState.CAROUSEL) {
+            currentState = IntakeState.CAROUSEL;
+            motor1.setPower(-1 * speed);
+            motor2.setPower(-1 * speed);
+        }
+    }
+
     public void setPower(double num) {
         motor1.setPower(num);
         motor2.setPower(num);

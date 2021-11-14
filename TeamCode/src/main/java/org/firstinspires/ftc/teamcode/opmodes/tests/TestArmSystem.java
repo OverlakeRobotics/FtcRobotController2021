@@ -37,6 +37,7 @@ public abstract class TestArmSystem extends BaseOpMode {
             targetTicks--;
         }
         armSystem.moveTo(targetTicks);
+        telemetry.addData("ticks: %i ", targetTicks);
     }
 
 }
