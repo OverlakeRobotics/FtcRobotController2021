@@ -98,4 +98,10 @@ public class ArmSystem {
         }
         return false;
     }
+
+    public void moveTo(int ticks){
+        elevatorMotor.setTargetPosition(ticks);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setPower(0.75);
+    }
 }
