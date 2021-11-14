@@ -38,7 +38,8 @@ public class ArmSystem {
         LEVEL_NADA,
         LEVEL_TOP,
         LEVEL_MID,
-        LEVEL_BOTTOM
+        LEVEL_BOTTOM,
+        LEVEL_CAROUSEL
     }
 
     private ElevatorState currentArmState;
@@ -57,14 +58,21 @@ public class ArmSystem {
         mapToPosition.put(ElevatorState.LEVEL_TOP, 32);
         mapToPosition.put(ElevatorState.LEVEL_MID, 16);
         mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 8);
+        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, 26);
     }
 
     public void goToLevel(ElevatorState state){
 //        releaser.setPosition(CLOSED_POSITION);
+        int targetPosition = mapToPosition.get(state);
         elevatorMotor.setPower(0);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-        elevatorMotor.setTargetPosition((mapToPosition.get(state)));
+        elevatorMotor.setTargetPosition(targetPosition);
         elevatorMotor.setPower(0.75);
+
+        // make sure the arm reaches desired position before exiting this method
+        while(elevatorMotor.getCurrentPosition() != targetPosition){
+
+        }
         //elevatorMotor.setPower(0);
     }
 
