@@ -74,10 +74,7 @@ public class ArmSystem {
 
         }
         //elevatorMotor.setPower(0);
-        // make sure the arm reaches desired position before exiting this method
-        while(elevatorMotor.getCurrentPosition() != targetPosition){
-
-        }
+       
     }
 
     public void release(boolean bool){
