@@ -20,6 +20,7 @@ public abstract class TestOfSpinningSpeedCarouselIntake extends BaseOpMode {
 
       @Override
       public void init(){
+          super.init();
           intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, INTAKE_MOTOR2));
       }
 
