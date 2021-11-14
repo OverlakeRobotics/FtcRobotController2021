@@ -44,7 +44,7 @@ public class BasicTeleDrive extends BaseOpMode {
             armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
         }
 
-        weightSystem.checkWeight();
+        //weightSystem.checkWeight();
 
         driveSystem.drive(rx, lx, ly);
 

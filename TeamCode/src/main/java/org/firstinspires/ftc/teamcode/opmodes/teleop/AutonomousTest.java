@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 import org.firstinspires.ftc.teamcode.components.ImuSystem;
-import org.firstinspires.ftc.teamcode.components.WeightSystem;
-import org.firstinspires.ftc.teamcode.components.WheelSystem;
+// import org.firstinspires.ftc.teamcode.components.WeightSystem;
+// import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
@@ -40,7 +40,7 @@ public class AutonomousTest extends BaseOpMode {
         motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, MOTOR_BACK_RIGHT));
         motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, MOTOR_BACK_LEFT));
 
-        driveSystemOther = new DriveSystemOther(motors, imuSystem);
+        driveSystem = new DriveSystemOther(motors, imuSystem);
         elapsedTime = new ElapsedTime();
     }
 
@@ -60,7 +60,7 @@ public class AutonomousTest extends BaseOpMode {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
 
-                if (driveSystemOther.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
                 }
                 break;
@@ -69,7 +69,7 @@ public class AutonomousTest extends BaseOpMode {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
 
-                if (driveSystemOther.turn(currentRouteState == RouteState.TOP ? -85 : 85, 1.0)) {
+                if (driveSystem.turn(currentRouteState == RouteState.TOP ? -85 : 85, 1.0)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
                 }
                 break;
@@ -78,7 +78,7 @@ public class AutonomousTest extends BaseOpMode {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
 
-                if (driveSystemOther.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
                     if (currentRouteState == RouteState.TOP) {
                         newGameState(GameState.PARK_IN_WAREHOUSE_ONE);
                     } else {
@@ -88,31 +88,31 @@ public class AutonomousTest extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystemOther.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                if (driveSystem.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;
 
             case DRIVE_TO_CAROUSEL_TWO:
-                if (driveSystemOther.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
+                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
                     newGameState(GameState.PARK_IN_DEPOT);
                 }
                 break;
 
             case PARK_IN_DEPOT:
-                if (driveSystemOther.driveToPosition(700, DriveSystemOther.Direction.LEFT, 0.75)) {
+                if (driveSystem.driveToPosition(700, DriveSystemOther.Direction.LEFT, 0.75)) {
                     newGameState(GameState.COMPLETE);
                 }
                 break;
 
             case PARK_IN_WAREHOUSE_ONE:
-                if (driveSystemOther.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
+                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
                     newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
                 }
                 break;
 
             case PARK_IN_WAREHOUSE_TWO:
-                if (driveSystemOther.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                if (driveSystem.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
                     newGameState(GameState.COMPLETE);
                 }
                 break;
@@ -132,7 +132,7 @@ public class AutonomousTest extends BaseOpMode {
     }
 
     protected boolean move(int ticksX, int ticksY, int rotation) {
-        driveSystemOther.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75);
+        driveSystem.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75);
         return true;
         /*if (driveSystemOther.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75)) {
             if (driveSystemOther.turn(rotation, 1.0)) {
@@ -145,13 +145,13 @@ public class AutonomousTest extends BaseOpMode {
 
     protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int degrees) {
         int deltaMM = (int) DriveSystemOther.TicksMM(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-        driveSystemOther.driveToPosition(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+        driveSystem.driveToPosition(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
         Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
 
-        driveSystemOther.turn(degrees, 1.0);
+        driveSystem.turn(degrees, 1.0);
 
         deltaMM = (int) DriveSystem.TicksCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
-        driveSystemOther.driveToPositionTicks(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+        driveSystem.driveToPositionTicks(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
         Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }
