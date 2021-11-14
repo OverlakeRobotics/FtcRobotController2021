@@ -68,6 +68,11 @@ public class ArmSystem {
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         elevatorMotor.setTargetPosition(targetPosition);
         elevatorMotor.setPower(0.75);
+
+        // make sure the arm reaches desired position before exiting this method
+        while(elevatorMotor.getCurrentPosition() != targetPosition){
+
+        }
         //elevatorMotor.setPower(0);
         // make sure the arm reaches desired position before exiting this method
         while(elevatorMotor.getCurrentPosition() != targetPosition){
