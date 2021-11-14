@@ -10,24 +10,35 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 public class BasicTeleDrive extends BaseOpMode {
 
     private boolean bool = false;
+    private boolean intakeOn = false;
+    private boolean outtakeOn = false;
+    private boolean carouselOn = false;
+
+    @Override
+    public void init(){
+        super.init();
+    }
+
     @Override
     public void loop() {
         float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        if (gamepad1.b){
-            bool = !bool;
-        }
-        if (bool) {
+        while (gamepad1.y) {
             intakeSystem.take_in();
         }
-        else{
+
+        while (gamepad1.b) {
             intakeSystem.spit_out();
         }
 
-        if (gamepad1.cross){
+        while (gamepad1.x) {
             intakeSystem.Carousel();
+        }
+
+        while (gamepad1.a) {
+            intakeSystem.setPower(0.0);
         }
 
         while (gamepad1.right_bumper){
@@ -37,16 +48,19 @@ public class BasicTeleDrive extends BaseOpMode {
             turnTableSystem.moveCounter();
         }
 
-        if (gamepad1.dpad_up){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+        if (gamepad1.dpad_up) {
+            armSystem.move_up();
         }
-        if (gamepad1.dpad_down){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+        else if (gamepad1.dpad_down){
+            armSystem.move_down();
+        }
+        else{
+            armSystem.stop();
         }
 
         //weightSystem.checkWeight();
 
-        driveSystem.drive(rx, lx, ly);
+        driveSystem.drive(rx, -lx, ly);
 
         telemetry.addData("rx", rx);
         telemetry.addData("lx", lx);

@@ -10,11 +10,19 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 //2019 code but but loops instead of calling forEach (which works with different API version)
 public class DriveSystemOther {
+
+    private DcMotor motorFrontRight;
+    private DcMotor motorFrontLeft;
+    private DcMotor motorBackRight;
+    private DcMotor motorBackLeft;
 
     public enum MotorNames {
         FRONTLEFT, FRONTRIGHT, BACKRIGHT, BACKLEFT
@@ -44,7 +52,7 @@ public class DriveSystemOther {
     public static final double P_TURN_COEFF = 0.012;     // Larger is more responsive, but also less stable
     public static final double HEADING_THRESHOLD = 1 ;      // As tight as we can make it with an integer gyro
 
-    public EnumMap<MotorNames, DcMotor> motors;
+    public Map<MotorNames, DcMotor> motors;
 
     public ImuSystem imuSystem;
 
@@ -52,11 +60,14 @@ public class DriveSystemOther {
     private double mTargetHeading;
     public boolean mSlowDrive;
 
-    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors, ImuSystem imuSystem) {
-        this.motors = motors;
+    public DriveSystemOther(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft, ImuSystem imuSystem) {
+        this.motorFrontRight = motorFrontRight;
+        this.motorFrontLeft = motorFrontLeft;
+        this.motorBackRight = motorBackRight;
+        this.motorBackLeft = motorBackLeft;
         mTargetTicks = 0;
-        initMotors();
         this.imuSystem = imuSystem;
+        initMotors();
     }
 
     /**
@@ -70,6 +81,11 @@ public class DriveSystemOther {
     }
 
     public void initMotors() {
+        motors = new HashMap<>();
+        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, motorFrontRight);
+        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, motorFrontLeft);
+        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, motorBackRight);
+        motors.put(DriveSystemOther.MotorNames.BACKLEFT, motorBackLeft);
         for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
             MotorNames name = entry.getKey();
             DcMotor motor = entry.getValue();

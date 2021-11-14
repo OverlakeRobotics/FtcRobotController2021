@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /***
  *  one motor - to change elevation
@@ -32,7 +34,11 @@ public class ArmSystem {
     private static final double CLOSED_POSITION = 0.3;
     private static final double OPEN_POSITION = 0.93;
 
-    private EnumMap <ElevatorState, Integer> mapToPosition;
+    private Map<ElevatorState, Integer> mapToPosition;
+
+    public void stop() {
+        elevatorMotor.setPower(0);
+    }
 
     public enum ElevatorState {
         LEVEL_NADA,
@@ -55,6 +61,7 @@ public class ArmSystem {
     public ArmSystem(DcMotor elevatorMotor/*, ?Servo releaser*/){
         this.elevatorMotor = elevatorMotor;
 //        this.releaser = releaser;
+        mapToPosition = new HashMap<>();
         mapToPosition.put(ElevatorState.LEVEL_TOP, 32);
         mapToPosition.put(ElevatorState.LEVEL_MID, 16);
         mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 8);
@@ -65,18 +72,33 @@ public class ArmSystem {
 //        releaser.setPosition(CLOSED_POSITION);
         int targetPosition = mapToPosition.get(state);
         elevatorMotor.setPower(0);
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         elevatorMotor.setTargetPosition(targetPosition);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         elevatorMotor.setPower(0.75);
 
         // make sure the arm reaches desired position before exiting this method
-        while(elevatorMotor.getCurrentPosition() != targetPosition){
-
-        }
         //elevatorMotor.setPower(0);
        
     }
 
+    /**
+     * Intakes rings
+     */
+    public void move_up() {
+        if (elevatorMotor.getCurrentPosition() > 53){
+            elevatorMotor.setPower(1);
+        }
+    }
+
+    /**
+     * Intakes rings
+     */
+    public void move_down() {
+        if (elevatorMotor.getCurrentPosition() < 12){
+            elevatorMotor.setPower(-1);
+        }
+
+    }
     public void release(boolean bool){
 //        if (bool){
 //            releaser.setPosition(CLOSED_POSITION);

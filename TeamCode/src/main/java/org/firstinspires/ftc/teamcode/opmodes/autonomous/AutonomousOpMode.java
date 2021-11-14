@@ -1,19 +1,13 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
-import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.components.Vuforia;
@@ -21,12 +15,9 @@ import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
 import org.firstinspires.ftc.teamcode.helpers.GameState;
-import org.firstinspires.ftc.teamcode.helpers.ObjectEnums;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
-
-import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 
 public abstract class AutonomousOpMode extends BaseOpMode {
 
@@ -90,7 +81,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.start();
         vuforia.activate();
         //tensorflow.activate()
-        newGameState(GameState.DETECT_BARCODE);
+        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
     }
 
     @Override
@@ -102,7 +93,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
-                if (driveSystem.driveToPosition(150, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.LEFT, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
                 }
                 break;
@@ -110,66 +101,17 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
-                if (driveSystem.turn(-90, rotateSpeed)) {
+
+                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
                 }
-                break;
-            case DETECT_BARCODE:
-//                for (int x = 1; x <= 3; x++) {
-//                    tensorflowNew.activate(x);
-//                    barcodes[x] = (tensorflowNew.getInference().size() > 0);
-//                    if (barcodes[x]) {
-//                        elevatorState = tensorflowNew.getObjectNew(x);
-//                    }
-//                }
-                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
-                /*if (level == 1) {
-                    //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
-                }
-                if (level == 2) {
-                    move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
-                }
-                if (level == 3) {
-                    stop();
-                }
-                if (tensorflow.getObject() == ObjectEnums.DUCK){
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
-                }
-                else {
-                    level++;
-                }*/
                 break;
             case DRIVE_TO_ALLIANCE_HUB_THREE:
                 /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
+
                 if (driveSystem.turn(90, rotateSpeed)) {
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_FOUR);
-                }
-                break;
-            case DRIVE_TO_ALLIANCE_HUB_FOUR:
-                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
-                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                } */
-                if (driveSystem.driveToPosition(150, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_FIVE);
-                }
-                break;
-            case DRIVE_TO_ALLIANCE_HUB_FIVE:
-                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
-                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                } */
-
-                if (driveSystem.turn(currentRouteState == RouteState.TOP ? -85 : 85, rotateSpeed)) {
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_SIX);
-                }
-                break;
-            case DRIVE_TO_ALLIANCE_HUB_SIX:
-                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
-                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                } */
-
-                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
                     newGameState(GameState.PLACE_CUBE);
                 }
                 break;

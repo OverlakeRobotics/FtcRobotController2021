@@ -30,19 +30,21 @@ public abstract class BaseOpMode extends OpMode {
     protected ElapsedTime elapsedTime;
     protected DriveSystemOther driveSystem;
 
-    protected EnumMap<DriveSystemOther.MotorNames, DcMotor> motors = new EnumMap<>(DriveSystemOther.MotorNames.class);
-
     @Override
     public void init() {
         imuSystem = new ImuSystem(hardwareMap.get(BNO055IMU.class, Constants.IMU));
-
-        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
-        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
-        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
-        motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
+//        EnumMap<DriveSystemOther.MotorNames, DcMotor> motors = new EnumMap<>(DriveSystemOther.MotorNames.class);
+//        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
+//        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
+//        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
+//        motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
 
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
-        driveSystem = new DriveSystemOther(motors, imuSystem);
+        driveSystem = new DriveSystemOther(hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT),
+                hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT),
+                hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT),
+                hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT),
+                imuSystem);
         //weightSystem = new WeightSystem(
                 //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ZERO),
                 //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ONE),
@@ -52,8 +54,7 @@ public abstract class BaseOpMode extends OpMode {
                 //hardwareMap.get(LED.class,WEIGHT_LIGHT_GREEN));
        // wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1));
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
-        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
-        elapsedTime = new ElapsedTime();
+        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));elapsedTime = new ElapsedTime();
     }
 
     @Override

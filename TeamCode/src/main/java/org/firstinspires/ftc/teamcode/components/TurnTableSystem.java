@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /***
  *  one motor - to rotate turntable
@@ -21,7 +23,7 @@ public class TurnTableSystem {
     private static final double CLOSED_POSITION = 0.3;
     private static final double OPEN_POSITION = 0.93;
 
-    private EnumMap <CircleState, Integer> mapToPosition;
+    private Map<CircleState, Integer> mapToPosition;
 
     private enum CircleState {
         LEVEL_FORWARD,
@@ -41,6 +43,7 @@ public class TurnTableSystem {
 
     public TurnTableSystem(DcMotor rotatorMotor){
         this.rotatorMotor = rotatorMotor;
+        mapToPosition = new HashMap<>();
         mapToPosition.put(CircleState.LEVEL_BACK, 32); // TODO
         mapToPosition.put(CircleState.LEVEL_FORWARD, 16);
         mapToPosition.put(CircleState.LEVEL_RIGHT, 8);
@@ -50,8 +53,8 @@ public class TurnTableSystem {
 
     private void goToSetPosition(CircleState state){
         rotatorMotor.setPower(0);
-        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         rotatorMotor.setTargetPosition((this.mapToPosition.get(state)));
+        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         rotatorMotor.setPower(0.75);
         //rotatorMotor.setPower(0);
     }
@@ -66,8 +69,8 @@ public class TurnTableSystem {
 
     private void goToPosition(int pos){
         rotatorMotor.setPower(0);
-        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         rotatorMotor.setTargetPosition(pos);
+        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         rotatorMotor.setPower(0.75);
         //rotatorMotor.setPower(0);
     }
