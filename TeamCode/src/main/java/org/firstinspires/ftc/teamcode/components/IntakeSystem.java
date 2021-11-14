@@ -22,14 +22,16 @@ public class IntakeSystem {
     private IntakeState currentState;
 
     // Hardware
-    private final DcMotor motor;
+    private final DcMotor motor1;
+    private final DcMotor motor2;
 
     /**
      * Creates the IntakeSystem Object
-     * @param motor to represent the motor which rotates in order to s'word the object in.
+     * @param motor1 to represent the motor which rotates in order to s'word the object in.
      */
-    public IntakeSystem(DcMotor motor) {
-        this.motor = motor;
+    public IntakeSystem(DcMotor motor1, DcMotor motor2) {
+        this.motor1 = motor1;
+        this.motor2 = motor2;
         initMotors();
     }
 
@@ -38,8 +40,10 @@ public class IntakeSystem {
      */
     public void initMotors() {
         currentState = IntakeState.IDLE;
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor.setPower(0);
+        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor1.setPower(0);
+        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor2.setPower(0);
     }
 
     /**
@@ -48,7 +52,8 @@ public class IntakeSystem {
     public void take_in() {
         if (currentState != IntakeState.TAKE_IN) {
             currentState = IntakeState.TAKE_IN;
-            motor.setPower(1);
+            motor1.setPower(1);
+            motor2.setPower(1);
         }
     }
 
@@ -58,7 +63,8 @@ public class IntakeSystem {
     public void spit_out() {
         if (currentState != IntakeState.SPIT_OUT) {
             currentState = IntakeState.SPIT_OUT;
-            motor.setPower(-1);
+            motor1.setPower(-1);
+            motor2.setPower(-1);
         }
     }
 
@@ -68,7 +74,7 @@ public class IntakeSystem {
     public void Carousel() {
         if (currentState != IntakeState.SPIT_OUT) {
             currentState = IntakeState.SPIT_OUT;
-            motor.setPower(-1 * WheelSystem.optimalSpinningSpeed);
+            motor1.setPower(-1 * WheelSystem.optimalSpinningSpeed);
         }
     }
 
@@ -78,7 +84,7 @@ public class IntakeSystem {
     public void stop() {
         if (currentState == IntakeState.TAKE_IN) {
             currentState = IntakeState.IDLE;
-            motor.setPower(0);
+            motor1.setPower(0);
         }
     }
 }

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
-import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 import org.firstinspires.ftc.teamcode.components.ImuSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
@@ -18,6 +17,7 @@ import org.firstinspires.ftc.teamcode.components.WheelSystem;
 
 import java.util.EnumMap;
 
+// TODO - Finalize WEIGHTSYSTEM AND INTAKESYSTEM TO WORK PROPERLY TOGETHER EVERYWHERE
 public abstract class BaseOpMode extends OpMode {
 
     private static final String MOTOR_FRONT_RIGHT = "motor-front-right";
@@ -34,9 +34,11 @@ public abstract class BaseOpMode extends OpMode {
 
     private static final String WHEEL_MOTOR = "wheelMotor";
 
-    private static final String INTAKE_MOTOR = "intakeMotor";
+    private static final String INTAKE_MOTOR1 = "intakeMotor1";
+    private static final String INTAKE_MOTOR2 = "intakeMotor2";
 
     private static final String ROTATOR_MOTOR = "rotatorMotor";
+
 
 //    protected DriveSystem driveSystem;
     protected WeightSystem weightSystem;
@@ -67,8 +69,8 @@ public abstract class BaseOpMode extends OpMode {
                 hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_THREE),
                 hardwareMap.get(LED.class,WEIGHT_LIGHT_RED),
                 hardwareMap.get(LED.class,WEIGHT_LIGHT_GREEN));
-        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, WHEEL_MOTOR));
-        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR));
+        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1));
+        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, INTAKE_MOTOR2));
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, ROTATOR_MOTOR));
         elapsedTime = new ElapsedTime();
     }
