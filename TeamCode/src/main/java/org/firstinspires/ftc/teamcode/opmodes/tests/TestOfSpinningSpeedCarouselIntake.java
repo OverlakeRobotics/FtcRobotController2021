@@ -32,7 +32,7 @@ public abstract class TestOfSpinningSpeedCarouselIntake extends BaseOpMode {
       @Override
       public void loop(){
           if(gamepad1.a) {
-              dub++;
+              dub += 0.1;
 //              intakeSystem.Carousel();
               intakeSystem.Carousel(dub);
               telemetry.addData("carouselPower %d", dub);
