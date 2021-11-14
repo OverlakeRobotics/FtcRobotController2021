@@ -19,6 +19,26 @@ public class TurnTableSystem {
 
     private final DcMotor rotatorMotor;
 
+
+    public void move_right() {
+        rotatorMotor.setTargetPosition(rotatorMotor.getCurrentPosition() - 80);
+        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotatorMotor.setPower(1.0);
+    }
+
+    /**
+     * Intakes rings
+     */
+    public void move_left() {
+        rotatorMotor.setTargetPosition(rotatorMotor.getCurrentPosition() + 80);
+        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotatorMotor.setPower(-1.0);
+
+    }
+    public void stop() {
+        rotatorMotor.setPower(0.0);
+    }
+
     //TODO - TEST + CHANGE THESE NUMBERS
     private static final double CLOSED_POSITION = 0.3;
     private static final double OPEN_POSITION = 0.93;

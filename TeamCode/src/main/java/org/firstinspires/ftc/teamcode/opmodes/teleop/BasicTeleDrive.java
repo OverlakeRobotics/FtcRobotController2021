@@ -56,6 +56,16 @@ public class BasicTeleDrive extends BaseOpMode {
             armSystem.stop();
         }
 
+        if (gamepad1.dpad_right) {
+            turnTableSystem.move_right();
+        }
+        else if (gamepad1.dpad_left){
+            turnTableSystem.move_left();
+        }
+        else{
+            turnTableSystem.stop();
+        }
+
         //weightSystem.checkWeight();
 
         driveSystem.drive(rx, -lx, ly);
@@ -64,6 +74,7 @@ public class BasicTeleDrive extends BaseOpMode {
         telemetry.addData("lx", lx);
         telemetry.addData("ly", ly);
         telemetry.addData("TIME_ELAPSED_MILSEC", elapsedTime.milliseconds());
+        telemetry.addData("ARM", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.update();
     }
 

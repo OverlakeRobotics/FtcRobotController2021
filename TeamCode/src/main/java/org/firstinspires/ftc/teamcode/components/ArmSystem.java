@@ -40,6 +40,10 @@ public class ArmSystem {
         elevatorMotor.setPower(0.0);
     }
 
+    public DcMotor getElevatorMotor() {
+        return elevatorMotor;
+    }
+
     public enum ElevatorState {
         LEVEL_NADA,
         LEVEL_TOP,
@@ -85,22 +89,18 @@ public class ArmSystem {
      * Intakes rings
      */
     public void move_up() {
-        if (elevatorMotor.getCurrentPosition() < 53){
-            elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 1);
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorMotor.setPower(1.0);
-        }
+        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 40);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setPower(1.0);
     }
 
     /**
      * Intakes rings
      */
     public void move_down() {
-        if (elevatorMotor.getCurrentPosition() > 12){
-            elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 1);
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorMotor.setPower(-1.0);
-        }
+        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 40);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setPower(-1.0);
 
     }
     public void release(boolean bool){
