@@ -83,6 +83,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
         switch (currentGameState) {
             case DETECT_BARCODE:
+                //TODO TURN 90 AT START AND MAKE THIS WORK
+                error fixthisnowanish
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                 /*if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
