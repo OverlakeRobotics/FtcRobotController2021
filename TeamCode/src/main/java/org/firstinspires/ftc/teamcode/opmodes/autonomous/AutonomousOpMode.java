@@ -195,19 +195,18 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
+                armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_CAROUSEL);
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }
                 intakeSystem.setPower(0);
                 newGameState(GameState.PARK_IN_DEPOT_ONE);
                 break;
-
             case PARK_IN_DEPOT_ONE:
                 if (driveSystem.driveToPositionTicks(teamState == TeamState.RED ? 70 : 70, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
                     newGameState(GameState.PARK_IN_DEPOT_TWO);
                 }
                 break;
-
             case PARK_IN_DEPOT_TWO:
                 if (driveSystem.turn(teamState == TeamState.RED ? -90 : 90, rotateSpeed)) {
                     newGameState(GameState.PARK_IN_DEPOT_THREE);
