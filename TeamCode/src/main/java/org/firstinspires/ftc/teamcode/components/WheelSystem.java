@@ -41,16 +41,16 @@ public class WheelSystem {
         wheelToSpin.setPower(0.0);
     }
 
-    private void delay(){
+    /*private void delay(){
         long initTime = System.currentTimeMillis();
         boolean enoughTimeElapsed = false;
         while (enoughTimeElapsed){
-            if (System.currentTimeMillis() - initTime > 0.55){ /* TODO: FIND TIME FOR FRICTION FORCE TO ACCELERATE VELCOITY TO 0 M/S */
+            if (System.currentTimeMillis() - initTime > 0.55){ /* TODO: FIND TIME FOR FRICTION FORCE TO ACCELERATE VELCOITY TO 0 M/S */ /*
                 enoughTimeElapsed = true;
             }
             else{
 
             }
         }
-    }
+    }*/
 }
