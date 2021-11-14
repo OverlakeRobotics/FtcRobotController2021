@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
+import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
@@ -38,6 +39,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private ArmSystem.ElevatorState elevatorState;
     boolean[] barcodes;
+
+    private static final String ROTATOR_MOTOR = "rotatorMotor";
 
     private static final String SPIN_WHEEL = "spin-wheel";
     private static final String WEBCAM = "Webcam 1";
@@ -66,7 +69,10 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         //tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, ELEVATOR_MOTOR));
+        armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, INTAKE_MOTOR2));
+        intakeSystem.initMotors();
+        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, ROTATOR_MOTOR));
         barcodes = new boolean[3];
     }
 

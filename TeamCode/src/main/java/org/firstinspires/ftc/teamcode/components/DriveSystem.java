@@ -81,6 +81,7 @@ public class DriveSystem {
         this.motorBackRight = motorBackRight;
         this.motorBackLeft = motorBackLeft;
         this.imuSystem = imuSystem;
+        initMotors();
     }
 
     public void initMotors() {
