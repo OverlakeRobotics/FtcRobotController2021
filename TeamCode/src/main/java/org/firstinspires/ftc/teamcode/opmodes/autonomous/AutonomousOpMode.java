@@ -30,20 +30,8 @@ import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 
 public abstract class AutonomousOpMode extends BaseOpMode {
 
-    private static final String ELEVATOR_MOTOR = "elevator-motor";
-    private static final String RELEASER = "releaser";
-
-
-    private static final String INTAKE_MOTOR1 = "intakeMotor1";
-    private static final String INTAKE_MOTOR2 = "intakeMotor2";
-
     private ArmSystem.ElevatorState elevatorState;
     boolean[] barcodes;
-
-    private static final String ROTATOR_MOTOR = "rotatorMotor";
-
-    private static final String SPIN_WHEEL = "spin-wheel";
-    private static final String WEBCAM = "Webcam 1";
 
     private GameState currentGameState;
     private RouteState currentRouteState;
@@ -62,14 +50,14 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         this.currentRouteState = routeState;
         newGameState(GameState.INITIAL);
         driveSystem.initMotors();
-        vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
+        vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, Constants.WEBCAM));
         //tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, ELEVATOR_MOTOR));
+        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
         armSystem.initMotors();
-        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, INTAKE_MOTOR2));
+        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
-        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, ROTATOR_MOTOR));
+        turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
         barcodes = new boolean[3];
     }
 
@@ -95,7 +83,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         switch (currentGameState) {
             case DETECT_BARCODE:
                 //TODO ADJUST CALCULATIONS FOR DEGREE TURNING AND IMPLEMENT TEAM STUFF
-                error jack if you can do this that would be great
+                ///error jack if you can do this that would be great
                 driveSystem.turn(-90, 0.75);
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                 /*if (level == 1) {

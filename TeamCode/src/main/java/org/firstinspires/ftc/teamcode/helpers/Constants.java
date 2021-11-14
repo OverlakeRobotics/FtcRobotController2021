@@ -12,6 +12,33 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 public class Constants {
 
+    // hardwareMap
+
+    public static final String ELEVATOR_MOTOR = "elevator-motor";
+    public static final String MOTOR_FRONT_RIGHT = "motor-front-right";
+    public static final String MOTOR_FRONT_LEFT = "motor-front-left";
+    public static final String MOTOR_BACK_RIGHT = "motor-back-right";
+    public static final String MOTOR_BACK_LEFT = "motor-back-left";
+
+    //private static final String WEIGHT_SENSOR_ZERO = "sensorAsAnalogInput0";
+    //private static final String WEIGHT_SENSOR_ONE = "sensorAsAnalogInput1";
+    //private static final String WEIGHT_SENSOR_TWO = "sensorAsAnalogInput2";
+    //private static final String WEIGHT_SENSOR_THREE = "sensorAsAnalogInput3";
+    //private static final String WEIGHT_LIGHT_RED = "weightIndicatorRed";
+    //private static final String WEIGHT_LIGHT_GREEN = "weightIndicatorGreen";
+
+    //private static final String WHEEL_MOTOR = "wheelMotor";
+
+    public static final String IMU = "imu";
+    public static final String INTAKE_MOTOR1 = "intakeMotor1";
+    public static final String INTAKE_MOTOR2 = "intakeMotor2";
+
+    public static final String ROTATOR_MOTOR = "rotatorMotor";
+
+    private static final String SPIN_WHEEL = "spin-wheel";
+    public static final String WEBCAM = "Webcam 1";
+
+
     // Debugging captions
     public static final String ROBOT_SYSTEM_ERROR = "ROBOTSYSTEMERROR";
 
