@@ -12,15 +12,19 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * Realize the motor's polarity is determined by set velocity's signum.
  * Understanding this should be pretty straight forward.
  */
+
+// TODO - TEST AND FIND THIS NUMBER
 public class IntakeSystem {
     // IntakeState
     private enum IntakeState {
         IDLE,
         TAKE_IN,
-        SPIT_OUT
+        SPIT_OUT,
+        CAROUSEL
     }
     private IntakeState currentState;
 
+    private static final double optimalSpinningSpeed = 0.75;
     // Hardware
     private final DcMotor motor1;
     private final DcMotor motor2;
@@ -53,7 +57,7 @@ public class IntakeSystem {
         if (currentState != IntakeState.TAKE_IN) {
             currentState = IntakeState.TAKE_IN;
             motor1.setPower(1);
-            motor2.setPower(1);
+            motor2.setPower(-1);
         }
     }
 
@@ -64,7 +68,7 @@ public class IntakeSystem {
         if (currentState != IntakeState.SPIT_OUT) {
             currentState = IntakeState.SPIT_OUT;
             motor1.setPower(-1);
-            motor2.setPower(-1);
+            motor2.setPower(1);
         }
     }
 
@@ -72,19 +76,32 @@ public class IntakeSystem {
      * Intakes rings
      */
     public void Carousel() {
-        if (currentState != IntakeState.SPIT_OUT) {
-            currentState = IntakeState.SPIT_OUT;
-            motor1.setPower(-1 * WheelSystem.optimalSpinningSpeed);
+        if (currentState != IntakeState.CAROUSEL) {
+            currentState = IntakeState.CAROUSEL;
+            motor1.setPower(-1 * optimalSpinningSpeed);
+            motor2.setPower(-1 * optimalSpinningSpeed);
         }
+    }
+
+    public void setPower(double num) {
+        motor1.setPower(num);
+        motor2.setPower(num);
+    }
+
+    public void setIdle(){
+        setPower(0);
     }
 
     /**
      * Shuts down the motor
      */
     public void stop() {
-        if (currentState == IntakeState.TAKE_IN) {
+        if (currentState == IntakeState.TAKE_IN || currentState == IntakeState.SPIT_OUT) {
             currentState = IntakeState.IDLE;
             motor1.setPower(0);
+            motor2.setPower(0);
         }
     }
+
+
 }

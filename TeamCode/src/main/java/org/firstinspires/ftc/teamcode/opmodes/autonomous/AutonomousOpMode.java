@@ -12,10 +12,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
+import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
 import org.firstinspires.ftc.teamcode.components.Vuforia;
-import org.firstinspires.ftc.teamcode.components.WheelSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.Coordinates;
 
@@ -31,6 +31,11 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private static final String ELEVATOR_MOTOR = "elevator-motor";
     private static final String RELEASER = "releaser";
+
+
+    private static final String INTAKE_MOTOR1 = "intakeMotor1";
+    private static final String INTAKE_MOTOR2 = "intakeMotor2";
+
     private ArmSystem.ElevatorState elevatorState;
     boolean[] barcodes;
 
@@ -57,8 +62,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         vuforia = Vuforia.getInstance(hardwareMap.get(WebcamName.class, WEBCAM));
         //tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
-        armSystem = new ArmSystem(hardwareMap.get(DcMotorEx.class, ELEVATOR_MOTOR), hardwareMap.get(Servo.class, RELEASER));
-        wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, SPIN_WHEEL));
+        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, ELEVATOR_MOTOR));
+        intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, INTAKE_MOTOR2));
         barcodes = new boolean[3];
     }
 
@@ -83,8 +88,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
         switch (currentGameState) {
             case DETECT_BARCODE:
-                //TODO TURN 90 AT START AND MAKE THIS WORK
-                error fixthisnowanish
+                //TODO ADJUST CALCULATIONS FOR DEGREE TURNING AND IMPLEMENT TEAM STUFF
+                error jack if you can do this that would be great
+                driveSystem.turn(-90, 0.75);
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                 /*if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
@@ -131,7 +137,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
             case PLACE_CUBE:
                 armSystem.goToLevel(elevatorState);
-                armSystem.release(true);
+                intakeSystem.spit_out();
+                armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
                 newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
 
@@ -150,9 +157,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
                 while (elapsedTime.seconds() < baseTime + 5.0) {
-                    wheelSystem.spinTheWheelFully();
+                    intakeSystem.Carousel();
                 }
-                wheelSystem.stopWheel();
+                intakeSystem.setPower(0);
                 newGameState(GameState.PARK_IN_DEPOT);
                 break;
 

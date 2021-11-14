@@ -10,7 +10,7 @@
 package org.firstinspires.ftc.teamcode.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -25,8 +25,8 @@ import java.util.EnumMap;
 public class ArmSystem {
     // TODO
 
-    private final DcMotorEx elevatorMotor;
-    private final Servo releaser;
+    private final DcMotor elevatorMotor;
+//    private final Servo releaser;
 
     //TODO - TEST + CHANGE THESE NUMBERS
     private static final double CLOSED_POSITION = 0.3;
@@ -45,21 +45,21 @@ public class ArmSystem {
 
     public void initMotors() {
         elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        elevatorMotor.setVelocity(0);
-        releaser.setPosition(CLOSED_POSITION);
+        elevatorMotor.setPower(0);
+//        releaser.setPosition(CLOSED_POSITION);
 
     }
 
-    public ArmSystem(DcMotorEx elevatorMotor, Servo releaser){
+    public ArmSystem(DcMotor elevatorMotor/*, ?Servo releaser*/){
         this.elevatorMotor = elevatorMotor;
-        this.releaser = releaser;
+//        this.releaser = releaser;
         mapToPosition.put(ElevatorState.LEVEL_TOP, 32);
         mapToPosition.put(ElevatorState.LEVEL_MID, 16);
         mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 8);
     }
 
     public void goToLevel(ElevatorState state){
-        releaser.setPosition(CLOSED_POSITION);
+//        releaser.setPosition(CLOSED_POSITION);
         elevatorMotor.setPower(0);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         elevatorMotor.setTargetPosition((mapToPosition.get(state)));
@@ -68,23 +68,23 @@ public class ArmSystem {
     }
 
     public void release(boolean bool){
-        if (bool){
-            releaser.setPosition(CLOSED_POSITION);
-        }
-        else{
-            releaser.setPosition(OPEN_POSITION);
-        }
-        long initTime = System.currentTimeMillis();
-        boolean enoughTimeElapsed = false;
-        while (enoughTimeElapsed){
-            if (System.currentTimeMillis() - initTime > 0.55){ /* TODO: FIND TIME TO DELAY/GO DOWN */
-                enoughTimeElapsed = true;
-            }
-            else{
-
-            }
-        }
-        releaser.setPosition(CLOSED_POSITION);
+//        if (bool){
+//            releaser.setPosition(CLOSED_POSITION);
+//        }
+//        else{
+//            releaser.setPosition(OPEN_POSITION);
+//        }
+//        long initTime = System.currentTimeMillis();
+//        boolean enoughTimeElapsed = false;
+//        while (enoughTimeElapsed){
+//            if (System.currentTimeMillis() - initTime > 0.55){ /* TODO: FIND TIME TO DELAY/GO DOWN */
+//                enoughTimeElapsed = true;
+//            }
+//            else{
+//
+//            }
+//        }
+//        releaser.setPosition(CLOSED_POSITION);
     }
 
     public boolean arm(){
