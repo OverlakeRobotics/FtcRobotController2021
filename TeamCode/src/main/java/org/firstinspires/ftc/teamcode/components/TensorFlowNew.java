@@ -26,7 +26,7 @@ public class TensorFlowNew {
         tfodParameters.minResultConfidence = 0.3f; //minimumConfidenceNecessaryForActingOnDetection
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforiaSystem.getVuforiaLocalizer()); //create objectDetector
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS[0], LABELS[1]); //loading models
-        tfod.activate(); //turnOn
+//        tfod.activate(); //turnOn
     }
 
     /** Method getInference()

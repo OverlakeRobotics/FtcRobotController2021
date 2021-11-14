@@ -33,17 +33,19 @@ public class TurnTableSystem {
     private CircleState currentArmState;
 
     private void initMotors() {
+        rotatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rotatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rotatorMotor.setPower(0);
-
     }
 
     public TurnTableSystem(DcMotor rotatorMotor){
         this.rotatorMotor = rotatorMotor;
-        mapToPosition.put(CircleState.LEVEL_BACK, 32);
+        mapToPosition.put(CircleState.LEVEL_BACK, 32); // TODO
         mapToPosition.put(CircleState.LEVEL_FORWARD, 16);
         mapToPosition.put(CircleState.LEVEL_RIGHT, 8);
         mapToPosition.put(CircleState.LEVEL_LEFT, 4);
+        initMotors();
     }
 
     private void goToSetPosition(CircleState state){

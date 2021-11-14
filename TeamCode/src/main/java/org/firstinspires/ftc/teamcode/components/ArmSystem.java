@@ -44,6 +44,7 @@ public class ArmSystem {
     private ElevatorState currentArmState;
 
     public void initMotors() {
+        elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotor.setPower(0);
 //        releaser.setPosition(CLOSED_POSITION);

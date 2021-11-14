@@ -45,6 +45,8 @@ public class IntakeSystem {
     public void initMotors() {
         currentState = IntakeState.IDLE;
         motor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor1.setPower(0);
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
         motor2.setPower(0);
