@@ -63,13 +63,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
         barcodes = new boolean[3];
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        vuforia.activate();
-        //tensorflow.activate();
         for (int x = 0; x <= 2; x++) {
             tensorflowNew.activate(x);
             barcodes[x] = (tensorflowNew.getInference().size() > 0);
@@ -90,6 +83,13 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 }
             }
         }
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        vuforia.activate();
+        //tensorflow.activate()
         newGameState(GameState.DETECT_BARCODE);
     }
 
