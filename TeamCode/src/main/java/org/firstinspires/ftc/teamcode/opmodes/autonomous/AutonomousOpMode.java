@@ -30,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.helpers.Constants.tileWidth;
 
 public abstract class AutonomousOpMode extends BaseOpMode {
 
+
     private ArmSystem.ElevatorState elevatorState;
     boolean[] barcodes;
 
@@ -38,6 +39,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     protected TeamState teamState;
 
     private int level;
+
+    private static final double driveSpeed = 0.5;
+    private static final double rotateSpeed = 0.25;
 
     // Systems
     //private TensorFlow tensorflow;
@@ -66,11 +70,24 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.start();
         vuforia.activate();
         //tensorflow.activate();
-        for (int x = 1; x <= 3; x++) {
+        for (int x = 0; x <= 2; x++) {
             tensorflowNew.activate(x);
             barcodes[x] = (tensorflowNew.getInference().size() > 0);
             if (barcodes[x]) {
                 elevatorState = tensorflowNew.getObjectNew(x);
+                break;
+            }
+            else if (!barcodes[x] && x == 2){
+                double giveUpHope = Math.random();
+                if (giveUpHope < 0.33) {
+                    elevatorState = ArmSystem.ElevatorState.LEVEL_BOTTOM;
+                }
+                if (giveUpHope < 0.66) {
+                    elevatorState =  ArmSystem.ElevatorState.LEVEL_MID;
+                }
+                else {
+                    elevatorState = ArmSystem.ElevatorState.LEVEL_TOP;
+                }
             }
         }
         newGameState(GameState.DETECT_BARCODE);
@@ -81,11 +98,31 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         telemetry.addData("GameState", currentGameState);
 
         switch (currentGameState) {
+            case DRIVE_TO_ALLIANCE_HUB_ONE:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+                if (driveSystem.driveToPosition(150, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_TWO:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+                if (driveSystem.turn(-90, rotateSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
+                }
+                break;
             case DETECT_BARCODE:
-                //TODO ADJUST CALCULATIONS FOR DEGREE TURNING AND IMPLEMENT TEAM STUFF
-                ///error jack if you can do this that would be great
-                driveSystem.turn(-90, 0.75);
-                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
+//                for (int x = 1; x <= 3; x++) {
+//                    tensorflowNew.activate(x);
+//                    barcodes[x] = (tensorflowNew.getInference().size() > 0);
+//                    if (barcodes[x]) {
+//                        elevatorState = tensorflowNew.getObjectNew(x);
+//                    }
+//                }
+                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
                 /*if (level == 1) {
                     //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
                 }
@@ -102,29 +139,37 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                     level++;
                 }*/
                 break;
-            case DRIVE_TO_ALLIANCE_HUB_ONE:
-                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
-                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                } */
-                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
-                }
-                break;
-            case DRIVE_TO_ALLIANCE_HUB_TWO:
-                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
-                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
-                } */
-
-                if (driveSystem.turn(currentRouteState == RouteState.TOP ? -85 : 85, 1.0)) {
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
-                }
-                break;
             case DRIVE_TO_ALLIANCE_HUB_THREE:
                 /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
                     newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
                 } */
+                if (driveSystem.turn(90, rotateSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_FOUR);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_FOUR:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+                if (driveSystem.driveToPosition(150, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_FIVE);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_FIVE:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
 
-                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+                if (driveSystem.turn(currentRouteState == RouteState.TOP ? -85 : 85, rotateSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_SIX);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_SIX:
+                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+                } */
+
+                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
                     newGameState(GameState.PLACE_CUBE);
                 }
                 break;
@@ -137,13 +182,13 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                if (driveSystem.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;
 
             case DRIVE_TO_CAROUSEL_TWO:
-                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
+                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.RIGHT, driveSpeed)) {
                     newGameState(GameState.SPIN_CAROUSEL);
                 }
                 break;
@@ -154,23 +199,34 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                     intakeSystem.Carousel();
                 }
                 intakeSystem.setPower(0);
-                newGameState(GameState.PARK_IN_DEPOT);
+                newGameState(GameState.PARK_IN_DEPOT_ONE);
                 break;
 
-            case PARK_IN_DEPOT:
-                if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+            case PARK_IN_DEPOT_ONE:
+                if (driveSystem.driveToPositionTicks(teamState == TeamState.RED ? 70 : 70, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.PARK_IN_DEPOT_TWO);
+                }
+                break;
+
+            case PARK_IN_DEPOT_TWO:
+                if (driveSystem.turn(teamState == TeamState.RED ? -90 : 90, rotateSpeed)) {
+                    newGameState(GameState.PARK_IN_DEPOT_THREE);
+                }
+                break;
+            case PARK_IN_DEPOT_THREE:
+                if (driveSystem.driveToPositionTicks(teamState == TeamState.RED ? 70 : 70, DriveSystemOther.Direction.FORWARD, driveSpeed)) {
                     newGameState(GameState.COMPLETE);
                 }
                 break;
 
             case PARK_IN_WAREHOUSE_ONE:
-                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
+                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.LEFT, driveSpeed)) {
                     newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
                 }
                 break;
 
             case PARK_IN_WAREHOUSE_TWO:
-                if (driveSystem.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+                if (driveSystem.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, driveSpeed)) {
                     newGameState(GameState.COMPLETE);
                 }
                 break;
@@ -200,7 +256,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     protected boolean move(int ticksX, int ticksY, int rotation) {
         if (driveSystem.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75)) {
-            if (driveSystem.turn(rotation, 1.0)) {
+            if (driveSystem.turn(rotation, rotateSpeed)) {
                 return driveSystem.driveToPositionTicks(ticksY, DriveSystemOther.Direction.FORWARD, 0.75);
             }
         }
@@ -212,13 +268,156 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         driveSystem.driveToPositionTicks(deltaTicks, DriveSystemOther.Direction.FORWARD, 1.0);
         Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
 
-        driveSystem.turn(degrees, 1.0);
+        driveSystem.turn(degrees, rotateSpeed);
 
         deltaTicks = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
         driveSystem.driveToPositionTicks(deltaTicks, DriveSystemOther.Direction.FORWARD, 1.0);
         Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
     }
 }
+//    @Override
+//    public void loop() {
+//        telemetry.addData("GameState", currentGameState);
+//
+//        switch (currentGameState) {
+//            case DETECT_BARCODE:
+//                //TODO ADJUST CALCULATIONS FOR DEGREE TURNING AND IMPLEMENT TEAM STUFF
+//                error jack if you can do this that would be great
+//                driveSystem.turn(-90, 0.75);
+//                newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
+//                /*if (level == 1) {
+//                    //move(Coordinates.RED_BOTTOM_LEFTBARCODE, Coordinates.BLUE_BOTTOM_RIGHTBARCODE);
+//                }
+//                if (level == 2) {
+//                    move(Coordinates.RED_BOTTOM_RIGHTBARCODE, Coordinates.BLUE_BOTTOM_LEFTBARCODE);
+//                }
+//                if (level == 3) {
+//                    stop();
+//                }
+//                if (tensorflow.getObject() == ObjectEnums.DUCK){
+//                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB);
+//                }
+//                else {
+//                    level++;
+//                }*/
+//                break;
+//            case DRIVE_TO_ALLIANCE_HUB_ONE:
+//                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+//                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+//                } */
+//                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
+//                }
+//                break;
+//            case DRIVE_TO_ALLIANCE_HUB_TWO:
+//                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+//                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+//                } */
+//
+//                if (driveSystem.turn(currentRouteState == RouteState.TOP ? -85 : 85, 1.0)) {
+//                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
+//                }
+//                break;
+//            case DRIVE_TO_ALLIANCE_HUB_THREE:
+//                /* if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+//                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
+//                } */
+//
+//                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//                    newGameState(GameState.PLACE_CUBE);
+//                }
+//                break;
+//
+//            case PLACE_CUBE:
+//                armSystem.goToLevel(elevatorState);
+//                intakeSystem.spit_out();
+//                armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+//                newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
+//                break;
+//
+//            case DRIVE_TO_CAROUSEL_ONE:
+//                if (driveSystem.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+//                    newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
+//                }
+//                break;
+//
+//            case DRIVE_TO_CAROUSEL_TWO:
+//                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
+//                    newGameState(GameState.SPIN_CAROUSEL);
+//                }
+//                break;
+//
+//            case SPIN_CAROUSEL:
+//                double baseTime = elapsedTime.seconds();
+//                while (elapsedTime.seconds() < baseTime + 5.0) {
+//                    intakeSystem.Carousel();
+//                }
+//                intakeSystem.setPower(0);
+//                newGameState(GameState.PARK_IN_DEPOT);
+//                break;
+//
+//            case PARK_IN_DEPOT:
+//                if (move(teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? 70 : 70, teamState == TeamState.RED ? -90 : 90)) {
+//                    newGameState(GameState.COMPLETE);
+//                }
+//                break;
+//
+//            case PARK_IN_WAREHOUSE_ONE:
+//                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
+//                    newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
+//                }
+//                break;
+//
+//            case PARK_IN_WAREHOUSE_TWO:
+//                if (driveSystem.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+//                    newGameState(GameState.COMPLETE);
+//                }
+//                break;
+//
+//            case COMPLETE:
+//                stop();
+//                break;
+//        }
+//    }
+//
+//    @Override
+//    public void stop() {
+//        super.stop();
+//        if (tensorflowNew != null) {
+//            tensorflowNew.shutdown();
+//        }
+//    }
+//
+//    /**
+//     * Updates the state of the system and updates RoadRunner trajectory
+//     *
+//     * @param newGameState to switch to
+//     */
+//    protected void newGameState(GameState newGameState) {
+//        currentGameState = newGameState;
+//    }
+//
+//    protected boolean move(int ticksX, int ticksY, int rotation) {
+//        if (driveSystem.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//            if (driveSystem.turn(rotation, 1.0)) {
+//                return driveSystem.driveToPositionTicks(ticksY, DriveSystemOther.Direction.FORWARD, 0.75);
+//            }
+//        }
+//        return false;
+//    }
+//
+//    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int degrees) {
+//        int deltaTicks = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+//        driveSystem.driveToPositionTicks(deltaTicks, DriveSystemOther.Direction.FORWARD, 1.0);
+//        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
+//
+//        driveSystem.turn(degrees, 1.0);
+//
+//        deltaTicks = (int) DriveSystem.TimeCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+//        driveSystem.driveToPositionTicks(deltaTicks, DriveSystemOther.Direction.FORWARD, 1.0);
+//        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
+//    }
+//}
 //}
 //
 //    @Override

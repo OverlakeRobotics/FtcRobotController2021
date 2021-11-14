@@ -29,18 +29,19 @@ public class TensorFlowNew {
 //        tfod.activate(); //turnOn
     }
 
-    /** Method getInference()
-     *
+    /**
+     * Method getInference()
+     * <p>
      * Returns a list of Tensoflow recognitions
-     *
+     * <p>
      * A recognition is, from my understanding, TensorFlow having identifying
      * an object as one of its labels - the thing it should be looking for.
-     *
+     * <p>
      * In a sense, this is sort of a 'picture' of all of the relevant
      * details or aspects of the picture. This is good so that we can
      * iterate through these Recognitions and find important information,
      * such as which label (or type) - amongst other things - these Recognitions are.
-     *
+     * <p>
      * Your garbage explanation brought to you by: @anishch
      */
 
@@ -56,13 +57,11 @@ public class TensorFlowNew {
      */
     public void activate(int x) {
         if (tfod != null) {
-            if(x == 1){
+            if (x == 1) {
                 tfod.setClippingMargins(100, 50, 100, 2 * 433);
-            }
-            else if (x == 2){
+            } else if (x == 2) {
                 tfod.setClippingMargins(100, 50 + 433, 100, 1 * 433);
-            }
-            else if (x == 3){
+            } else if (x == 3) {
                 tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
             }
             tfod.activate();
@@ -80,28 +79,18 @@ public class TensorFlowNew {
     }
 
     public ArmSystem.ElevatorState getObjectNew(int num) {
-        if (num == 1) {
+        if (num == 0) {
             return ArmSystem.ElevatorState.LEVEL_TOP;
         }
-        if (num == 2) {
+        if (num == 1) {
             return ArmSystem.ElevatorState.LEVEL_MID;
         }
-        if (num == 3) {
+        if (num == 2) {
             return ArmSystem.ElevatorState.LEVEL_BOTTOM;
-        } else {
-            double giveUpHope = Math.random();
-            if (giveUpHope < 0.33) {
-                return ArmSystem.ElevatorState.LEVEL_BOTTOM;
-            }
-            if (giveUpHope < 0.66) {
-                return ArmSystem.ElevatorState.LEVEL_MID;
-            } else {
-                return ArmSystem.ElevatorState.LEVEL_TOP;
-            }
         }
+        return null;
     }
-    }
-
+}
         /*
     }
 }
