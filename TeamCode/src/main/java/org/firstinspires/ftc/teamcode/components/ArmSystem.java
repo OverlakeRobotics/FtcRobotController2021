@@ -37,7 +37,7 @@ public class ArmSystem {
     private Map<ElevatorState, Integer> mapToPosition;
 
     public void stop() {
-        elevatorMotor.setPower(0);
+        elevatorMotor.setPower(0.0);
     }
 
     public enum ElevatorState {
@@ -71,7 +71,7 @@ public class ArmSystem {
     public void goToLevel(ElevatorState state){
 //        releaser.setPosition(CLOSED_POSITION);
         int targetPosition = mapToPosition.get(state);
-        elevatorMotor.setPower(0);
+        elevatorMotor.setPower(0.0);
         elevatorMotor.setTargetPosition(targetPosition);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
         elevatorMotor.setPower(0.75);
@@ -85,8 +85,10 @@ public class ArmSystem {
      * Intakes rings
      */
     public void move_up() {
-        if (elevatorMotor.getCurrentPosition() > 53){
-            elevatorMotor.setPower(1);
+        if (elevatorMotor.getCurrentPosition() < 53){
+            elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 1);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            elevatorMotor.setPower(1.0);
         }
     }
 
@@ -94,8 +96,10 @@ public class ArmSystem {
      * Intakes rings
      */
     public void move_down() {
-        if (elevatorMotor.getCurrentPosition() < 12){
-            elevatorMotor.setPower(-1);
+        if (elevatorMotor.getCurrentPosition() > 12){
+            elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 1);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            elevatorMotor.setPower(-1.0);
         }
 
     }

@@ -26,26 +26,23 @@ public class BasicTeleDrive extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        while (gamepad1.y) {
+        if (gamepad1.y) {
             intakeSystem.take_in();
         }
-
-        while (gamepad1.b) {
+        else if (gamepad1.b) {
             intakeSystem.spit_out();
         }
-
-        while (gamepad1.x) {
+        else if (gamepad1.x) {
             intakeSystem.Carousel();
         }
-
-        while (gamepad1.a) {
+        else {
             intakeSystem.setPower(0.0);
         }
 
-        while (gamepad1.right_bumper){
+        if (gamepad1.right_bumper){
             turnTableSystem.moveClock();
         }
-        while (gamepad1.left_bumper){
+        if (gamepad1.left_bumper){
             turnTableSystem.moveCounter();
         }
 
