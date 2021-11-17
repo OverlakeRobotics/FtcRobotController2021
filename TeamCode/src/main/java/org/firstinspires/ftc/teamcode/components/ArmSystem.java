@@ -34,6 +34,9 @@ public class ArmSystem {
     private static final double CLOSED_POSITION = 0.3;
     private static final double OPEN_POSITION = 0.93;
 
+    private static int start_position;
+    // use potentiamotor to detect voltage, then do from there is brian's suggestion
+
     private Map<ElevatorState, Integer> mapToPosition;
 
     public void stop() {
@@ -49,7 +52,8 @@ public class ArmSystem {
         LEVEL_TOP,
         LEVEL_MID,
         LEVEL_BOTTOM,
-        LEVEL_CAROUSEL
+        LEVEL_CAROUSEL,
+        LEVEL_DROP
     }
 
     private ElevatorState currentArmState;
@@ -66,11 +70,19 @@ public class ArmSystem {
         this.elevatorMotor = elevatorMotor;
 //        this.releaser = releaser;
         mapToPosition = new HashMap<>();
-        mapToPosition.put(ElevatorState.LEVEL_TOP, 32);
-        mapToPosition.put(ElevatorState.LEVEL_MID, 16);
-        mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 8);
-        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, 26);
+        // TEST THESE VALUES
+        mapToPosition.put(ElevatorState.LEVEL_TOP, 500);
+        mapToPosition.put(ElevatorState.LEVEL_MID, 300);
+        mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 100);
+        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, 150);
+        mapToPosition.put(ElevatorState.LEVEL_DROP, 100);
+
+        // use potentiamotor to detect voltage, then do from there is brian's suggestion
+        start_position = elevatorMotor.getCurrentPosition();
+
     }
+
+
 
     public void goToLevel(ElevatorState state){
 //        releaser.setPosition(CLOSED_POSITION);
