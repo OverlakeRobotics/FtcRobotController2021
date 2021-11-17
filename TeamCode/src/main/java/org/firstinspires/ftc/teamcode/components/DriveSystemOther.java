@@ -6,23 +6,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.helpers.Constants;
-import org.firstinspires.ftc.teamcode.helpers.Coordinates;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
-//2019 code but but loops instead of calling forEach (which works with different API version)
 public class DriveSystemOther {
-
-    private DcMotor motorFrontRight;
-    private DcMotor motorFrontLeft;
-    private DcMotor motorBackRight;
-    private DcMotor motorBackLeft;
 
     public enum MotorNames {
         FRONTLEFT, FRONTRIGHT, BACKRIGHT, BACKLEFT
@@ -36,7 +23,6 @@ public class DriveSystemOther {
         }
     }
 
-    // TODO - update with our current robot
     public static final double SLOW_DRIVE_COEFF = 0.4;
     // Gives the point at which to switch to less than full power
     public static final double FULL_POWER_UNTIL = 30;
@@ -48,7 +34,7 @@ public class DriveSystemOther {
     // 1120 / 319 = 3.51
     private final double TICKS_IN_MM = 3.51;
     public static final double STRAFE_COEFF = 0.09;
-    public static final String TAG = "DriveSystemOther";
+    public static final String TAG = "DriveSystem";
     public static final double P_TURN_COEFF = 0.012;     // Larger is more responsive, but also less stable
     public static final double HEADING_THRESHOLD = 1 ;      // As tight as we can make it with an integer gyro
 
@@ -60,13 +46,19 @@ public class DriveSystemOther {
     private double mTargetHeading;
     public boolean mSlowDrive;
 
-    public DriveSystemOther(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft, ImuSystem imuSystem) {
-        this.motorFrontRight = motorFrontRight;
-        this.motorFrontLeft = motorFrontLeft;
-        this.motorBackRight = motorBackRight;
-        this.motorBackLeft = motorBackLeft;
+    /**
+     * Handles the data for the abstract creation of a drive system with four wheels
+     */
+    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors, BNO055IMU imu) {
+        this.motors = motors;
         mTargetTicks = 0;
-        this.imuSystem = imuSystem;
+        initMotors();
+        imuSystem = new ImuSystem(imu);
+    }
+
+    public DriveSystemOther(EnumMap<MotorNames, DcMotor> motors) {
+        this.motors = motors;
+        mTargetTicks = 0;
         initMotors();
     }
 
@@ -81,24 +73,17 @@ public class DriveSystemOther {
     }
 
     public void initMotors() {
-        motors = new HashMap<>();
-        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, motorFrontRight);
-        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, motorFrontLeft);
-        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, motorBackRight);
-        motors.put(DriveSystemOther.MotorNames.BACKLEFT, motorBackLeft);
-        for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
-            MotorNames name = entry.getKey();
-            DcMotor motor = entry.getValue();
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            switch (name) {
+        for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+            motor.getValue().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.getValue().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            switch(motor.getKey()) {
                 case FRONTLEFT:
                 case BACKLEFT:
-                    motor.setDirection(DcMotorSimple.Direction.REVERSE);
+                    motor.getValue().setDirection(DcMotorSimple.Direction.REVERSE);
                     break;
                 case FRONTRIGHT:
                 case BACKRIGHT:
-                    motor.setDirection(DcMotorSimple.Direction.FORWARD);
+                    motor.getValue().setDirection(DcMotorSimple.Direction.FORWARD);
                     break;
             }
         }
@@ -138,10 +123,9 @@ public class DriveSystemOther {
         double backRightPower = -leftY - rightX + leftX;
 
 
-        for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
-            MotorNames name = entry.getKey();
-            DcMotor motor = entry.getValue();
-            switch (name) {
+
+        motors.forEach((name, motor) -> {
+            switch(name) {
                 case FRONTRIGHT:
                     setDriveSpeed(motor, frontRightPower);
                     break;
@@ -155,7 +139,7 @@ public class DriveSystemOther {
                     setDriveSpeed(motor, backRightPower);
                     break;
             }
-        }
+        });
         mSlowDrive = false;
     }
 
@@ -178,20 +162,18 @@ public class DriveSystemOther {
             double diff = computeDegreesDiff();
             double correction = Range.clip(STRAFE_COEFF * diff, -1, 1);
             int sign = direction == Direction.LEFT ? -1 : 1;
-            for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
-                MotorNames name = entry.getKey();
-                DcMotor motor = entry.getValue();
-                switch (name) {
+            motors.forEach((name, motor) -> {
+                switch(name) {
                     case FRONTLEFT:
                     case BACKLEFT:
-                        motor.setPower(correction > 0 ? 1 - sign * correction : 1);
+                        motor.setPower(correction > 0 ? 1 - sign * correction: 1);
                         break;
                     case FRONTRIGHT:
                     case BACKRIGHT:
                         motor.setPower(correction < 0 ? 1 + sign * correction : 1);
                         break;
                 }
-            }
+            });
         }
         // Motor has not reached target
         return false;
@@ -199,15 +181,13 @@ public class DriveSystemOther {
 
     private void driveToPositionInit(int ticks, Direction direction, double maxPower) {
         mTargetTicks = direction == Direction.BACKWARD ? -ticks : ticks;
-        for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
-            MotorNames name = entry.getKey();
-            DcMotor motor = entry.getValue();
+        motors.forEach((name, motor) -> {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            if (Direction.isStrafe(direction)) {
+            if(Direction.isStrafe(direction)) {
                 strafeInit();
                 int sign = direction == Direction.LEFT ? -1 : 1;
 
-                switch (name) {
+                switch(name){
                     case FRONTLEFT:
                     case BACKRIGHT:
                         motor.setTargetPosition(sign * mTargetTicks);
@@ -222,7 +202,7 @@ public class DriveSystemOther {
             }
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(maxPower);
-        }
+        });
     }
 
     public void stopAndReset() {
@@ -263,14 +243,6 @@ public class DriveSystemOther {
     public boolean turnAbsolute(double degrees, double maxPower) {
         // Since it is vertical, use pitch instead of heading
         return turn(diffFromAbs(degrees), maxPower);
-    }
-
-    public static double[] TicksMM(Coordinates robotCoordinate, Coordinates newCoordinate) {
-        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
-        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
-        double XMM = (deltaX/ Constants.tileWidth) * Constants.MM_IN_TILE;
-        double YMM = (deltaY/Constants.tileWidth) * Constants.MM_IN_TILE;
-        return new double[]{XMM, YMM};
     }
 
     /**
@@ -361,11 +333,9 @@ public class DriveSystemOther {
      * @param leftPower sets the left side power of the robot
      * @param rightPower sets the right side power of the robot
      */
-    public void tankDrive(double leftPower, double rightPower) {
-        for (Map.Entry<MotorNames, DcMotor> entry : motors.entrySet()) {
-            MotorNames name = entry.getKey();
-            DcMotor motor = entry.getValue();
-            switch (name) {
+    private void tankDrive(double leftPower, double rightPower) {
+        motors.forEach((name, motor) -> {
+            switch(name) {
                 case FRONTLEFT:
                 case BACKLEFT:
                     motor.setPower(leftPower);
@@ -375,7 +345,7 @@ public class DriveSystemOther {
                     motor.setPower(rightPower);
                     break;
             }
-        }
+        });
     }
 
     /**

@@ -26,25 +26,25 @@ public class BasicTeleDrive extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        if (gamepad1.y) {
+        if (gamepad1.right_bumper) {
             intakeSystem.take_in();
         }
-        else if (gamepad1.b) {
+        else if (gamepad1.left_bumper) {
             intakeSystem.spit_out();
         }
-        else if (gamepad1.x) {
+        /*else if (gamepad1.x) {
             intakeSystem.Carousel();
-        }
+        }*/
         else {
             intakeSystem.setPower(0.0);
         }
 
-        if (gamepad1.right_bumper){
+        /*if (gamepad1.right_bumper){
             turnTableSystem.moveClock();
         }
         if (gamepad1.left_bumper){
             turnTableSystem.moveCounter();
-        }
+        }*/
 
         if (gamepad1.dpad_up) {
             armSystem.move_up();
@@ -56,7 +56,7 @@ public class BasicTeleDrive extends BaseOpMode {
             armSystem.stop();
         }
 
-        if (gamepad1.dpad_right) {
+        /*if (gamepad1.dpad_right) {
             turnTableSystem.move_right();
         }
         else if (gamepad1.dpad_left){
@@ -64,7 +64,7 @@ public class BasicTeleDrive extends BaseOpMode {
         }
         else{
             turnTableSystem.stop();
-        }
+        }*/
 
         //weightSystem.checkWeight();
 
