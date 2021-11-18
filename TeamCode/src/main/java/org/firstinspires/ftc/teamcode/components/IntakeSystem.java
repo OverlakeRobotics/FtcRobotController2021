@@ -56,22 +56,18 @@ public class IntakeSystem {
      * Intakes rings
      */
     public void take_in() {
-        if (currentState != IntakeState.TAKE_IN) {
             currentState = IntakeState.TAKE_IN;
             motor1.setPower(1);
             motor2.setPower(-1);
-        }
     }
 
     /**
      * Intakes rings
      */
     public void spit_out() {
-        if (currentState != IntakeState.SPIT_OUT) {
             currentState = IntakeState.SPIT_OUT;
-            motor1.setPower(-1);
-            motor2.setPower(1);
-        }
+            motor1.setPower(-0.15);
+            motor2.setPower(0.15);
     }
 
     /**

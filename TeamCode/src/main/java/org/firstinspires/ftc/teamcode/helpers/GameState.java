@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.helpers;
 
 public enum GameState {
     INITIAL,
+    DRIVE_LMAO,
+    DRIVE_LMAO_TWO,
     DRIVE_TO_ALLIANCE_HUB_ONE,
     DRIVE_TO_ALLIANCE_HUB_TWO,
     DRIVE_TO_ALLIANCE_HUB_THREE,

@@ -22,59 +22,41 @@ public class BasicTeleDrive extends BaseOpMode {
 
     @Override
     public void loop() {
-        float rx = (float) Math.pow(gamepad2.right_stick_x, 3);
-        float lx = (float) Math.pow(gamepad2.left_stick_x, 3);
-        float ly = (float) Math.pow(gamepad2.left_stick_y, 3);
+        float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
+        float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
+        float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-       /* if (gamepad1.y) {
+        if (gamepad1.right_bumper) {
             intakeSystem.take_in();
         }
-        else if (gamepad1.b) {
+        else if (gamepad1.left_bumper) {
             intakeSystem.spit_out();
         }
-        else if (gamepad1.x) {
+        /*else if (gamepad1.x) {
             intakeSystem.Carousel();
-        }
+        }*/
         else {
             intakeSystem.setPower(0.0);
+        }
+
+        /*if (gamepad1.right_bumper){
+            turnTableSystem.moveClock();
+        }
+        if (gamepad1.left_bumper){
+            turnTableSystem.moveCounter();
         }*/
-        if(gamepad1.y){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_TOP);
+
+        if (gamepad1.dpad_up) {
+            armSystem.move_up();
         }
-        else if (gamepad1.b){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_CAROUSEL);
-        }
-        else if(gamepad1.x){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_MID);
-        }
-        else if(gamepad1.a){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
-        }
-        else if(gamepad1.right_bumper){
-            armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_DROP);
+        else if (gamepad1.dpad_down){
+            armSystem.move_down();
         }
         else{
             armSystem.stop();
         }
 
-        //if (gamepad1.right_bumper){
-          //  turnTableSystem.moveClock();
-        //}
-        //if (gamepad1.left_bumper){
-          //  turnTableSystem.moveCounter();
-       // }
-
-        //if (gamepad1.dpad_up) {
-          //  armSystem.move_up();
-        //}
-        //else if (gamepad1.dpad_down){
-         //   armSystem.move_down();
-       // }
-        //else{
-          //  armSystem.stop();
-        //}
-
-        if (gamepad1.dpad_right) {
+        /*if (gamepad1.dpad_right) {
             turnTableSystem.move_right();
         }
         else if (gamepad1.dpad_left){
@@ -82,7 +64,7 @@ public class BasicTeleDrive extends BaseOpMode {
         }
         else{
             turnTableSystem.stop();
-        }
+        }*/
 
         //weightSystem.checkWeight();
 
