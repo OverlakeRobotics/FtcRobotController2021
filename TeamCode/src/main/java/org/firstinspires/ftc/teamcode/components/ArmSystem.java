@@ -87,12 +87,15 @@ public class ArmSystem {
     public void goToLevel(ElevatorState state){
 //        releaser.setPosition(CLOSED_POSITION);
         int targetPosition = mapToPosition.get(state);
-
-        while (elevatorMotor.getCurrentPosition() < targetPosition) {
-            elevatorMotor.setTargetPosition(targetPosition);
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-            elevatorMotor.setPower(elevatorMotor.getCurrentPosition() < targetPosition ? 0.75 : -0.75);
+        elevatorMotor.setTargetPosition(targetPosition);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
+        if(targetPosition > elevatorMotor.getCurrentPosition()){
+            elevatorMotor.setPower(0.75);
         }
+        else{
+            elevatorMotor.setPower(-0.75);
+        }
+
 
         // make sure the arm reaches desired position before exiting this method
         //elevatorMotor.setPower(0);
