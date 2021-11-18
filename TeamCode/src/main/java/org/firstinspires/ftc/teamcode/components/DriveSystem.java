@@ -1,35 +1,44 @@
 package org.firstinspires.ftc.teamcode.components;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.helpers.Constants;
-import org.firstinspires.ftc.teamcode.helpers.Coordinates;
-import org.firstinspires.ftc.teamcode.opmodes.autonomous.AutonomousOpMode;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class DriveSystem {
 
-    //Constants
-    public static final double MAIN_SPEED_COEFFICIENT = 1;
-    public static final double SLOW_DRIVE_SPEED_COEFFICIENT = 0.25;
+    public enum MotorNames {
+        FRONTLEFT, FRONTRIGHT, BACKRIGHT, BACKLEFT
+    }
+
+    public enum Direction {
+        FORWARD, BACKWARD, LEFT, RIGHT;
+
+        private static boolean isStrafe(Direction direction) {
+            return direction == LEFT || direction == RIGHT;
+        }
+    }
+
+    public static final double SLOW_DRIVE_COEFF = 0.4;
+    // Gives the point at which to switch to less than full power
+    public static final double FULL_POWER_UNTIL = 30;
+    // Minimum speed to complete the turn
     public static final double MIN_SPEED = 0.37;
+    // 12.6 inches circumference of a wheel
+    // 319 mm circumference of a wheel
+    // 1120 ticks in a revolution
+    // 1120 / 319 = 3.51
+    private final double TICKS_IN_MM = 3.51;
     public static final double STRAFE_COEFF = 0.09;
-    public static final String TAG = "DriveSystem";
+    public static final String TAG = "DriveSystemOld";
     public static final double P_TURN_COEFF = 0.012;     // Larger is more responsive, but also less stable
     public static final double HEADING_THRESHOLD = 1 ;      // As tight as we can make it with an integer gyro
 
-    //Motors
-    private DcMotor motorFrontRight;
-    private DcMotor motorFrontLeft;
-    private DcMotor motorBackRight;
-    private DcMotor motorBackLeft;
+    public Map<MotorNames, DcMotor> motors;
 
     public ImuSystem imuSystem;
 
@@ -37,64 +46,203 @@ public class DriveSystem {
     private double mTargetHeading;
     public boolean mSlowDrive;
 
-
-    //IMUs (for Gyros)
-    private BNO055IMU IMUSystemOne;
-    private BNO055IMU IMUSystemTwo; // Should be used for redundancy but not enabled as of present
-
-    public enum Direction {
-        FORWARD, BACKWARD, LEFT, RIGHT;
-
-        /*private static Direction getDirection(Direction direction) {
-            if (direction == FORWARD){
-
-            }
-            if (direction == BACKWARD){
-
-            }
-            if (direction == LEFT){
-
-            }
-            if (direction == RIGHT){
-
-            }
-            return direction;
-        }*/
+    /**
+     * Handles the data for the abstract creation of a drive system with four wheels
+     */
+    public DriveSystem(Map<MotorNames, DcMotor> motors, BNO055IMU imu) {
+        this.motors = motors;
+        mTargetTicks = 0;
+        initMotors();
+        imuSystem = new ImuSystem(imu);
     }
 
-    //Other "settings"
-    public boolean slowDriveMode = false;
-
-    //Coordinates/Location
-    // TODO - Set these equal to the actual coordinates relative to the field
-//    public double x_coordinate;
-//    public double y_coordinate;
-//    public double driver_x_coordinate;
-//    public double driver_y_coordinate;
-
-    /**
-     * Initializes the DriveSystem
-     */
-    public DriveSystem(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft, ImuSystem imuSystem) {
-        this.motorFrontRight = motorFrontRight;
-        this.motorFrontLeft = motorFrontLeft;
-        this.motorBackRight = motorBackRight;
-        this.motorBackLeft = motorBackLeft;
-        this.imuSystem = imuSystem;
+    public DriveSystem(EnumMap<MotorNames, DcMotor> motors) {
+        this.motors = motors;
+        mTargetTicks = 0;
         initMotors();
     }
 
+    /**
+     * Set the power of the drive system
+     * @param power power of the system
+     */
+    public void setMotorPower(double power) {
+        for (DcMotor motor : motors.values()) {
+            motor.setPower(power);
+        }
+    }
+
     public void initMotors() {
-        this.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.motorBackLeft.setPower(0);
-        this.motorBackRight.setPower(0);
-        this.motorFrontLeft.setPower(0);
-        this.motorFrontRight.setPower(0);
+        for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+            motor.getValue().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.getValue().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            switch(motor.getKey()) {
+                case FRONTLEFT:
+                case BACKLEFT:
+                    motor.getValue().setDirection(DcMotorSimple.Direction.REVERSE);
+                    break;
+                case FRONTRIGHT:
+                case BACKRIGHT:
+                    motor.getValue().setDirection(DcMotorSimple.Direction.FORWARD);
+                    break;
+            }
+        }
+        // setMotorPower(0);
+    }
+
+    public void slowDrive(boolean slowDrive) {
+        mSlowDrive = slowDrive;
+    }
+
+    private void setDriveSpeed(DcMotor motor, double motorPower) {
+        motor.setPower(Range.clip(mSlowDrive ?
+                SLOW_DRIVE_COEFF * motorPower : motorPower, -1, 1));
+    }
+
+    /**
+     * Clips joystick values and drives the motors.
+     * @param rightX Right X joystick value
+     * @param leftX Left X joystick value
+     * @param leftY Left Y joystick value in case you couldn't tell from the others
+     */
+    public void drive(float rightX, float leftX, float leftY) {
+        // Prevent small values from causing the robot to drift
+        if (Math.abs(rightX) < 0.01) {
+            rightX = 0.0f;
+        }
+        if (Math.abs(leftX) < 0.01) {
+            leftX = 0.0f;
+        }
+        if (Math.abs(leftY) < 0.01) {
+            leftY = 0.0f;
+        }
+
+        double frontLeftPower = -leftY + rightX + leftX;
+        double frontRightPower = -leftY - rightX - leftX;
+        double backLeftPower = -leftY + rightX - leftX;
+        double backRightPower = -leftY - rightX + leftX;
+
+
+
+        for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+            switch(motor.getKey()) {
+                case FRONTRIGHT:
+                    setDriveSpeed(motor.getValue(), frontRightPower);
+                    break;
+                case BACKLEFT:
+                    setDriveSpeed(motor.getValue(), backLeftPower);
+                    break;
+                case FRONTLEFT:
+                    setDriveSpeed(motor.getValue(), frontLeftPower);
+                    break;
+                case BACKRIGHT:
+                    setDriveSpeed(motor.getValue(), backRightPower);
+                    break;
+            }
+        }
+        mSlowDrive = false;
+    }
+
+    public boolean driveToPositionTicks(int ticks, Direction direction, double maxPower) {
+        if(mTargetTicks == 0) {
+            driveToPositionInit(ticks, direction, maxPower);
+        }
+        for (DcMotor motor : motors.values()) {
+            int offset = Math.abs(motor.getCurrentPosition() - mTargetTicks);
+            if(offset <= 15){
+                // Shut down motors
+                // Reset target
+                stopAndReset();
+                // Motor has reached target
+                return true;
+            }
+        }
+
+        if (Direction.isStrafe(direction)) {
+            double diff = computeDegreesDiff();
+            double correction = Range.clip(STRAFE_COEFF * diff, -1, 1);
+            int sign = direction == Direction.LEFT ? -1 : 1;
+            for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+                switch(motor.getKey()) {
+                    case FRONTLEFT:
+                    case BACKLEFT:
+                        motor.getValue().setPower(correction > 0 ? 1 - sign * correction: 1);
+                        break;
+                    case FRONTRIGHT:
+                    case BACKRIGHT:
+                        motor.getValue().setPower(correction < 0 ? 1 + sign * correction : 1);
+                        break;
+                }
+            }
+        }
+        // Motor has not reached target
+        return false;
+    }
+
+    private void driveToPositionInit(int ticks, Direction direction, double maxPower) {
+        mTargetTicks = direction == Direction.BACKWARD ? -ticks : ticks;
+        for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+            motor.getValue().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            if(Direction.isStrafe(direction)) {
+                strafeInit();
+                int sign = direction == Direction.LEFT ? -1 : 1;
+
+                switch(motor.getKey()){
+                    case FRONTLEFT:
+                    case BACKRIGHT:
+                        motor.getValue().setTargetPosition(sign * mTargetTicks);
+                        break;
+                    case FRONTRIGHT:
+                    case BACKLEFT:
+                        motor.getValue().setTargetPosition(sign * -mTargetTicks);
+                        break;
+                }
+            } else {
+                motor.getValue().setTargetPosition(mTargetTicks);
+            }
+            motor.getValue().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.getValue().setPower(maxPower);
+        }
+    }
+
+    public void stopAndReset() {
+        setMotorPower(0.0);
+        mTargetTicks = 0;
+        mTargetHeading = 0;
+        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private void strafeInit() {
+        mTargetHeading = imuSystem.getHeading();
+    }
+
+    public void setRunMode(DcMotor.RunMode runMode) {
+        for (DcMotor motor : motors.values()) {
+            motor.setMode(runMode);
+        }
+    }
+
+    public boolean driveToPosition(int millimeters, Direction direction, double maxPower) {
+        return driveToPositionTicks(millimetersToTicks(millimeters), direction, maxPower);
+    }
+
+    /**
+     * Converts millimeters to ticks
+     * @param millimeters Millimeters to convert to ticks
+     * @return number of ticks
+     */
+    private int millimetersToTicks(int millimeters) {
+        return (int) Math.round(millimeters * TICKS_IN_MM);
+    }
+
+    /**
+     * Turns relative the heading upon construction
+     * @param degrees The degrees to turn the robot by
+     * @param maxPower The maximum power of the motors
+     */
+    public boolean turnAbsolute(double degrees, double maxPower) {
+        // Since it is vertical, use pitch instead of heading
+        return turn(diffFromAbs(degrees), maxPower);
     }
 
     /**
@@ -118,22 +266,21 @@ public class DriveSystem {
 
     }
 
-
-    private double computeDegreesDiff() {
-        double diff = mTargetHeading - imuSystem.getHeading();
-        return Math.abs(diff) == 180 ? diff : diff % 180;
-    }
-
+    /**
+     * Perform one cycle of closed loop heading control.
+     * @param speed Desired speed of turn
+     */
     public boolean onHeading(double speed, double heading) {
         double leftSpeed;
 
         // determine turn power based on +/- error
         double error = computeDegreesDiff();
+        Log.d(TAG, "Error: " + error);
 
         // If it gets there: stop
         if (Math.abs(error) <= HEADING_THRESHOLD) {
             mTargetHeading = 0;
-            setAllMotorPower(0.0);
+            setMotorPower(0);
             return true;
         }
 
@@ -145,104 +292,70 @@ public class DriveSystem {
 
         // Send desired speeds to motors.
         tankDrive(leftSpeed * Math.signum(error), -leftSpeed * Math.signum(error));
+        Log.d(TAG, "Left Speed Post Tank Drive " + leftSpeed);
+        Log.d(TAG, "Left Power" + motors.get(MotorNames.FRONTLEFT).getPower());
         return false;
     }
-    
 
+    /**
+     * getError determines the error between the target angle and the robot's current heading
+     * @param   heading  Desired angle (relative to global reference established at last Gyro Reset).
+     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
+     */
+
+    private double diffFromAbs(double heading) {
+        // calculate error in -179 to +180 range
+        // When vertical use pitch instead of heading
+        double robotDiff = heading - imuSystem.getHeading();
+        Log.d(TAG,"Difference from initial: " + robotDiff);
+        while (robotDiff > 180) {
+            robotDiff -= 360;
+        }
+        while (robotDiff <= -180) {
+            robotDiff += 360;
+        }
+        Log.d(TAG,"Difference from initial 2: " + robotDiff);
+        return robotDiff;
+    }
+
+    /**
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @return
+     */
+    private double getSteer(double error) {
+        return Range.clip(error *  P_TURN_COEFF, -1, 1);
+    }
+
+    /**
+     * Causes the system to tank drive
+     * @param leftPower sets the left side power of the robot
+     * @param rightPower sets the right side power of the robot
+     */
     private void tankDrive(double leftPower, double rightPower) {
-        motorFrontRight.setPower(0);
-        motorFrontLeft.setPower(leftPower);
-        motorBackRight.setPower(rightPower);
-        motorBackLeft.setPower(0);
-    }
-    /**
-     * Sets the motor's power, taking speed into account.
-     * @param motor The motor that will have a change in power
-     * @param power The speed of the motor, from -1 to 1
-     */
-    private void setMotorPower (DcMotor motor, double power) {
-        motor.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
-    }
-
-    public void setAllMotorPower(double power) {
-        motorFrontLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
-        motorFrontRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
-        motorBackLeft.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
-        motorBackRight.setPower(MAIN_SPEED_COEFFICIENT * (slowDriveMode ? SLOW_DRIVE_SPEED_COEFFICIENT * power : power));
+        for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
+            switch(motor.getKey()) {
+                case FRONTLEFT:
+                case BACKLEFT:
+                    motor.getValue().setPower(leftPower);
+                    break;
+                case FRONTRIGHT:
+                case BACKRIGHT:
+                    motor.getValue().setPower(rightPower);
+                    break;
+            }
+        }
     }
 
     /**
-     * Turn joystick input into motor movement.
-     * @param rx The x of the right joystick, from -1 to 1
-     * @param lx The x of the left joystick, from -1 to 1
-     * @param ly The y of the left joystick, from -1 to 1
+     * computeDegreesDiff determines the error between the target angle and the robot's current heading
+     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
      */
-    public void joystickDrive (float rx, float lx, float ly) {
-        if (Math.abs(rx) < 0.01) {
-            rx = 0;
-        }
-        if (Math.abs(ly) < 0.01) {
-            ly = 0;
-        }
-        if (Math.abs(lx) < 0.01) {
-            lx = 0;
-        }
-
-        //Powers assume robot forward is forward for motor as well
-        setMotorPower(motorBackLeft,  lx + ly - rx);
-        setMotorPower(motorFrontLeft, - lx + ly - rx);
-        setMotorPower(motorBackRight, (- lx + ly + rx) * -1);
-        setMotorPower(motorFrontRight, (lx + ly + rx) * -1);
+    private double computeDegreesDiff() {
+        double diff = mTargetHeading - imuSystem.getHeading();
+        return Math.abs(diff) == 180 ? diff : diff % 180;
     }
 
-    public int getTicks() {
-        int num = 0;
-        num += motorBackLeft.getCurrentPosition() + motorBackRight.getCurrentPosition() + motorFrontLeft.getCurrentPosition() + motorFrontRight.getCurrentPosition();
-        return num;
-    }
-
-    public void driveTicks(int ticks) {
-        motorFrontLeft.setTargetPosition(motorFrontLeft.getTargetPosition() + ticks);
-        motorFrontRight.setTargetPosition(motorFrontRight.getTargetPosition() + ticks);
-        motorBackLeft.setTargetPosition(motorBackLeft.getTargetPosition() + ticks);
-        motorBackRight.setTargetPosition(motorBackRight.getTargetPosition() + ticks);
-    }
-
-    public static double[] TimeCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {
-        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
-        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
-        double Xtime = (deltaX/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
-        double Ytime = (deltaY/Constants.tileWidth) * Constants.FULL_POWER_TILE_TIME;
-        double xMagnitude = deltaX/Math.abs(deltaX); //goes in drivesystem params
-        double yMagnitude = deltaY/Math.abs(deltaY); // goes in drivesystem params
-        return new double[]{Xtime, Ytime, xMagnitude, yMagnitude};
-    }
-
-    public static double[] TicksCoordinate(Coordinates robotCoordinate, Coordinates newCoordinate) {
-        double deltaX = newCoordinate.getX() - robotCoordinate.getX();
-        double deltaY = newCoordinate.getY() - robotCoordinate.getY();
-        double XTicks = (deltaX/Constants.tileWidth) * Constants.TICKS_IN_TILE;
-        double YTicks = (deltaY/Constants.tileWidth) * Constants.TICKS_IN_TILE;
-        return new double[]{XTicks, YTicks};
-    }
-
-
-    //Todo Add functionality for gyro assisted strafe
-
-    //Todo God mode
-    //Drive with GodMode Enabled
-    //Angles are relative to the vertical axis, with 90 being right and -90 being left
-//    private void godDrive (float rx, float lx, float ly) {
-//        double gyroAngle = Math.atan2(y_coordinate - driver_y_coordinate, x_coordinate - driver_x_coordinate);
-//        double joystickAngle = Math.atan(lx/ly);
-//        double angleToDrive = joystickAngle - gyroAngle;
-//
-//        double vectorDriveMagnitude = Math.sqrt(ly*ly+lx*lx);
-//
-//        float horizontalVectorDrive = (float) vectorDriveMagnitude * (float) Math.sin(angleToDrive);
-//        float verticalVectorDrive = (float) vectorDriveMagnitude * (float)  Math.cos(angleToDrive);
-//
-//        joystickDrive(rx, horizontalVectorDrive, verticalVectorDrive);
-//
-//    }
 }

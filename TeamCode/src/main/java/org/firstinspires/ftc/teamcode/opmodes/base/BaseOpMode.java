@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.opmodes.base;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
-import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
+import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.ImuSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
@@ -16,11 +14,12 @@ import org.firstinspires.ftc.teamcode.helpers.Constants;
 // import org.firstinspires.ftc.teamcode.components.WeightSystem;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 // TODO - Finalize INTAKESYSTEM TO WORK PROPERLY TOGETHER EVERYWHERE
 public abstract class BaseOpMode extends OpMode {
 
-//    protected DriveSystem driveSystem;
+//    protected DriveSystemOld driveSystem;
     //protected WeightSystem weightSystem;
     protected ArmSystem armSystem;
    // protected WheelSystem wheelSystem;
@@ -28,23 +27,19 @@ public abstract class BaseOpMode extends OpMode {
     protected TurnTableSystem turnTableSystem;
     protected ImuSystem imuSystem;
     protected ElapsedTime elapsedTime;
-    protected DriveSystemOther driveSystem;
+    protected DriveSystem driveSystem;
 
     @Override
     public void init() {
         imuSystem = new ImuSystem(hardwareMap.get(BNO055IMU.class, Constants.IMU));
-//        EnumMap<DriveSystemOther.MotorNames, DcMotor> motors = new EnumMap<>(DriveSystemOther.MotorNames.class);
-//        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
-//        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
-//        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
-//        motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
+        Map<DriveSystem.MotorNames, DcMotor> motors = new EnumMap<>(DriveSystem.MotorNames.class);
+        motors.put(DriveSystem.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
+        motors.put(DriveSystem.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
+        motors.put(DriveSystem.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
+        motors.put(DriveSystem.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
 
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
-        driveSystem = new DriveSystemOther(hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT),
-                hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT),
-                hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT),
-                hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT),
-                imuSystem);
+        driveSystem = new DriveSystem(motors, hardwareMap.get(BNO055IMU.class, Constants.IMU));
         //weightSystem = new WeightSystem(
                 //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ZERO),
                 //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ONE),

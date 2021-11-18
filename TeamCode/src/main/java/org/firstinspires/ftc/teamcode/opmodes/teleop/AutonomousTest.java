@@ -8,8 +8,8 @@
 //import com.qualcomm.robotcore.hardware.LED;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
+//import org.firstinspires.ftc.teamcode.components.DriveSystemOld;
 //import org.firstinspires.ftc.teamcode.components.DriveSystem;
-//import org.firstinspires.ftc.teamcode.components.DriveSystemOther;
 //import org.firstinspires.ftc.teamcode.components.ImuSystem;
 //// import org.firstinspires.ftc.teamcode.components.WeightSystem;
 //// import org.firstinspires.ftc.teamcode.components.WheelSystem;
@@ -36,12 +36,12 @@
 //        imuSystem = new ImuSystem(hardwareMap.get(BNO055IMU.class, "imu"));
 //
 //        CURRENT_POSITION = Coordinates.BLUE_STARTING_POSITION_BOTTOM;
-//        motors.put(DriveSystemOther.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
-//        motors.put(DriveSystemOther.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
-//        motors.put(DriveSystemOther.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
-//        motors.put(DriveSystemOther.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
+//        motors.put(DriveSystem.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
+//        motors.put(DriveSystem.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
+//        motors.put(DriveSystem.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
+//        motors.put(DriveSystem.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
 //
-//        driveSystem = new DriveSystemOther(motors, imuSystem);
+//        driveSystem = new DriveSystem(motors, imuSystem);
 //        elapsedTime = new ElapsedTime();
 //    }
 //
@@ -61,7 +61,7 @@
 //                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
 //                } */
 //
-//                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//                if (driveSystem.driveToPosition(300, DriveSystem.Direction.FORWARD, 0.75)) {
 //                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
 //                }
 //                break;
@@ -79,7 +79,7 @@
 //                    newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL);
 //                } */
 //
-//                if (driveSystem.driveToPosition(300, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//                if (driveSystem.driveToPosition(300, DriveSystem.Direction.FORWARD, 0.75)) {
 //                    if (currentRouteState == RouteState.TOP) {
 //                        newGameState(GameState.PARK_IN_WAREHOUSE_ONE);
 //                    } else {
@@ -89,31 +89,31 @@
 //                break;
 //
 //            case DRIVE_TO_CAROUSEL_ONE:
-//                if (driveSystem.driveToPosition(840, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+//                if (driveSystem.driveToPosition(840, DriveSystem.Direction.BACKWARD, 0.75)) {
 //                    newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
 //                }
 //                break;
 //
 //            case DRIVE_TO_CAROUSEL_TWO:
-//                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.RIGHT, 0.75)) {
+//                if (driveSystem.driveToPosition(350, DriveSystem.Direction.RIGHT, 0.75)) {
 //                    newGameState(GameState.PARK_IN_DEPOT);
 //                }
 //                break;
 //
 //            case PARK_IN_DEPOT:
-//                if (driveSystem.driveToPosition(700, DriveSystemOther.Direction.LEFT, 0.75)) {
+//                if (driveSystem.driveToPosition(700, DriveSystem.Direction.LEFT, 0.75)) {
 //                    newGameState(GameState.COMPLETE);
 //                }
 //                break;
 //
 //            case PARK_IN_WAREHOUSE_ONE:
-//                if (driveSystem.driveToPosition(350, DriveSystemOther.Direction.LEFT, 0.75)) {
+//                if (driveSystem.driveToPosition(350, DriveSystem.Direction.LEFT, 0.75)) {
 //                    newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
 //                }
 //                break;
 //
 //            case PARK_IN_WAREHOUSE_TWO:
-//                if (driveSystem.driveToPosition(1000, DriveSystemOther.Direction.BACKWARD, 0.75)) {
+//                if (driveSystem.driveToPosition(1000, DriveSystem.Direction.BACKWARD, 0.75)) {
 //                    newGameState(GameState.COMPLETE);
 //                }
 //                break;
@@ -133,11 +133,11 @@
 //    }
 //
 //    protected boolean move(int ticksX, int ticksY, int rotation) {
-//        driveSystem.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75);
+//        driveSystem.driveToPositionTicks(ticksX, DriveSystem.Direction.FORWARD, 0.75);
 //        return true;
-//        /*if (driveSystemOther.driveToPositionTicks(ticksX, DriveSystemOther.Direction.FORWARD, 0.75)) {
+//        /*if (driveSystemOther.driveToPositionTicks(ticksX, DriveSystem.Direction.FORWARD, 0.75)) {
 //            if (driveSystemOther.turn(rotation, 1.0)) {
-//                return driveSystemOther.driveToPositionTicks(ticksY, DriveSystemOther.Direction.FORWARD, 0.75);
+//                return driveSystemOther.driveToPositionTicks(ticksY, DriveSystem.Direction.FORWARD, 0.75);
 //            }
 //        }
 //        return false;*/
@@ -145,14 +145,14 @@
 //
 //
 //    protected void moveTicks(Coordinates redTeamCoords, Coordinates blueTeamCoords, int degrees) {
-//        int deltaMM = (int) DriveSystemOther.TicksMM(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
-//        driveSystem.driveToPosition(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+//        int deltaMM = (int) DriveSystem.TicksMM(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[0];
+//        driveSystem.driveToPosition(deltaMM, DriveSystem.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
 //        Coordinates.updateX(teamState == TeamState.RED ? redTeamCoords.getX() : blueTeamCoords.getX());
 //
 //        driveSystem.turn(degrees, 1.0);
 //
-//        deltaMM = (int) DriveSystem.TicksCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
-//        driveSystem.driveToPositionTicks(deltaMM, DriveSystemOther.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
+//        deltaMM = (int) DriveSystemOld.TicksCoordinate(Coordinates.CURRENT_POSITION, teamState == TeamState.RED ? redTeamCoords : blueTeamCoords)[1];
+//        driveSystem.driveToPositionTicks(deltaMM, DriveSystem.Direction.FORWARD, deltaMM/Math.abs(deltaMM));
 //        Coordinates.updateY(teamState == TeamState.RED ? redTeamCoords.getY() : blueTeamCoords.getY());
 //    }
 //}
