@@ -71,11 +71,11 @@ public class ArmSystem {
 //        this.releaser = releaser;
         mapToPosition = new HashMap<>();
         // TEST THESE VALUES
-        mapToPosition.put(ElevatorState.LEVEL_TOP, 500);
-        mapToPosition.put(ElevatorState.LEVEL_MID, 300);
-        mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 100);
-        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, 150);
-        mapToPosition.put(ElevatorState.LEVEL_DROP, 100);
+        mapToPosition.put(ElevatorState.LEVEL_TOP, -3 + 280);
+        mapToPosition.put(ElevatorState.LEVEL_MID, -505 + 280);
+        mapToPosition.put(ElevatorState.LEVEL_BOTTOM, -730 + 280);
+        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, -280 + 280);
+        //mapToPosition.put(ElevatorState.LEVEL_DROP, 100);
 
         // use potentiamotor to detect voltage, then do from there is brian's suggestion
         start_position = elevatorMotor.getCurrentPosition();

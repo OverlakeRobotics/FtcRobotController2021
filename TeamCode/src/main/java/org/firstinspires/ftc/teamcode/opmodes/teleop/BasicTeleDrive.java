@@ -39,12 +39,14 @@ public class BasicTeleDrive extends BaseOpMode {
             intakeSystem.setPower(0.0);
         }
 
-        /*if (gamepad1.right_bumper){
+        if (gamepad1.right_bumper){
             turnTableSystem.moveClock();
         }
         if (gamepad1.left_bumper){
             turnTableSystem.moveCounter();
-        }*/
+        }
+
+        telemetry.addData("CurrentPosition: ", armSystem.getElevatorMotor().getCurrentPosition());
 
         if (gamepad1.dpad_up) {
             armSystem.move_up();
