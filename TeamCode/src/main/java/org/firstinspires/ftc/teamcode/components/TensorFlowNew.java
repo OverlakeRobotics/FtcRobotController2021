@@ -78,17 +78,17 @@ public class TensorFlowNew {
         }
     }
 
-    public ArmSystem.ElevatorState getObjectNew(int num) {
+    public int getObjectNew(int num) {
         if (num == 0) {
-            return ArmSystem.ElevatorState.LEVEL_TOP;
+            return ArmSystem.LEVEL_TOP;
         }
         if (num == 1) {
-            return ArmSystem.ElevatorState.LEVEL_MID;
+            return ArmSystem.LEVEL_MID;
         }
         if (num == 2) {
-            return ArmSystem.ElevatorState.LEVEL_BOTTOM;
+            return ArmSystem.LEVEL_BOTTOM;
         }
-        return null;
+        return 0;
     }
 }
         /*

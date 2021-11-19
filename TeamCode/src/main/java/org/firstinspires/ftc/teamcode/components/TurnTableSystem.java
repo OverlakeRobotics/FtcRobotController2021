@@ -95,7 +95,7 @@ public class TurnTableSystem {
         //rotatorMotor.setPower(0);
     }
 
-    private void place(ArmSystem.ElevatorState level, CircleState state){
+    private void place(int level, CircleState state){
         /*if (bool){
             releaser.setPosition(CLOSED_POSITION);
         }

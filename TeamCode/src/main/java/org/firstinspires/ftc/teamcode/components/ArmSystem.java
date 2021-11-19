@@ -34,10 +34,14 @@ public class ArmSystem {
     private static final double CLOSED_POSITION = 0.3;
     private static final double OPEN_POSITION = 0.93;
 
+    public static final int LEVEL_TOP =  500;
+    public static final int LEVEL_MID = 300;
+    public static final int LEVEL_BOTTOM = 100;
+    public static final int LEVEL_CAROUSEL = 150;
+    public static final int LEVEL_DROP = 100;
+
     private static int start_position;
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
-
-    private Map<ElevatorState, Integer> mapToPosition;
 
     public void stop() {
         elevatorMotor.setPower(0.0);
@@ -46,17 +50,6 @@ public class ArmSystem {
     public DcMotor getElevatorMotor() {
         return elevatorMotor;
     }
-
-    public enum ElevatorState {
-        LEVEL_NADA,
-        LEVEL_TOP,
-        LEVEL_MID,
-        LEVEL_BOTTOM,
-        LEVEL_CAROUSEL,
-        LEVEL_DROP
-    }
-
-    private ElevatorState currentArmState;
 
     public void initMotors() {
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -69,13 +62,6 @@ public class ArmSystem {
     public ArmSystem(DcMotor elevatorMotor/*, ?Servo releaser*/){
         this.elevatorMotor = elevatorMotor;
 //        this.releaser = releaser;
-        mapToPosition = new HashMap<>();
-        // TEST THESE VALUES
-        mapToPosition.put(ElevatorState.LEVEL_TOP, 500);
-        mapToPosition.put(ElevatorState.LEVEL_MID, 300);
-        mapToPosition.put(ElevatorState.LEVEL_BOTTOM, 100);
-        mapToPosition.put(ElevatorState.LEVEL_CAROUSEL, 150);
-        mapToPosition.put(ElevatorState.LEVEL_DROP, 100);
 
         // use potentiamotor to detect voltage, then do from there is brian's suggestion
         start_position = elevatorMotor.getCurrentPosition();
@@ -84,12 +70,10 @@ public class ArmSystem {
 
 
 
-    public void goToLevel(ElevatorState state){
-//        releaser.setPosition(CLOSED_POSITION);
-        int targetPosition = mapToPosition.get(state);
-        elevatorMotor.setTargetPosition(targetPosition);
+    public void goToLevel(int state){
+        elevatorMotor.setTargetPosition(state);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-        if(targetPosition > elevatorMotor.getCurrentPosition()){
+        if(state > elevatorMotor.getCurrentPosition()){
             elevatorMotor.setPower(0.75);
         }
         else{
@@ -103,7 +87,7 @@ public class ArmSystem {
     }
 
     /**
-     * Intakes rings
+     * Moves arm up
      */
     public void move_up() {
         elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 80);
@@ -112,7 +96,7 @@ public class ArmSystem {
     }
 
     /**
-     * Intakes rings
+     * Moves arm down
      */
     public void move_down() {
         elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 80);
@@ -138,18 +122,6 @@ public class ArmSystem {
 //            }
 //        }
 //        releaser.setPosition(CLOSED_POSITION);
-    }
-
-    public boolean arm(){
-        switch (currentArmState){
-            case LEVEL_TOP:
-                break;
-            case LEVEL_MID:
-                break;
-            case LEVEL_BOTTOM:
-                break;
-        }
-        return false;
     }
 
     public void moveTo(int ticks){

@@ -19,10 +19,7 @@ import java.util.Map;
 // TODO - Finalize INTAKESYSTEM TO WORK PROPERLY TOGETHER EVERYWHERE
 public abstract class BaseOpMode extends OpMode {
 
-//    protected DriveSystemOld driveSystem;
-    //protected WeightSystem weightSystem;
     protected ArmSystem armSystem;
-   // protected WheelSystem wheelSystem;
     protected IntakeSystem intakeSystem;
     protected TurnTableSystem turnTableSystem;
     protected ImuSystem imuSystem;
@@ -40,14 +37,6 @@ public abstract class BaseOpMode extends OpMode {
 
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
         driveSystem = new DriveSystem(motors, hardwareMap.get(BNO055IMU.class, Constants.IMU));
-        //weightSystem = new WeightSystem(
-                //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ZERO),
-                //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_ONE),
-                //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_TWO),
-                //hardwareMap.get(AnalogInput.class, WEIGHT_SENSOR_THREE),
-                //hardwareMap.get(LED.class,WEIGHT_LIGHT_RED),
-                //hardwareMap.get(LED.class,WEIGHT_LIGHT_GREEN));
-       // wheelSystem = new WheelSystem(hardwareMap.get(DcMotor.class, INTAKE_MOTOR1));
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));elapsedTime = new ElapsedTime();
     }

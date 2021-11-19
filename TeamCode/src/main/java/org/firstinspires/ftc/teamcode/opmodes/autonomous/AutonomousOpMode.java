@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 public abstract class AutonomousOpMode extends BaseOpMode {
 
 
-    private ArmSystem.ElevatorState elevatorState;
+    private int elevatorLevel;
     boolean[] barcodes;
 
     private GameState currentGameState;
@@ -53,19 +53,19 @@ public abstract class AutonomousOpMode extends BaseOpMode {
             tensorflowNew.activate(x);
             barcodes[x] = (tensorflowNew.getInference().size() > 0);
             if (barcodes[x]) {
-                elevatorState = tensorflowNew.getObjectNew(x);
+                elevatorLevel = tensorflowNew.getObjectNew(x);
                 break;
             }
             else if (!barcodes[x] && x == 2){
                 double giveUpHope = Math.random();
                 if (giveUpHope < 0.33) {
-                    elevatorState = ArmSystem.ElevatorState.LEVEL_BOTTOM;
+                    elevatorLevel = ArmSystem.LEVEL_BOTTOM;
                 }
                 if (giveUpHope < 0.66) {
-                    elevatorState =  ArmSystem.ElevatorState.LEVEL_MID;
+                    elevatorLevel =  ArmSystem.LEVEL_MID;
                 }
                 else {
-                    elevatorState = ArmSystem.ElevatorState.LEVEL_TOP;
+                    elevatorLevel = ArmSystem.LEVEL_TOP; //TODO: If not detected in center position, create states for moving left and right, also put camera on left side, mounted so that the camera detects the duck in the provided space
                 }
             }
         }*/
@@ -102,9 +102,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case PLACE_CUBE:
-                armSystem.goToLevel(elevatorState);
+                armSystem.goToLevel(elevatorLevel);
                 intakeSystem.spit_out();
-                armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_BOTTOM);
+                armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
                 newGameState(currentRouteState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
 
@@ -122,7 +122,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
-                armSystem.goToLevel(ArmSystem.ElevatorState.LEVEL_CAROUSEL);
+                armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }
