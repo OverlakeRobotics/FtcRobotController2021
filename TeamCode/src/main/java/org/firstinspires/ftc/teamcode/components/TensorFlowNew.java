@@ -57,13 +57,7 @@ public class TensorFlowNew {
      */
     public void activate(int x) {
         if (tfod != null) {
-            if (x == 1) {
-                tfod.setClippingMargins(100, 50, 100, 2 * 433);
-            } else if (x == 2) {
-                tfod.setClippingMargins(100, 50 + 433, 100, 1 * 433);
-            } else if (x == 3) {
-                tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
-            }
+            tfod.setZoom(4, 16/9);
             tfod.activate();
         }
 
