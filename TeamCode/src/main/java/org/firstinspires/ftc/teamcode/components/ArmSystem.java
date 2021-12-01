@@ -37,7 +37,7 @@ public class ArmSystem {
     public static final int LEVEL_TOP = -3 + 280;
     public static final int LEVEL_MID = -505 + 280;
     public static final int LEVEL_BOTTOM = -730 + 280;
-    public static final int LEVEL_CAROUSEL = 0;
+    public static final int LEVEL_CAROUSEL = 0; // to test
 
     private static int start_position;
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
