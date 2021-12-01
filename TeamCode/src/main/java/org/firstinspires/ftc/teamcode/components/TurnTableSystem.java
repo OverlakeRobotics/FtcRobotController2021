@@ -19,7 +19,7 @@ public class TurnTableSystem {
 
     private final DcMotor rotatorMotor;
 
-    public static final int LEVEL_90 = -3 + 280; // to test
+    public static final int LEVEL_90 = -3 + 50; // to test
     public static final int LEVEL_0 = 0; // to test
 
     public int getPosition(){
