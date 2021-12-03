@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 @TeleOp(name = "DriveOpMode", group = "TeleOp")
 public class DriveOpMode extends BaseOpMode {
 
+    private int bool = -500;
     @Override
     public void init(){
         super.init();
@@ -43,14 +44,54 @@ public class DriveOpMode extends BaseOpMode {
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
             telemetry.addData("ACTIVE", "turnTableSystem left");
         }
-        if(gamepad2.y){
-            armSystem.goToLevel(ArmSystem.LEVEL_TOP);
+        if (gamepad2.y){
+            bool = 1;
+            //armSystem.getElevatorMotor().setTargetPosition(ArmSystem.LEVEL_TOP);
             telemetry.addData("ACTIVE", "armSystem, TOP");
         }
-        if(gamepad2.a){
-            armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+        else if (gamepad2.a){
+            bool = -1;
+            /*
+            armSystem.getElevatorMotor().setTargetPosition(ArmSystem.LEVEL_BOTTOM);
+            if(armSystem.getElevatorMotor().getCurrentPosition() > ArmSystem.LEVEL_BOTTOM){
+                armSystem.getElevatorMotor().setPower(0.75);
+            }
+            else{
+                armSystem.getElevatorMotor().setPower(0);
+            }*/
+            //armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
             telemetry.addData("ACTIVE", "armSystem, BOTTOM");
         }
+//        else{
+//            armSystem.getElevatorMotor().setTargetPosition(armSystem.getElevatorMotor().getCurrentPosition());
+//            armSystem.getElevatorMotor().setPower(0);
+//        }
+
+        if (bool == 1 && armSystem.getElevatorMotor().getCurrentPosition() < ArmSystem.LEVEL_TOP) {
+            armSystem.move_up();
+        }
+        else if (bool == -1 && armSystem.getElevatorMotor().getCurrentPosition() > ArmSystem.LEVEL_BOTTOM){
+            armSystem.move_down();
+        }
+        else{
+            armSystem.stop();
+            bool = 0;
+        }
+
+//        if (bool == 1){
+//            if ((armSystem.goToLevel(ArmSystem.LEVEL_TOP))){
+//                bool = 0;
+//            }
+//        }
+//        else if (bool == -1){
+//            if ((armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM))){
+//                bool = 0;
+//            }
+//        }
+//        else{
+//            armSystem.getElevatorMotor().setPower(0);
+//        }
+
 
         // y is highest, a is shared hub
 

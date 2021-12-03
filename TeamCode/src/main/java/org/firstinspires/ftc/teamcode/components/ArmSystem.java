@@ -69,14 +69,20 @@ public class ArmSystem {
 
 
 
-    public void goToLevel(int state){
+    public boolean goToLevel(int state){
         elevatorMotor.setTargetPosition(state);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-        if(state > elevatorMotor.getCurrentPosition()){
+        if(state > elevatorMotor.getCurrentPosition() + 5){
             elevatorMotor.setPower(0.75);
+            return false;
+        }
+        else if (state < elevatorMotor.getCurrentPosition() - 5){
+            elevatorMotor.setPower(-0.75);
+            return false;
         }
         else{
-            elevatorMotor.setPower(-0.75);
+            elevatorMotor.setPower(0);
+            return true;
         }
 
 
