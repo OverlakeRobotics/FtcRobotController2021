@@ -65,6 +65,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     public void loop() {
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
+        telemetry.addData("DUCK???", tensorflowNew.seesDuck());
+        telemetry.addData("ANYTHING?????", tensorflowNew.seeAnything());
         telemetry.update();
 
         switch (currentGameState) {

@@ -52,6 +52,21 @@ public class TensorFlowNew {
         return null;
     }
 
+    public boolean seesDuck(){
+        if(tfod.getRecognitions().size() > 1) {
+            for (Recognition r : tfod.getRecognitions()) {
+                if(r.getLabel().equalsIgnoreCase("Duck")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean seeAnything(){
+        return tfod.getRecognitions().size() > 0;
+    }
+
     /**
      * Activates TensorFlow
      */
