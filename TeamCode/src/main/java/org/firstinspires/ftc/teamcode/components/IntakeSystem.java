@@ -57,8 +57,8 @@ public class IntakeSystem {
      */
     public void take_in() {
             currentState = IntakeState.TAKE_IN;
-            motor1.setPower(1);
-            motor2.setPower(-1);
+            motor1.setPower(0.15);
+            motor2.setPower(-0.15);
     }
 
     /**
@@ -66,8 +66,8 @@ public class IntakeSystem {
      */
     public void spit_out() {
             currentState = IntakeState.SPIT_OUT;
-            motor1.setPower(-0.15);
-            motor2.setPower(0.15);
+            motor1.setPower(-1);
+            motor2.setPower(1);
     }
 
     /**

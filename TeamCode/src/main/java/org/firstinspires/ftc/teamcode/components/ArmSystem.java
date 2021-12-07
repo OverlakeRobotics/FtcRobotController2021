@@ -69,21 +69,10 @@ public class ArmSystem {
 
 
 
-    public boolean goToLevel(int state){
+    public void goToLevel(int state){
         elevatorMotor.setTargetPosition(state);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-        if(state > elevatorMotor.getCurrentPosition() + 5){
-            elevatorMotor.setPower(0.75);
-            return false;
-        }
-        else if (state < elevatorMotor.getCurrentPosition() - 5){
-            elevatorMotor.setPower(-0.75);
-            return false;
-        }
-        else{
-            elevatorMotor.setPower(0);
-            return true;
-        }
+        elevatorMotor.setPower(1.0);
 
 
         // make sure the arm reaches desired position before exiting this method
@@ -95,8 +84,7 @@ public class ArmSystem {
      * Moves arm up
      */
     public void move_up() {
-        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 80);
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         elevatorMotor.setPower(1.0);
     }
 
@@ -104,9 +92,8 @@ public class ArmSystem {
      * Moves arm down
      */
     public void move_down() {
-        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 80);
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorMotor.setPower(-1.0);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorMotor.setPower(-0.75);
 
     }
     public void release(boolean bool){

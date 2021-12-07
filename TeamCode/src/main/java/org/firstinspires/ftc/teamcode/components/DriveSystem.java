@@ -161,7 +161,7 @@ public class DriveSystem {
         if (Direction.isStrafe(direction)) {
             double diff = computeDegreesDiff();
             double correction = Range.clip(STRAFE_COEFF * diff, -1, 1);
-            int sign = direction == Direction.LEFT ? -1 : 1;
+            int sign = direction == Direction.RIGHT ? -1 : 1;
             for (Map.Entry<MotorNames, DcMotor> motor : motors.entrySet()) {
                 switch(motor.getKey()) {
                     case FRONTLEFT:
@@ -185,7 +185,7 @@ public class DriveSystem {
             motor.getValue().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             if(Direction.isStrafe(direction)) {
                 strafeInit();
-                int sign = direction == Direction.LEFT ? -1 : 1;
+                int sign = direction == Direction.RIGHT ? -1 : 1;
 
                 switch(motor.getKey()){
                     case FRONTLEFT:

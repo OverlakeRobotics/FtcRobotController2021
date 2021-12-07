@@ -19,6 +19,21 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 public abstract class AutonomousOpMode extends BaseOpMode {
 
+    /*
+    * ROBOT CONFIG
+    *
+    * Control Hub
+    * Port 0 - NeveRest 40 Gearmotor - motor-back-left
+    * Port 1 - NeveRest 40 Gearmotor - motor-front-left
+    * Port 2 - NeveRest 40 Gearmotor - motor-back-right
+    * Port 3 - NeveRest 40 Gearmotor - motor-front-right
+    *
+    * Expansion Hub
+    * Port 0 - NeveRest 40 Gearmotor - intakeMotor2
+    * Port 1 - NeveRest 40 Gearmotor - intakeMotor1
+    * Port 2 - NeveRest 40 Gearmotor - rotatorMotor
+    * Port 3 - NeveRest 40 Gearmotor - elevator-motor
+    * */
 
     private int elevatorLevel;
     private boolean isRBorBT;
@@ -40,7 +55,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.init();
         this.teamState = teamState;
         this.routeState = routeState;
-        newGameState(GameState.SCAN_INITIAL);
         driveSystem.initMotors();
         vuforia = Vuforia.getInstance();
         tensorflow = new TensorFlow(vuforia);
@@ -55,8 +69,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void start() {
         super.start();
-        //vuforia.activate();
-        //tensorflow.activate()
+        vuforia.activate();
+        //tensorflow.activate();
 
         newGameState(GameState.SCAN_INITIAL);
     }

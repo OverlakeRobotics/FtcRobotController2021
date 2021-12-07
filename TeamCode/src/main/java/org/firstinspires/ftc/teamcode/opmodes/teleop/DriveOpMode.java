@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
+import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
@@ -17,6 +18,14 @@ public class DriveOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
+
+        telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
+        telemetry.addData("elevator-motor", armSystem.getElevatorMotor().getCurrentPosition());
+        telemetry.addData("motor-back-left", driveSystem.motors.get(DriveSystem.MotorNames.BACKLEFT).getCurrentPosition());
+        telemetry.addData("motor-front-left", driveSystem.motors.get(DriveSystem.MotorNames.FRONTLEFT).getCurrentPosition());
+        telemetry.addData("motor-back-right", driveSystem.motors.get(DriveSystem.MotorNames.BACKRIGHT).getCurrentPosition());
+        telemetry.addData("motor-front-right", driveSystem.motors.get(DriveSystem.MotorNames.FRONTRIGHT).getCurrentPosition());
+
 
         float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
@@ -67,6 +76,7 @@ public class DriveOpMode extends BaseOpMode {
 //            armSystem.getElevatorMotor().setPower(0);
 //        }
 
+        /*
         if (bool == 1 && armSystem.getElevatorMotor().getCurrentPosition() < ArmSystem.LEVEL_TOP) {
             armSystem.move_up();
         }
@@ -77,6 +87,7 @@ public class DriveOpMode extends BaseOpMode {
             armSystem.stop();
             bool = 0;
         }
+        */
 
 //        if (bool == 1){
 //            if ((armSystem.goToLevel(ArmSystem.LEVEL_TOP))){

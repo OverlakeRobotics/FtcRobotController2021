@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 
-//@Autonomous(name = "AutonomousOpModeTest - BLUE - TOP", group = "Autonomous")
+@Autonomous(name = "AutonomousOpMode - BLUE - TOP", group = "Autonomous")
 public class AutonomousOpModeBlueTop extends AutonomousOpMode {
 
     @Override

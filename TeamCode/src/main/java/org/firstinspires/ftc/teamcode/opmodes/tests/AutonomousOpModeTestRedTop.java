@@ -10,9 +10,8 @@ public class AutonomousOpModeTestRedTop extends AutonomousOpModeTest {
 
     @Override
     public void init() {
-        teamState = TeamState.RED;
-        routeState = RouteState.TOP;
-        super.init();
+        super.init(TeamState.RED, RouteState.TOP);
+
     }
 
 }
