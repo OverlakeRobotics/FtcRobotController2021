@@ -28,6 +28,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     * Port 2 - NeveRest 40 Gearmotor - motor-back-right
     * Port 3 - NeveRest 40 Gearmotor - motor-front-right
     *
+    * Analog 0 - Analog input - p
+    *
     * Expansion Hub
     * Port 0 - NeveRest 40 Gearmotor - intakeMotor2
     * Port 1 - NeveRest 40 Gearmotor - intakeMotor1
@@ -37,6 +39,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private int elevatorLevel;
     private boolean isRBorBT;
+    private double baseTime;
 
     private GameState currentGameState;
     private RouteState routeState;
@@ -138,7 +141,10 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                     }
                 }
                 armSystem.goToLevel(elevatorLevel);
-                intakeSystem.spit_out();
+                baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() < baseTime + 5.0) {
+                    intakeSystem.spit_out();
+                }
                 armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
@@ -156,8 +162,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case SPIN_CAROUSEL:
-                double baseTime = elapsedTime.seconds();
                 armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+                baseTime = elapsedTime.seconds();
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }

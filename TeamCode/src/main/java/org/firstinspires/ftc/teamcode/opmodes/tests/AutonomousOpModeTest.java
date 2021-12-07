@@ -22,6 +22,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
 
     private int elevatorLevel;
     private boolean isRBorBT;
+    private double baseTime;
 
     private GameState currentGameState;
     public RouteState routeState;
@@ -39,9 +40,9 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
         this.routeState = routeState;
         newGameState(GameState.SCAN_INITIAL);
         driveSystem.initMotors();
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
-        armSystem.initMotors();
-        armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+        //armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
+        //armSystem.initMotors();
+        //armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
@@ -75,7 +76,6 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * (2/3)), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {
                     if (level == 3) {
                         elevatorLevel = isRBorBT ? ArmSystem.LEVEL_BOTTOM : ArmSystem.LEVEL_TOP;
-                        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY);
                     } else {
                         elevatorLevel = isRBorBT ? ArmSystem.LEVEL_TOP : ArmSystem.LEVEL_BOTTOM;
                     }
@@ -116,29 +116,38 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
                 }
-                armSystem.goToLevel(elevatorLevel);
-                intakeSystem.spit_out();
-                armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+                //armSystem.goToLevel(elevatorLevel);
+                baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() > baseTime + 5.0) {
+                    intakeSystem.spit_out();
+                }
+                //armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
                 intakeSystem.setPower(0);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(teamState == teamState.BLUE ? 180 : 0, rotateSpeed)) {
+                if (driveSystem.turn(90, rotateSpeed)) {
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;
 
             case DRIVE_TO_CAROUSEL_TWO:
-                if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * 2.0), teamState == TeamState.RED ? DriveSystem.Direction.LEFT : DriveSystem.Direction.RIGHT, driveSpeed)) {
+                if (driveSystem.turn(90, rotateSpeed)) {
+                    newGameState(GameState.DRIVE_TO_CAROUSEL_THREE);
+                }
+                break;
+
+            case DRIVE_TO_CAROUSEL_THREE:
+                if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * 2.0), teamState == TeamState.BLUE ? DriveSystem.Direction.LEFT : DriveSystem.Direction.RIGHT, driveSpeed)) {
                     newGameState(GameState.SPIN_CAROUSEL);
                 }
                 break;
 
             case SPIN_CAROUSEL:
-                double baseTime = elapsedTime.seconds();
-                armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
-                while (elapsedTime.seconds() < baseTime + 5.0) {
+                //armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+                baseTime = elapsedTime.seconds();
+                while (elapsedTime.seconds() > baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }
                 intakeSystem.setPower(0);
@@ -151,13 +160,13 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 break;
 
             case PARK_IN_WAREHOUSE_ONE:
-                if (driveSystem.turn(teamState == TeamState.RED ? -90 : 90, rotateSpeed)) {
+                if (driveSystem.turn(teamState == TeamState.BLUE ? -90 : 90, rotateSpeed)) {
                     newGameState(GameState.PARK_IN_WAREHOUSE_TWO);
                 }
                 break;
 
             case PARK_IN_WAREHOUSE_TWO:
-                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * (12/7) * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * (12/7) * Constants.mmPerInch), teamState == TeamState.BLUE? DriveSystem.Direction.LEFT : DriveSystem.Direction.RIGHT, driveSpeed)) {
                     newGameState(GameState.PARK_IN_WAREHOUSE_THREE);
                 }
                 break;
