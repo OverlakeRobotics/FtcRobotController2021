@@ -28,8 +28,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     * Port 2 - NeveRest 40 Gearmotor - motor-back-right
     * Port 3 - NeveRest 40 Gearmotor - motor-front-right
     *
-    * Analog 0 - Analog input - p
-    *
     * Expansion Hub
     * Port 0 - NeveRest 40 Gearmotor - intakeMotor2
     * Port 1 - NeveRest 40 Gearmotor - intakeMotor1
@@ -39,7 +37,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     private int elevatorLevel;
     private boolean isRBorBT;
-    private double baseTime;
 
     private GameState currentGameState;
     private RouteState routeState;
@@ -80,6 +77,12 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
+
+        if(!armSystem.inRange()){
+            telemetry.addData("ARM OUT OF RANGE", armSystem.inRange());
+            telemetry.update();
+            return;
+        }
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
         telemetry.addData("DUCK???", tensorflowNew.seesDuck());
@@ -110,6 +113,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
                 }
+                // turn
                 break;
             case DRIVE_TO_ALLIANCE_HUB_ONE_SECONDARY:
                 if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch * (1/3)), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {
@@ -140,12 +144,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
                 }
-                armSystem.goToLevel(elevatorLevel);
-                baseTime = elapsedTime.seconds();
-                while (elapsedTime.seconds() < baseTime + 5.0) {
-                    intakeSystem.spit_out();
-                }
-                armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+                armSystem.moveToPosition(elevatorLevel);
+                intakeSystem.spit_out();
+                armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
 
@@ -162,8 +163,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case SPIN_CAROUSEL:
-                armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
-                baseTime = elapsedTime.seconds();
+                double baseTime = elapsedTime.seconds();
+                armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }

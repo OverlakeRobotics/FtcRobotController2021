@@ -4,21 +4,30 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.PotentiometerSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 @TeleOp(name = "DriveOpMode", group = "TeleOp")
 public class DriveOpMode extends BaseOpMode {
 
     private int bool = -500;
     @Override
-    public void init(){
-        super.init();
+    public void init_loop(){
+        armSystem.moveTo(1000);
+        telemetry.addData("Position: ", armSystem.getElevatorMotor().getCurrentPosition());
+        telemetry.addData("Voltage ", armSystem.sensorAsAnalogInput0.getVoltage());
+//        if (armSystem.sensorAsAnalogInput0.getVoltage() < 1.1 || armSystem.sensorAsAnalogInput0.getVoltage() > 1.2){
+//            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
+//        }
     }
 
     @Override
     public void loop() {
 
+       // telemetry.addData("See: ", PotentiometerSystem.sensorAsAnalogInput0.getVoltage());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
         telemetry.addData("elevator-motor", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.addData("motor-back-left", driveSystem.motors.get(DriveSystem.MotorNames.BACKLEFT).getCurrentPosition());
@@ -26,25 +35,24 @@ public class DriveOpMode extends BaseOpMode {
         telemetry.addData("motor-back-right", driveSystem.motors.get(DriveSystem.MotorNames.BACKRIGHT).getCurrentPosition());
         telemetry.addData("motor-front-right", driveSystem.motors.get(DriveSystem.MotorNames.FRONTRIGHT).getCurrentPosition());
 
-
         float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        if(gamepad2.right_trigger > 0.5){
-            while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0){
-                if (armSystem.getElevatorMotor().getCurrentPosition() <= ArmSystem.LEVEL_MID + 50) {
-                    while (armSystem.getElevatorMotor().getCurrentPosition() != ArmSystem.LEVEL_TOP) {
-                        armSystem.goToLevel(ArmSystem.LEVEL_TOP);
-                    }
-                }
-                while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
-                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
-                }
-            }
-            armSystem.goToLevel(0);
-            // Arm down to position for intake
-        }
+//        if(gamepad2.right_trigger > 0.5){
+//            while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0){
+//                if (armSystem.getElevatorMotor().getCurrentPosition() <= ArmSystem.LEVEL_MID + 50) {
+//                    while (armSystem.getElevatorMotor().getCurrentPosition() != ArmSystem.LEVEL_TOP) {
+//                        armSystem.moveTo(ArmSystem.LEVEL_TOP);
+//                    }
+//                }
+//                while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
+//                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
+//                }
+//            }
+//            armSystem.goToLevel(0);
+//            // Arm down to position for intake
+//        }
         if(gamepad2.dpad_right){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
             telemetry.addData("ACTIVE", "turnTableSystem right");
