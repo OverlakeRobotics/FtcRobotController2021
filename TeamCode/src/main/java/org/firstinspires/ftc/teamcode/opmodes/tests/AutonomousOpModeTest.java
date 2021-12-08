@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.tests;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
@@ -39,7 +40,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
         this.routeState = routeState;
         newGameState(GameState.SCAN_INITIAL);
         driveSystem.initMotors();
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
+        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
