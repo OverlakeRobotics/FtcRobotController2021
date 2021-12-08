@@ -61,6 +61,7 @@ public class ArmSystem {
 
         }*/
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotor.setPower(0);
 //        releaser.setPosition(CLOSED_POSITION);

@@ -164,7 +164,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
-                armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+                armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }

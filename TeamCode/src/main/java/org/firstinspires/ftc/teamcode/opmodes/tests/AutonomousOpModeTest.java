@@ -42,7 +42,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
         driveSystem.initMotors();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
-        armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
@@ -117,9 +117,9 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
                 }
-                armSystem.goToLevel(elevatorLevel);
+                armSystem.moveToPosition(elevatorLevel);
                 intakeSystem.spit_out();
-                armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+                armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                 intakeSystem.setPower(0);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
@@ -138,7 +138,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
 
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
-                armSystem.goToLevel(ArmSystem.LEVEL_CAROUSEL);
+                armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                 while (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }
