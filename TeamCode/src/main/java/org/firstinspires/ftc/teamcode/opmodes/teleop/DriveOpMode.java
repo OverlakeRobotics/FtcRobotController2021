@@ -17,6 +17,7 @@ public class DriveOpMode extends BaseOpMode {
     @Override
     public void init(){
         super.init();
+        armSystem.moveTo(ArmSystem.LEVEL_TOP);
     }
 
     @Override
@@ -34,20 +35,20 @@ public class DriveOpMode extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        if(gamepad2.right_trigger > 0.5){
-            while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0){
-                if (armSystem.getElevatorMotor().getCurrentPosition() <= ArmSystem.LEVEL_MID + 50) {
-                    while (armSystem.getElevatorMotor().getCurrentPosition() != ArmSystem.LEVEL_TOP) {
-                        armSystem.moveTo(ArmSystem.LEVEL_TOP);
-                    }
-                }
-                while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
-                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
-                }
-            }
-            armSystem.goToLevel(0);
-            // Arm down to position for intake
-        }
+//        if(gamepad2.right_trigger > 0.5){
+//            while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0){
+//                if (armSystem.getElevatorMotor().getCurrentPosition() <= ArmSystem.LEVEL_MID + 50) {
+//                    while (armSystem.getElevatorMotor().getCurrentPosition() != ArmSystem.LEVEL_TOP) {
+//                        armSystem.moveTo(ArmSystem.LEVEL_TOP);
+//                    }
+//                }
+//                while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
+//                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
+//                }
+//            }
+//            armSystem.goToLevel(0);
+//            // Arm down to position for intake
+//        }
         if(gamepad2.dpad_right){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
             telemetry.addData("ACTIVE", "turnTableSystem right");

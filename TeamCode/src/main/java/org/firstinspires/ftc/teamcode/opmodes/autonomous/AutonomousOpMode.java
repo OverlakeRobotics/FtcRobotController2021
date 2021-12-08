@@ -138,9 +138,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
                 }
-                armSystem.goToLevel(elevatorLevel);
+                armSystem.moveToPosition(elevatorLevel);
                 intakeSystem.spit_out();
-                armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+                armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 break;
 

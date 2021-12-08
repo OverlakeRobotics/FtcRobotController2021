@@ -139,7 +139,7 @@ public class ArmSystem {
     }
 
     public void moveToPosition(int num){
-        moveTo(num - elevatorMotor.getCurrentPosition());
+        moveTo(num);
     }
 }
 
