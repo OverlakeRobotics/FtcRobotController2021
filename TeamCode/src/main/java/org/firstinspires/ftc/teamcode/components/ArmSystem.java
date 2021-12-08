@@ -83,6 +83,10 @@ public class ArmSystem {
 //        openGripper();
     }
 
+    public boolean inRange(){
+        return (sensorAsAnalogInput0.getVoltage() > 2.69 || sensorAsAnalogInput0.getVoltage() < 0.8);
+    }
+
 
     /*public void goToLevel(int state){
 
@@ -101,8 +105,9 @@ public class ArmSystem {
      * Moves arm up
      */
     public void move_up() {
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotor.setPower(1.0);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setPower(1.0);
+
     }
 
     /**
@@ -449,3 +454,4 @@ public class ArmSystem {
 //    }
 //
 //}
+

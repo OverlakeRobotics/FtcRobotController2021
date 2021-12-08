@@ -59,8 +59,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         vuforia = Vuforia.getInstance();
         tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
-        //armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
-        //armSystem.initMotors();
+        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
+        armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
@@ -77,6 +77,12 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
+
+        if(!armSystem.inRange()){
+            telemetry.addData("ARM OUT OF RANGE", armSystem.inRange());
+            telemetry.update();
+            return;
+        }
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
         telemetry.addData("DUCK???", tensorflowNew.seesDuck());
