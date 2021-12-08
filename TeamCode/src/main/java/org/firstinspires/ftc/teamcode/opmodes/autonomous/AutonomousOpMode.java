@@ -59,8 +59,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         vuforia = Vuforia.getInstance();
         tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
-        armSystem.initMotors();
+        //armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
+        //armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
@@ -107,6 +107,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
                 }
+                // turn
                 break;
             case DRIVE_TO_ALLIANCE_HUB_ONE_SECONDARY:
                 if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch * (1/3)), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {

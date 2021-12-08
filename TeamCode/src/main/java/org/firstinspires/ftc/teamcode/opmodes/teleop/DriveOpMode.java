@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
+import org.firstinspires.ftc.teamcode.components.PotentiometerSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 @TeleOp(name = "DriveOpMode", group = "TeleOp")
 public class DriveOpMode extends BaseOpMode {
@@ -19,13 +22,13 @@ public class DriveOpMode extends BaseOpMode {
     @Override
     public void loop() {
 
+       // telemetry.addData("See: ", PotentiometerSystem.sensorAsAnalogInput0.getVoltage());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
         telemetry.addData("elevator-motor", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.addData("motor-back-left", driveSystem.motors.get(DriveSystem.MotorNames.BACKLEFT).getCurrentPosition());
         telemetry.addData("motor-front-left", driveSystem.motors.get(DriveSystem.MotorNames.FRONTLEFT).getCurrentPosition());
         telemetry.addData("motor-back-right", driveSystem.motors.get(DriveSystem.MotorNames.BACKRIGHT).getCurrentPosition());
         telemetry.addData("motor-front-right", driveSystem.motors.get(DriveSystem.MotorNames.FRONTRIGHT).getCurrentPosition());
-
 
         float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
@@ -35,7 +38,7 @@ public class DriveOpMode extends BaseOpMode {
             while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0){
                 if (armSystem.getElevatorMotor().getCurrentPosition() <= ArmSystem.LEVEL_MID + 50) {
                     while (armSystem.getElevatorMotor().getCurrentPosition() != ArmSystem.LEVEL_TOP) {
-                        armSystem.goToLevel(ArmSystem.LEVEL_TOP);
+                        armSystem.moveTo(ArmSystem.LEVEL_TOP);
                     }
                 }
                 while(turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {

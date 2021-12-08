@@ -20,7 +20,7 @@ public abstract class TestArmSystem extends BaseOpMode {
     @Override
     public void init(){
         super.init();
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, ARM_MOTOR));
+        //armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, ARM_MOTOR));
     }
 
     @Override
