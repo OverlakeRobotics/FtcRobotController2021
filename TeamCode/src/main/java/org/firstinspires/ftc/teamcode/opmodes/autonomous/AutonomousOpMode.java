@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
@@ -59,7 +60,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         vuforia = Vuforia.getInstance();
         tensorflow = new TensorFlow(vuforia);
         tensorflowNew = new TensorFlowNew(vuforia);
-        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR));
+        armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
@@ -147,7 +148,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(170, rotateSpeed)) {
+                if (driveSystem.turn(90, rotateSpeed)) {
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;

@@ -49,6 +49,12 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
     }
 
     @Override
+    public void init_loop() {
+        super.init_loop();
+        armSystem.moveToPosition(ArmSystem.LEVEL_MID);
+    }
+
+    @Override
     public void start() {
         super.start();
         //vuforia.activate();
@@ -94,7 +100,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB_TWO:
-                if (driveSystem.driveToPosition((int) (0.4 * Constants.tileWidth * (12/7) * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_THREE);
                 }
                 break;
@@ -139,7 +145,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
             case SPIN_CAROUSEL:
                 double baseTime = elapsedTime.seconds();
                 armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
-                while (elapsedTime.seconds() < baseTime + 5.0) {
+                if (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
                 }
                 intakeSystem.setPower(0);
@@ -170,6 +176,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 break;
 
             case COMPLETE:
+                armSystem.moveToPosition(0);
                 stop();
                 break;
         }

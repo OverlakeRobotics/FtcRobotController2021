@@ -37,7 +37,7 @@ public abstract class TestArmSystem extends BaseOpMode {
         if(gamepad1.dpad_down) {
             targetTicks--;
         }
-        armSystem.moveTo(targetTicks);
+        armSystem.moveToPosition(targetTicks);
         telemetry.addData("ticks: %i ", targetTicks);
     }
 

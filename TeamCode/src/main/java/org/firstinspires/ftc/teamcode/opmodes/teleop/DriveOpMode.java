@@ -14,14 +14,17 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class DriveOpMode extends BaseOpMode {
 
     private int bool = -500;
+    public boolean forTest = true;
+
+
     @Override
     public void init_loop(){
-        armSystem.moveTo(1000);
         telemetry.addData("Position: ", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.addData("Voltage ", armSystem.sensorAsAnalogInput0.getVoltage());
 //        if (armSystem.sensorAsAnalogInput0.getVoltage() < 1.1 || armSystem.sensorAsAnalogInput0.getVoltage() > 1.2){
 //            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
 //        }
+
     }
 
     @Override
