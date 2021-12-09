@@ -65,22 +65,20 @@ public class DriveOpMode extends BaseOpMode {
             telemetry.addData("ACTIVE", "turnTableSystem left");
         }
         if (gamepad2.y){
-            bool = 1;
-            //armSystem.getElevatorMotor().setTargetPosition(ArmSystem.LEVEL_TOP);
+            //bool = 1;
+            armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
             telemetry.addData("ACTIVE", "armSystem, TOP");
         }
         else if (gamepad2.a){
-            bool = -1;
-            /*
-            armSystem.getElevatorMotor().setTargetPosition(ArmSystem.LEVEL_BOTTOM);
-            if(armSystem.getElevatorMotor().getCurrentPosition() > ArmSystem.LEVEL_BOTTOM){
-                armSystem.getElevatorMotor().setPower(0.75);
-            }
-            else{
-                armSystem.getElevatorMotor().setPower(0);
-            }*/
-            //armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM);
+            //bool = -1;
+            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
             telemetry.addData("ACTIVE", "armSystem, BOTTOM");
+        }
+        else if(gamepad2.x){
+            armSystem.moveToPosition(ArmSystem.LEVEL_MID);
+        }
+        else if(gamepad2.b){
+            armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         }
 //        else{
 //            armSystem.getElevatorMotor().setTargetPosition(armSystem.getElevatorMotor().getCurrentPosition());
