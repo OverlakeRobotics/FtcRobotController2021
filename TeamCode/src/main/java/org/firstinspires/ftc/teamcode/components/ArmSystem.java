@@ -9,6 +9,8 @@
 
 package org.firstinspires.ftc.teamcode.components;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -106,17 +108,28 @@ public class ArmSystem {
      * Moves arm up
      */
     public void move_up() {
+        if(sensorAsAnalogInput0.getVoltage() >= 0.8) {
             elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             elevatorMotor.setPower(1.0);
-
+        }
+        else{
+            telemetry.addData("ARM OUT OF RANGE!!! ", inRange());
+            telemetry.update();
+        }
     }
 
     /**
      * Moves arm down
      */
     public void move_down() {
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotor.setPower(-0.75);
+        if(sensorAsAnalogInput0.getVoltage() <= 2.69) {
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setPower(-0.75);
+        }
+        else{
+            telemetry.addData("ARM OUT OF RANGE", inRange());
+            telemetry.update();
+        }
     }
     public void release(boolean bool){
 //        if (bool){
