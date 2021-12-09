@@ -78,11 +78,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void loop() {
 
-        if(!armSystem.inRange()){
-            telemetry.addData("ARM OUT OF RANGE", armSystem.inRange());
-            telemetry.update();
-            return;
-        }
+
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
         telemetry.addData("DUCK???", tensorflowNew.seesDuck());
