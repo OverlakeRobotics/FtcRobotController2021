@@ -24,6 +24,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
 
     private int elevatorLevel;
     private boolean isRBorBT;
+    private double baseTime;
 
     private GameState currentGameState;
     public RouteState routeState;
@@ -125,7 +126,10 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                     }
                 }
                 armSystem.moveToPosition(elevatorLevel);
-                intakeSystem.spit_out();
+                baseTime = elapsedTime.seconds();
+                if (elapsedTime.seconds() < baseTime + 5.0) {
+                    intakeSystem.spit_out();
+                }
                 armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                 intakeSystem.setPower(0);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
@@ -180,7 +184,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(teamState == teamState.BLUE ? 180 : 0, rotateSpeed)) {
+                if (driveSystem.turn(teamState == TeamState.BLUE ? 180 : 0, rotateSpeed)) {
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;
@@ -192,7 +196,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 break;
 
             case SPIN_CAROUSEL:
-                double baseTime = elapsedTime.seconds();
+                baseTime = elapsedTime.seconds();
                 armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                 if (elapsedTime.seconds() < baseTime + 5.0) {
                     intakeSystem.Carousel();
