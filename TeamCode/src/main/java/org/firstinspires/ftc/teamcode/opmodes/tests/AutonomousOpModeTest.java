@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.tests;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
@@ -128,6 +129,54 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                 intakeSystem.setPower(0);
                 newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
+                break;
+
+            case TURN_BACK_HOME:
+                if (driveSystem.turn(90, rotateSpeed)) {
+                    newGameState(GameState.PLACE_CUBE_ONE);
+                }
+                break;
+
+            case DRIVE_TO_START_PART_ONE:
+                if (driveSystem.driveToPosition((int) (0.4 * Constants.tileWidth * (12/7) * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_START_PART_TWO);
+                }
+
+            case DRIVE_TO_START_PART_TWO:
+                if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch * (1/3)), isRBorBT ? DriveSystem.Direction.BACKWARD : DriveSystem.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_START_PART_THREE);
+                }
+                break;
+
+            case DRIVE_TO_START_PART_THREE:
+                if (driveSystem.driveToPosition((int) (0.8 * Constants.tileWidth * Constants.mmPerInch), isRBorBT ? DriveSystem.Direction.BACKWARD : DriveSystem.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_START_PART_FOUR);
+                }
+                break;
+
+            case DRIVE_TO_START_PART_FOUR:
+                if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * (2/3)), isRBorBT ? DriveSystem.Direction.BACKWARD : DriveSystem.Direction.FORWARD, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO_PART_ONE);
+                }
+                break;
+
+            case DRIVE_TO_ALLIANCE_HUB_TWO_PART_ONE:
+                if (driveSystem.driveToPosition((int) (0.4 * Constants.tileWidth * (12/7) * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO_PART_TWO);
+                }
+                break;
+
+            case DRIVE_TO_ALLIANCE_HUB_TWO_PART_TWO:
+                intakeSystem.setPower(1);
+                if (driveSystem.driveToPosition((int) (0.4 * Constants.tileWidth * (12/7 + 2/3 + 4/5 + 0.8 + 0.4) * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
+                    newGameState(GameState.PLACE_CUBE_SECOND_TIME);
+                }
+                break;
+
+            case PLACE_CUBE_SECOND_TIME:
+                intakeSystem.setPower(0);
+                armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
+                intakeSystem.spit_out();
                 break;
 
             case DRIVE_TO_CAROUSEL_ONE:
