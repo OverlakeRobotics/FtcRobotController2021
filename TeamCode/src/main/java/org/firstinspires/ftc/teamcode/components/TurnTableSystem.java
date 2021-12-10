@@ -19,22 +19,28 @@ public class TurnTableSystem {
 
     private final DcMotor rotatorMotor;
 
-    public static final int LEVEL_90 = -3 + 5000; // to test
+    public static final int LEVEL_90 = 4209; // to test
     public static final int LEVEL_0 = 0; // to test
 
     public int getPosition(){
         return rotatorMotor.getCurrentPosition();
     }
 
-    public void moveToPosition(int state){
-        rotatorMotor.setTargetPosition(state);
-        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
-        if(state > rotatorMotor.getCurrentPosition()){
-            rotatorMotor.setPower(0.75);
-        }
-        else{
-            rotatorMotor.setPower(-0.75);
-        }
+//    public void moveToPosition(int state){
+//        rotatorMotor.setTargetPosition(state);
+//        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //is this right? Refer to last year's YeetSystem
+//        if(state > rotatorMotor.getCurrentPosition()){
+//            rotatorMotor.setPower(0.75);
+//        }
+//        else{
+//            rotatorMotor.setPower(-0.75);
+//        }
+//    }
+
+    public void moveToPosition(int ticks){
+        rotatorMotor.setTargetPosition(ticks);
+        rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotatorMotor.setPower(0.75);
     }
 
     public void move_right() {
