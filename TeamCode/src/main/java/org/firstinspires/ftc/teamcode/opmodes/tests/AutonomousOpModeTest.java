@@ -100,7 +100,7 @@ public abstract class AutonomousOpModeTest extends BaseOpMode {
                 baseTime = elapsedTime.seconds();
                 armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                 if (elapsedTime.seconds() < baseTime + 5.0) {
-                    intakeSystem.Carousel();
+                    intakeSystem.Carousel(teamState);
                 }
                 intakeSystem.setPower(0);
                 newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);

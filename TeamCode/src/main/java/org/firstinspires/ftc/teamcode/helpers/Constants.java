@@ -30,8 +30,8 @@ public class Constants {
     //private static final String WHEEL_MOTOR = "wheelMotor";
 
     public static final String IMU = "imu";
-    public static final String INTAKE_MOTOR1 = "intakeMotor1";
-    public static final String INTAKE_MOTOR2 = "intakeMotor2";
+    public static final String INTAKE_MOTOR1 = "intakeLeft";
+    public static final String INTAKE_MOTOR2 = "intakeRight";
 
     public static final String ROTATOR_MOTOR = "rotatorMotor";
 

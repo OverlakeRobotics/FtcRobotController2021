@@ -29,9 +29,10 @@ public class ArmSystem {
     private boolean bool = false;
 //    private final Servo releaser;
 
-    public static final int LEVEL_TOP = 200;
+    public static final int LEVEL_TOP = 310;
     public static final int LEVEL_MID = -200;
-    public static final int LEVEL_BOTTOM = -400;
+    public static final int LEVEL_BOTTOM = -526;
+    public static final int LEVEL_INTAKE = -830;
     public static final int LEVEL_CAROUSEL = 0; // to test
 
     private static int start_position = LEVEL_CAROUSEL;
@@ -74,28 +75,17 @@ public class ArmSystem {
      * Moves arm up
      */
     public void move_up() {
-        if(sensorAsAnalogInput0.getVoltage() >= 0.8) {
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            elevatorMotor.setPower(1.0);
-        }
-        else{
-            telemetry.addData("ARM OUT OF RANGE!!! ", inRange());
-            telemetry.update();
-        }
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorMotor.setPower(1.0);
+
     }
 
     /**
      * Moves arm down
      */
     public void move_down() {
-        if(sensorAsAnalogInput0.getVoltage() <= 2.69) {
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            elevatorMotor.setPower(-0.75);
-        }
-        else{
-            telemetry.addData("ARM OUT OF RANGE", inRange());
-            telemetry.update();
-        }
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorMotor.setPower(-0.75);
     }
 
     public void moveToPosition(int ticks){

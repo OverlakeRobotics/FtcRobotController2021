@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.helpers.TeamState;
+
 /**
  * IntakeSystem.java is a component which
  * comprises of two enums in order to convey the state
@@ -26,16 +28,16 @@ public class IntakeSystem {
 
     private static final double optimalSpinningSpeed = 0.75;
     // Hardware
-    private final DcMotor motor1;
-    private final DcMotor motor2;
+    public final DcMotor motorLeft; //TODO
+    public final DcMotor motorRight;
 
     /**
      * Creates the IntakeSystem Object
-     * @param motor1 to represent the motor which rotates in order to s'word the object in.
+     * @param motorLeft to represent the motor which rotates in order to s'word the object in.
      */
-    public IntakeSystem(DcMotor motor1, DcMotor motor2) {
-        this.motor1 = motor1;
-        this.motor2 = motor2;
+    public IntakeSystem(DcMotor motorLeft, DcMotor motorRight) {
+        this.motorLeft = motorLeft;
+        this.motorRight = motorRight;
         initMotors();
     }
 
@@ -44,12 +46,12 @@ public class IntakeSystem {
      */
     public void initMotors() {
         currentState = IntakeState.IDLE;
-        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor1.setPower(0);
-        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor2.setPower(0);
+        motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorLeft.setPower(0);
+        motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorRight.setPower(0);
     }
 
     /**
@@ -57,8 +59,8 @@ public class IntakeSystem {
      */
     public void take_in() {
             currentState = IntakeState.TAKE_IN;
-            motor1.setPower(0.15);
-            motor2.setPower(-0.15);
+            motorLeft.setPower(-1);
+            motorRight.setPower(1);
     }
 
     /**
@@ -66,33 +68,35 @@ public class IntakeSystem {
      */
     public void spit_out() {
             currentState = IntakeState.SPIT_OUT;
-            motor1.setPower(-1);
-            motor2.setPower(1);
+            motorLeft.setPower(0.15);
+            motorRight.setPower(-0.15);
     }
 
     /**
      * Intakes rings
      */
-    public void Carousel() {
+    public void Carousel(TeamState teamState) {
         if (currentState != IntakeState.CAROUSEL) {
             currentState = IntakeState.CAROUSEL;
-            motor1.setPower(-1 * optimalSpinningSpeed);
-            motor2.setPower(-1 * optimalSpinningSpeed);
+            motorLeft.setPower((teamState == TeamState.RED ? -1 : 1) * optimalSpinningSpeed);
+            motorRight.setPower((teamState == TeamState.RED ? -1 : 1) * optimalSpinningSpeed);
         }
     }
 
     public void Carousel(double speed) {
         if (currentState != IntakeState.CAROUSEL) {
             currentState = IntakeState.CAROUSEL;
-            motor1.setPower(-1 * speed);
-            motor2.setPower(-1 * speed);
+            motorLeft.setPower(-1 * speed);
+            motorRight.setPower(-1 * speed);
         }
     }
 
     public void setPower(double num) {
-        motor1.setPower(num);
-        motor2.setPower(num);
+        motorLeft.setPower(num);
+        motorRight.setPower(num);
     }
+
+
 
     public void setIdle(){
         setPower(0);
@@ -104,8 +108,8 @@ public class IntakeSystem {
     public void stop() {
         if (currentState == IntakeState.TAKE_IN || currentState == IntakeState.SPIT_OUT) {
             currentState = IntakeState.IDLE;
-            motor1.setPower(0);
-            motor2.setPower(0);
+            motorLeft.setPower(0);
+            motorRight.setPower(0);
         }
     }
 

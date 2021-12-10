@@ -6,16 +6,22 @@ import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.PotentiometerSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
+import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
-@TeleOp(name = "DriveOpMode", group = "TeleOp")
-public class DriveOpMode extends BaseOpMode {
+public abstract class DriveOpMode extends BaseOpMode {
 
     private int bool = -500;
     public boolean forTest = true;
+    TeamState teamState;
 
+
+    public void init(TeamState teamState) {
+        super.init();
+        this.teamState = teamState;
+    }
 
     @Override
     public void init_loop(){
@@ -71,49 +77,15 @@ public class DriveOpMode extends BaseOpMode {
         }
         else if (gamepad2.a){
             //bool = -1;
-            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
+            armSystem.moveToPosition(ArmSystem.LEVEL_INTAKE);
             telemetry.addData("ACTIVE", "armSystem, BOTTOM");
         }
         else if(gamepad2.x){
-            armSystem.moveToPosition(ArmSystem.LEVEL_MID);
+            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
         }
         else if(gamepad2.b){
-            armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
+            armSystem.moveToPosition(ArmSystem.LEVEL_MID);
         }
-//        else{
-//            armSystem.getElevatorMotor().setTargetPosition(armSystem.getElevatorMotor().getCurrentPosition());
-//            armSystem.getElevatorMotor().setPower(0);
-//        }
-
-        /*
-        if (bool == 1 && armSystem.getElevatorMotor().getCurrentPosition() < ArmSystem.LEVEL_TOP) {
-            armSystem.move_up();
-        }
-        else if (bool == -1 && armSystem.getElevatorMotor().getCurrentPosition() > ArmSystem.LEVEL_BOTTOM){
-            armSystem.move_down();
-        }
-        else{
-            armSystem.stop();
-            bool = 0;
-        }
-        */
-
-//        if (bool == 1){
-//            if ((armSystem.goToLevel(ArmSystem.LEVEL_TOP))){
-//                bool = 0;
-//            }
-//        }
-//        else if (bool == -1){
-//            if ((armSystem.goToLevel(ArmSystem.LEVEL_BOTTOM))){
-//                bool = 0;
-//            }
-//        }
-//        else{
-//            armSystem.getElevatorMotor().setPower(0);
-//        }
-
-
-        // y is highest, a is shared hub
 
         if (gamepad2.right_bumper) {
             intakeSystem.take_in();
@@ -122,7 +94,10 @@ public class DriveOpMode extends BaseOpMode {
         else if (gamepad2.left_bumper) {
             intakeSystem.spit_out();
             telemetry.addData("ACTIVE", "outtake");
-
+        }
+        else if (gamepad2.right_trigger > 0.25f) {
+            intakeSystem.Carousel(teamState);
+            telemetry.addData("ACTIVE", "carousel");
         }
         else {
             intakeSystem.setPower(0.0);
