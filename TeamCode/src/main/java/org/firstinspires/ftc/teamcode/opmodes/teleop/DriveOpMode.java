@@ -124,9 +124,13 @@ public class DriveOpMode extends BaseOpMode {
             telemetry.addData("ACTIVE", "outtake");
 
         }
+        else if(gamepad2.right_trigger > 0.5){
+            intakeSystem.Carousel();
+        }
         else {
             intakeSystem.setPower(0.0);
         }
+
 
         if (gamepad1.right_bumper){
             turnTableSystem.moveClock();
