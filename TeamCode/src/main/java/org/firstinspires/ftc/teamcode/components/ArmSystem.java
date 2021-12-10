@@ -67,8 +67,20 @@ public class ArmSystem {
 
     }
 
+    //high - 0.77
+    //home - 1.25
+    //lolo - 2.83
+
+    public boolean notTooHigh(){
+        return (sensorAsAnalogInput0.getVoltage() > 0.77);
+    }
+
+    public boolean notTooLow(){
+        return (sensorAsAnalogInput0.getVoltage() < 2.83);
+    }
+
     public boolean inRange(){
-        return (sensorAsAnalogInput0.getVoltage() > 2.69 || sensorAsAnalogInput0.getVoltage() < 0.8);
+        return (notTooHigh() && notTooLow());
     }
 
     /**
