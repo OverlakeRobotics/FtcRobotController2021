@@ -84,7 +84,7 @@ public class TensorFlow {
     }
 
     public boolean seesDuck(){
-        return getObject() == ObjectEnums.DUCK;
+        return tfod.getRecognitions().size() > 0;
     }
 
     /**

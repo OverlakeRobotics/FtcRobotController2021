@@ -215,6 +215,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void stop() {
         super.stop();
+        tensorFlow.shutdown();
         /*if (tensorflowNew != null) {
             tensorflowNew.shutdown();
         }*/
