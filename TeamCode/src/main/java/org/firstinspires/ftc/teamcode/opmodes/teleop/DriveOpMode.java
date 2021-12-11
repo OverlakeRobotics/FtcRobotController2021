@@ -21,6 +21,8 @@ public abstract class DriveOpMode extends BaseOpMode {
     public void init(TeamState teamState) {
         super.init();
         this.teamState = teamState;
+        turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
+        turnTableSystem.resetPosition();
     }
 
     @Override
@@ -84,7 +86,7 @@ public abstract class DriveOpMode extends BaseOpMode {
             armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
         }
         else if(gamepad2.b){
-            armSystem.moveToPosition(ArmSystem.LEVEL_MID);
+            armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         }
 
         if (gamepad2.right_bumper) {
@@ -95,15 +97,11 @@ public abstract class DriveOpMode extends BaseOpMode {
             intakeSystem.spit_out();
             telemetry.addData("ACTIVE", "outtake");
         }
-        else if (gamepad2.right_trigger > 0.25f) {
+        else if (gamepad2.right_stick_button) {
             intakeSystem.Carousel(teamState);
             telemetry.addData("ACTIVE", "carousel");
-        }
-        else if(gamepad2.right_trigger > 0.5){
-            intakeSystem.Carousel();
-        }
-        else {
-            intakeSystem.setPower(0.0);
+        } else {
+            intakeSystem.setIdle();
         }
 
 

@@ -92,7 +92,7 @@ public class TensorFlowNew {
             return ArmSystem.LEVEL_TOP;
         }
         if (num == 1) {
-            return ArmSystem.LEVEL_MID;
+            return ArmSystem.LEVEL_CAROUSEL;
         }
         if (num == 2) {
             return ArmSystem.LEVEL_BOTTOM;

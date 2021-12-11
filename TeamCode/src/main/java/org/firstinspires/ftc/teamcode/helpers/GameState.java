@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.helpers;
 public enum GameState {
     SCAN_INITIAL,
     SCAN_SECONDARY,
-    DRIVE_TO_CAROUSEL,
+    DRIVE_TO_CAROUSEL_ONE,
+    DRIVE_TO_CAROUSEL_TWO,
+    DRIVE_TO_CAROUSEL_THREE,
     SPIN_CAROUSEL,
     DRIVE_TO_ALLIANCE_HUB_ONE,
     ROTATE_TURNTABLE,

@@ -30,12 +30,10 @@ public class ArmSystem {
 //    private final Servo releaser;
 
     public static final int LEVEL_TOP = 310;
-    public static final int LEVEL_MID = -200;
     public static final int LEVEL_BOTTOM = -526;
     public static final int LEVEL_INTAKE = -830;
     public static final int LEVEL_CAROUSEL = 0; // to test
 
-    private static int start_position = LEVEL_CAROUSEL;
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
 
     public void stop() {
@@ -61,7 +59,6 @@ public class ArmSystem {
         this.elevatorMotor = elevatorMotor;
         this.sensorAsAnalogInput0 = sensorAsAnalogInput0;
         // use potentiamotor to detect voltage, then do from there is brian's suggestion
-        start_position = elevatorMotor.getCurrentPosition();
         this.elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -69,6 +66,10 @@ public class ArmSystem {
 
     public boolean inRange(){
         return (sensorAsAnalogInput0.getVoltage() > 2.69 || sensorAsAnalogInput0.getVoltage() < 0.8);
+    }
+
+    public double getSensorAsAnalogInput0() {
+        return sensorAsAnalogInput0.getVoltage();
     }
 
     /**

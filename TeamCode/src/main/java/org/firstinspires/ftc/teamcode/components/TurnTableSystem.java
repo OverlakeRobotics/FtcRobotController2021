@@ -43,6 +43,10 @@ public class TurnTableSystem {
         rotatorMotor.setPower(0.75);
     }
 
+    public void resetPosition() {
+        rotatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
     public void move_right() {
         rotatorMotor.setTargetPosition(rotatorMotor.getCurrentPosition() - 80);
         rotatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

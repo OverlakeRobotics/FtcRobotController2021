@@ -68,8 +68,8 @@ public class IntakeSystem {
      */
     public void spit_out() {
             currentState = IntakeState.SPIT_OUT;
-            motorLeft.setPower(0.15);
-            motorRight.setPower(-0.15);
+            motorLeft.setPower(0.2);
+            motorRight.setPower(-0.2);
     }
 
     /**
