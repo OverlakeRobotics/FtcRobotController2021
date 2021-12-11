@@ -64,8 +64,20 @@ public class ArmSystem {
 
     }
 
+    //high - 0.77
+    //home - 1.25
+    //lolo - 2.83
+
+    public boolean notTooHigh(){
+        return (sensorAsAnalogInput0.getVoltage() > 0.77);
+    }
+
+    public boolean notTooLow(){
+        return (sensorAsAnalogInput0.getVoltage() < 2.83);
+    }
+
     public boolean inRange(){
-        return (sensorAsAnalogInput0.getVoltage() > 2.69 || sensorAsAnalogInput0.getVoltage() < 0.8);
+        return (notTooHigh() && notTooLow());
     }
 
     public double getSensorAsAnalogInput0() {
@@ -76,17 +88,20 @@ public class ArmSystem {
      * Moves arm up
      */
     public void move_up() {
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotor.setPower(1.0);
-
+        if (notTooHigh()){
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setPower(1.0);
+        }
     }
 
     /**
      * Moves arm down
      */
     public void move_down() {
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotor.setPower(-0.75);
+        if (notTooLow()){
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setPower(-0.75);
+        }
     }
 
     public void moveToPosition(int ticks){
