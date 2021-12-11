@@ -52,8 +52,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void start() {
         super.start();
-        //vuforia.activate();
-        //tensorflow.activate()
+//        vuforia.activate();
+//        tensorflow.activate();
 
         newGameState(GameState.SCAN_INITIAL);
     }
@@ -104,24 +104,24 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 while (turnTableSystem.getPosition() != TurnTableSystem.LEVEL_90) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
-                    turnTableSystem.moveToPosition(teamState == TeamState.BLUE ? TurnTableSystem.LEVEL_90);
+                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
                 }
                 baseTime = 0;
                 newGameState(GameState.PLACE_CUBE);
                 break;
             case PLACE_CUBE:
-//                if (elevatorLevel == -3333333){
-//                    double giveUpHope = Math.random();
-//                    if (giveUpHope < 0.33) {
-//                        elevatorLevel = ArmSystem.LEVEL_BOTTOM;
-//                    }
-//                    if (giveUpHope < 0.66) {
-//                        elevatorLevel =  ArmSystem.LEVEL_CAROUSEL;
-//                    }
-//                    else {
-//                        elevatorLevel = ArmSystem.LEVEL_TOP;
-//                    }
-//                }
+                if (elevatorLevel == -3333333){
+                    double giveUpHope = Math.random();
+                    if (giveUpHope < 0.33) {
+                        elevatorLevel = ArmSystem.LEVEL_BOTTOM;
+                    }
+                    if (giveUpHope < 0.66) {
+                        elevatorLevel =  ArmSystem.LEVEL_CAROUSEL;
+                    }
+                    else {
+                        elevatorLevel = ArmSystem.LEVEL_TOP;
+                    }
+                }
                 armSystem.moveToPosition(elevatorLevel);
                 if (baseTime == 0) {
                     baseTime = elapsedTime.seconds();

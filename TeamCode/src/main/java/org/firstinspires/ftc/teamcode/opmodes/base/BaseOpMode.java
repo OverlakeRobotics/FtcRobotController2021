@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.components.ImuSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
-// import org.firstinspires.ftc.teamcode.components.WeightSystem;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -47,6 +46,7 @@ public abstract class BaseOpMode extends OpMode {
         super.start();
         armSystem.initMotors();
         intakeSystem.initMotors();
+        elapsedTime = new ElapsedTime();
         elapsedTime.reset();
     }
 
