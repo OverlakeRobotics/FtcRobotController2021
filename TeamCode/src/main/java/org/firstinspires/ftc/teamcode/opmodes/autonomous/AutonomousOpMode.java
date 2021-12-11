@@ -137,7 +137,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                         armSystem.stop();
                         turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
                     }
-                    newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL_ONE);
+                    newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_TOP_WAREHOUSE_ONE : GameState.DRIVE_TO_CAROUSEL_ONE);
                 }
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
@@ -171,17 +171,29 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                     intakeSystem.Carousel(teamState);
                 } else {
                     intakeSystem.setPower(0);
-                    newGameState(GameState.PARK_IN_WAREHOUSE);
+                    newGameState(GameState.PARK_IN_BOTTOM_WAREHOUSE);
                 }
                 break;
 
-            case PARK_IN_WAREHOUSE:
+            case PARK_IN_BOTTOM_WAREHOUSE:
                 if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.COMPLETE);
                 }
                 break;
+
+            case PARK_IN_TOP_WAREHOUSE_ONE:
+                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), teamState == TeamState.BLUE ? DriveSystem.Direction.LEFT : DriveSystem.Direction.RIGHT, driveSpeed)) {
+                    newGameState(GameState.PARK_IN_TOP_WAREHOUSE_TWO);
+                }
+                break;
+
+            case PARK_IN_TOP_WAREHOUSE_TWO:
+                if (driveSystem.driveToPosition((int) (3 * Constants.tileWidth * Constants.mmPerInch), teamState == TeamState.BLUE ? DriveSystem.Direction.BACKWARD : DriveSystem.Direction.FORWARD, driveSpeed)) {
+                newGameState(GameState.COMPLETE);
+            }
+            break;
 
             case COMPLETE:
                 armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
