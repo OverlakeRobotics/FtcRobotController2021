@@ -124,6 +124,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 } else {
                     intakeSystem.setPower(0);
                     while (turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
+                        armSystem.stop();
                         turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
                     }
                     newGameState(routeState == RouteState.TOP ? GameState.PARK_IN_WAREHOUSE : GameState.DRIVE_TO_CAROUSEL_ONE);
@@ -131,6 +132,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
                 if (driveSystem.turn(78, rotateSpeed)) {
+                    armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
                 }
                 break;
