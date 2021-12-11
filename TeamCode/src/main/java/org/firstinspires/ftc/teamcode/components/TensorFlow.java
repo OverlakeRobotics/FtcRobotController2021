@@ -56,8 +56,8 @@ public class TensorFlow {
     /**
      * Activates TensorFlow
      */
-    public void activate(int x) {
-        if(x == 1){
+    public void activate() {
+        /*if(x == 1){
             tfod.setClippingMargins(100, 50, 100, 2 * 433);
         }
         else if (x == 2){
@@ -65,7 +65,7 @@ public class TensorFlow {
         }
         else if (x == 3){
             tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
-        }
+        }*/
 
         if (tfod != null) {
             tfod.activate();
@@ -81,6 +81,10 @@ public class TensorFlow {
         if (tfod != null) {
             tfod.shutdown();
         }
+    }
+
+    public boolean seesDuck(){
+        return getObject() == ObjectEnums.DUCK;
     }
 
     /**
