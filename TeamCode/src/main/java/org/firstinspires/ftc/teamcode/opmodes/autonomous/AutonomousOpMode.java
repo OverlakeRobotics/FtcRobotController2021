@@ -40,7 +40,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         super.init();
         this.teamState = teamState;
         this.routeState = routeState;
-        newGameState(GameState.SCAN_INITIAL);
         driveSystem.initMotors();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
@@ -141,7 +140,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(teamState == TeamState.BLUE ? 78 : 0, rotateSpeed)) {
+                if (driveSystem.turn(78, rotateSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
@@ -149,13 +148,13 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_TWO:
-                if (driveSystem.driveToPosition((int) (2.25 * Constants.tileWidth * Constants.mmPerInch), teamState == TeamState.BLUE ? DriveSystem.Direction.LEFT : DriveSystem.Direction.BACKWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition(teamState == TeamState.BLUE ? (int) (2.25 * Constants.tileWidth * Constants.mmPerInch) : (int) ((2.25 * Constants.tileWidth * Constants.mmPerInch) - (Constants.mmPerInch)), teamState == TeamState.BLUE ? DriveSystem.Direction.LEFT : DriveSystem.Direction.RIGHT, driveSpeed)) {
                     armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                     newGameState(GameState.DRIVE_TO_CAROUSEL_THREE);
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (4.25 * Constants.mmPerInch), teamState == TeamState.BLUE ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.RIGHT, driveSpeed * 0.5)) {
+                if (driveSystem.driveToPosition(teamState == TeamState.BLUE ? (int) (6.25 * Constants.mmPerInch) : (int) (13.25 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.SPIN_CAROUSEL);
@@ -199,8 +198,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
                 armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 driveSystem.setMotorPower(0);
-                turnTableSystem.moveToPosition(-1 * TurnTableSystem.LEVEL_90);
+                turnTableSystem.moveToPosition(teamState == TeamState.BLUE ? -TurnTableSystem.LEVEL_90 : TurnTableSystem.LEVEL_90);
                 armSystem.stop();
+                telemetry.speak("among us among us among us");
                 stop();
                 break;
         }
