@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
@@ -29,6 +30,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     private GameState currentGameState;
     public RouteState routeState;
     protected TeamState teamState;
+    private Vuforia vuforia;
+    private TensorFlow tensorFlow;
 
     private static final double driveSpeed = 0.5;
     private static final double rotateSpeed = 0.25;
@@ -42,6 +45,10 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         this.routeState = routeState;
         newGameState(GameState.SCAN_INITIAL);
         driveSystem.initMotors();
+        vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
+        tensorFlow = new TensorFlow(vuforia);
+        vuforia.activate();
+        tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
@@ -52,8 +59,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void start() {
         super.start();
-//        vuforia.activate();
-//        tensorflow.activate();
 
         newGameState(GameState.SCAN_INITIAL);
     }
@@ -62,6 +67,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     public void loop() {
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
+        telemetry.addData("DUCK?", tensorFlow.seesDuck());
         telemetry.update();
 
         armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -66,7 +66,7 @@ public class Vuforia {
      * Constructor
      * @param webcamName to use for init
      */
-    private Vuforia(WebcamName webcamName, int identifier) {
+    public Vuforia(WebcamName webcamName, int identifier) {
 
         VuforiaLocalizer.Parameters parameters;
         if (identifier != 1) {
