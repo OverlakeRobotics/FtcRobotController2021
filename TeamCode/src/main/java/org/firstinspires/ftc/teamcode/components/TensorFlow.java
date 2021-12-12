@@ -83,10 +83,6 @@ public class TensorFlow {
         }
     }
 
-    public boolean seesDuck(){
-        return tfod.getRecognitions().size() > 0;
-    }
-
     /**
      * Returns the target region currently selected
      * @return the target region currently selected

@@ -3,18 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
-import org.firstinspires.ftc.teamcode.components.TensorFlowNew;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
-
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
@@ -23,9 +20,11 @@ import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 public abstract class AutonomousOpMode extends BaseOpMode {
 
 
-    private int elevatorLevel = -3333333;
+    private double elevatorLevel = -3333333;
     private boolean isRBorBT;
     private double baseTime;
+    private boolean primary_scan;
+    private boolean secondary_scan;
 
     private GameState currentGameState;
     public RouteState routeState;
@@ -58,13 +57,13 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     @Override
     public void init_loop() {
         super.init_loop();
-        telemetry.addData("DUCK?", tensorFlow.seesDuck());
+        primary_scan = tensorFlow.getInference().size() > 0;
+        telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
     }
 
     @Override
     public void start() {
         super.start();
-
         newGameState(GameState.SCAN_INITIAL);
     }
 
@@ -79,7 +78,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
 
         switch (currentGameState) {
             case SCAN_INITIAL:
-                if (level == 2) {
+                if (primary_scan) {
                     elevatorLevel = ArmSystem.LEVEL_CAROUSEL;
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                 } else {
@@ -88,13 +87,15 @@ public abstract class AutonomousOpMode extends BaseOpMode {
                 break;
             case SCAN_SECONDARY:
                 if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * (2/3)), isRBorBT ? DriveSystem.Direction.FORWARD : DriveSystem.Direction.BACKWARD, driveSpeed)) {
-                    if (level == 3) {
+                    if (secondary_scan) {
                         elevatorLevel = isRBorBT ? ArmSystem.LEVEL_BOTTOM : ArmSystem.LEVEL_TOP;
                         newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                     } else {
                         elevatorLevel = isRBorBT ? ArmSystem.LEVEL_TOP : ArmSystem.LEVEL_BOTTOM;
                     }
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
+                } else {
+                    secondary_scan = tensorFlow.getInference().size() > 0;
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB_ONE:

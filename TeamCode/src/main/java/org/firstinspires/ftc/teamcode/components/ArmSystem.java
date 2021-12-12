@@ -29,10 +29,10 @@ public class ArmSystem {
     private boolean bool = false;
 //    private final Servo releaser;
 
-    public static final int LEVEL_TOP = 310;
-    public static final int LEVEL_BOTTOM = -526;
-    public static final int LEVEL_INTAKE = -830;
-    public static final int LEVEL_CAROUSEL = 0; // to test
+    public static final double LEVEL_TOP = 0.65;
+    public static final double LEVEL_CAROUSEL = 1.115;
+    public static final double LEVEL_BOTTOM = 1.786;
+    public static final double LEVEL_INTAKE = 2.65;
 
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
 
@@ -45,9 +45,6 @@ public class ArmSystem {
     }
 
     public void initMotors() {
-        /*while (sensorAsAnalogInput0.getVoltage() != 1.4){
-
-        }*/
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -58,26 +55,22 @@ public class ArmSystem {
     public ArmSystem(DcMotor elevatorMotor, AnalogInput sensorAsAnalogInput0){
         this.elevatorMotor = elevatorMotor;
         this.sensorAsAnalogInput0 = sensorAsAnalogInput0;
-        // use potentiamotor to detect voltage, then do from there is brian's suggestion
         this.elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
-    //high - 0.77
-    //home - 1.25
-    //lolo - 2.83
+    //high - 0.65
+    //carousel - 1.16
+    // bottom - 1.786
+    //lolo - 2.65
 
     public boolean notTooHigh(){
-        return (sensorAsAnalogInput0.getVoltage() > 0.77);
+        return (sensorAsAnalogInput0.getVoltage() >= LEVEL_TOP);
     }
 
     public boolean notTooLow(){
-        return (sensorAsAnalogInput0.getVoltage() < 2.83);
-    }
-
-    public boolean inRange(){
-        return (notTooHigh() && notTooLow());
+        return (sensorAsAnalogInput0.getVoltage() <= LEVEL_INTAKE);
     }
 
     public double getSensorAsAnalogInput0() {
@@ -89,7 +82,7 @@ public class ArmSystem {
      */
     public void move_up() {
         if (notTooHigh()){
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             elevatorMotor.setPower(1.0);
         }
     }
@@ -99,20 +92,21 @@ public class ArmSystem {
      */
     public void move_down() {
         if (notTooLow()){
-            elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             elevatorMotor.setPower(-0.75);
         }
     }
 
-    public void moveToPosition(int ticks){
-        elevatorMotor.setTargetPosition(ticks);
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorMotor.setPower(0.25);
-    }
-
-    public void moveTop() {
-        while (sensorAsAnalogInput0.getVoltage() != 0.77) {
-            move_up();
+    public void moveToPosition(double voltage){
+        if (getSensorAsAnalogInput0() < voltage) {
+            while (getSensorAsAnalogInput0() < voltage) {
+                move_down();
+            }
+        }
+        if (getSensorAsAnalogInput0() > voltage) {
+            while (getSensorAsAnalogInput0() > voltage) {
+                move_up();
+            }
         }
     }
 }

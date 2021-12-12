@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
@@ -36,70 +37,55 @@ public abstract class DriveOpMode extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        if(gamepad2.dpad_right){
+        if (gamepad2.dpad_right){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
             telemetry.addData("ACTIVE", "turnTableSystem right");
-        }
-        if(gamepad2.dpad_left){
+        } else if (gamepad2.dpad_left){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
             telemetry.addData("ACTIVE", "turnTableSystem left");
+        } else if (gamepad1.right_bumper){
+            turnTableSystem.moveClock();
+            telemetry.addData("ACTIVE", "turntable clockwise");
+        } else if (gamepad1.left_bumper){
+            turnTableSystem.moveCounter();
+            telemetry.addData("ACTIVE", "turntable counterclockwise");
+        } else {
+            turnTableSystem.stop();
         }
+
+
         /*if (gamepad2.y){
-            bool = 1;
             armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
             telemetry.addData("ACTIVE", "armSystem, TOP");
-        }
-        else if (gamepad2.a){
-            bool = -1;
+        } else if (gamepad2.a){
             armSystem.moveToPosition(ArmSystem.LEVEL_INTAKE);
             telemetry.addData("ACTIVE", "armSystem, BOTTOM");
-        }*/
-        else if(gamepad2.x){
+        } else if (gamepad2.x){
             armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
-        }
-        else if(gamepad2.b){
+        } else if (gamepad2.b){
             armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
+        }*/ if (gamepad2.dpad_up) {
+            armSystem.move_up();
+            telemetry.addData("ACTIVE", "armSystem up");
+        } else if (gamepad2.dpad_down){
+            armSystem.move_down();
+            telemetry.addData("ACTIVE", "armSystem down");
+        } else {
+            armSystem.stop();
+            armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
         if (gamepad2.right_bumper) {
             intakeSystem.take_in();
             telemetry.addData("ACTIVE", "intake");
-        }
-        else if (gamepad2.left_bumper) {
+        } else if (gamepad2.left_bumper) {
             intakeSystem.spit_out();
             telemetry.addData("ACTIVE", "outtake");
-        }
-        else if (gamepad2.right_stick_button) {
+        } else if (gamepad2.right_stick_button) {
             intakeSystem.Carousel(teamState);
             telemetry.addData("ACTIVE", "carousel");
         } else {
             intakeSystem.setIdle();
-        }
-
-
-        if (gamepad1.right_bumper){
-            turnTableSystem.moveClock();
-            telemetry.addData("ACTIVE", "turntable clockwise");
-        }
-        if (gamepad1.left_bumper){
-            turnTableSystem.moveCounter();
-            telemetry.addData("ACTIVE", "turntable counterclockwise");
-
-        }
-
-        telemetry.addData("CurrentPosition: ", armSystem.getElevatorMotor().getCurrentPosition());
-
-        if (gamepad1.dpad_up) {
-            armSystem.move_up();
-            telemetry.addData("ACTIVE", "armSystem up");
-        }
-        else if (gamepad1.dpad_down){
-            armSystem.move_down();
-            telemetry.addData("ACTIVE", "armSystem down");
-
-        }
-        else{
-            armSystem.stop();
         }
 
         driveSystem.drive(rx, -lx, ly);
@@ -108,7 +94,6 @@ public abstract class DriveOpMode extends BaseOpMode {
         telemetry.addData("lx", lx);
         telemetry.addData("ly", ly);
         telemetry.addData("TIME_ELAPSED_MILSEC", elapsedTime.milliseconds());
-        telemetry.addData("ARM", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.update();
     }
 

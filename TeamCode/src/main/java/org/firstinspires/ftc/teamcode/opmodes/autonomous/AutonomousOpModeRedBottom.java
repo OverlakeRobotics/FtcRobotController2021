@@ -17,11 +17,14 @@ import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
-@Autonomous(name = "AutonomousOpModeRedBottom", group = "Autonomous")
+@Autonomous(name = "RED, BOTTOM", group = "Autonomous")
 public class AutonomousOpModeRedBottom extends BaseOpMode {
 
-    private int elevatorLevel = -3333333;
+    private double elevatorLevel = -3333333;
     private double baseTime;
+
+    private boolean primary_scan;
+    private boolean secondary_scan;
 
     private GameState currentGameState;
     private Vuforia vuforia;
@@ -29,8 +32,6 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
 
     private static final double driveSpeed = 0.5;
     private static final double rotateSpeed = 0.25;
-
-    private static final int level = 2;
 
     @Override
     public void init() {
@@ -50,13 +51,13 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     @Override
     public void init_loop() {
         super.init_loop();
-        telemetry.addData("DUCK?", tensorFlow.seesDuck());
+        primary_scan = tensorFlow.getInference().size() > 0;
+        telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
     }
 
     @Override
     public void start() {
         super.start();
-
         newGameState(GameState.SCAN_INITIAL);
     }
 
@@ -68,29 +69,38 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
         telemetry.update();
 
         armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armSystem.stop();
 
         switch (currentGameState) {
             case SCAN_INITIAL:
-                if (level == 2) {
+                if (primary_scan) {
                     elevatorLevel = ArmSystem.LEVEL_CAROUSEL;
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY);
                 } else {
                     newGameState(GameState.SCAN_SECONDARY);
                 }
                 break;
             case SCAN_SECONDARY:
                 if (driveSystem.driveToPosition((int) (Constants.tileWidth * Constants.mmPerInch * (2/3)), DriveSystem.Direction.FORWARD, driveSpeed)) {
-                    if (level == 3) {
+                    if (secondary_scan) {
                         elevatorLevel = ArmSystem.LEVEL_BOTTOM;
-                        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
                     } else {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
-                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE);
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_SECONDARY);
+                } else {
+                    secondary_scan = tensorFlow.getInference().size() > 0;
                 }
                 break;
-            case DRIVE_TO_ALLIANCE_HUB_ONE:
+            case DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY:
                 if (driveSystem.driveToPosition((int) ((Constants.tileWidth - 5) * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed)) {
+                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    armSystem.stop();
+                    newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
+                }
+                break;
+            case DRIVE_TO_ALLIANCE_HUB_ONE_SECONDARY:
+                if (driveSystem.driveToPosition(((int) ((Constants.tileWidth - 5) * Constants.mmPerInch)) - (int) (Constants.tileWidth * Constants.mmPerInch * (2/3)), DriveSystem.Direction.FORWARD, driveSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
@@ -125,9 +135,6 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                         elevatorLevel = ArmSystem.LEVEL_TOP;
                     }
                 }
-                while (armSystem.notTooHigh()) {
-                    armSystem.move_up();
-                }
                 if (baseTime == 0) {
                     baseTime = elapsedTime.seconds();
                 }
@@ -142,15 +149,14 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                         armSystem.stop();
                         turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
                     }
-                    while (armSystem.getSensorAsAnalogInput0() < 1) {
-                        armSystem.move_down();
-                    }
+                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    armSystem.stop();
                     baseTime = 0;
                     newGameState(GameState.DRIVE_TO_CAROUSEL_ONE);
                 }
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.driveToPosition((int) (0.75 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed * 0.25)) {
+                if (driveSystem.turn(78, rotateSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
@@ -158,14 +164,17 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 break;
 
             case DRIVE_TO_CAROUSEL_TWO:
-                if (driveSystem.driveToPosition((int) ((Constants.tileWidth - 10) * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (2.25 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed)) {
                     driveSystem.setMotorPower(0);
+                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_THREE);
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (16.25 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
+                if (driveSystem.driveToPosition((int) (6.25 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
                     driveSystem.setMotorPower(0);
+                    armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.SPIN_CAROUSEL);
@@ -209,9 +218,6 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     public void stop() {
         super.stop();
         tensorFlow.shutdown();
-        /*if (tensorflowNew != null) {
-            tensorflowNew.shutdown();
-        }*/
     }
 
     /**
