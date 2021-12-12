@@ -24,14 +24,20 @@ public abstract class DriveOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
+        telemetry.addData("Turntable set values", "dpad right/left contr 2");
+        telemetry.addData("turntable turn", "bumpers contr 1");
+        telemetry.addData("move arm up/down", "dpad up/down contr 2");
+        telemetry.addData("intake", "right bumper cntrl 2");
+        telemetry.addData("outtake", "left bumper contrl 2");
+        telemetry.addData("carousel", "right stick button cntrl 2");
 
-        telemetry.addData("See: ", armSystem.getSensorAsAnalogInput0());
+       /* telemetry.addData("See: ", armSystem.getSensorAsAnalogInput0());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
         telemetry.addData("elevator-motor", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.addData("motor-back-left", driveSystem.motors.get(DriveSystem.MotorNames.BACKLEFT).getCurrentPosition());
         telemetry.addData("motor-front-left", driveSystem.motors.get(DriveSystem.MotorNames.FRONTLEFT).getCurrentPosition());
         telemetry.addData("motor-back-right", driveSystem.motors.get(DriveSystem.MotorNames.BACKRIGHT).getCurrentPosition());
-        telemetry.addData("motor-front-right", driveSystem.motors.get(DriveSystem.MotorNames.FRONTRIGHT).getCurrentPosition());
+        telemetry.addData("motor-front-right", driveSystem.motors.get(DriveSystem.MotorNames.FRONTRIGHT).getCurrentPosition());*/
 
         float rx = (float) Math.pow(gamepad1.right_stick_x, 3);
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
@@ -90,9 +96,9 @@ public abstract class DriveOpMode extends BaseOpMode {
 
         driveSystem.drive(rx, -lx, ly);
 
-        telemetry.addData("rx", rx);
+        /*telemetry.addData("rx", rx);
         telemetry.addData("lx", lx);
-        telemetry.addData("ly", ly);
+        telemetry.addData("ly", ly);*/
         telemetry.addData("TIME_ELAPSED_MILSEC", elapsedTime.milliseconds());
         telemetry.update();
     }

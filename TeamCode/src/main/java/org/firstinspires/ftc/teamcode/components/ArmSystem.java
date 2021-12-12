@@ -102,11 +102,11 @@ public class ArmSystem {
             while (getSensorAsAnalogInput0() < voltage) {
                 move_down();
             }
-        }
-        if (getSensorAsAnalogInput0() > voltage) {
+        } else if (getSensorAsAnalogInput0() > voltage) {
             while (getSensorAsAnalogInput0() > voltage) {
                 move_up();
             }
         }
+        stop();
     }
 }
