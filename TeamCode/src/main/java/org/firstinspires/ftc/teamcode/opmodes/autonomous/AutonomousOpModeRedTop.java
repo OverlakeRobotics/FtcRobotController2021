@@ -15,9 +15,10 @@ import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
+import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
 @Autonomous(name = "AutonomousOpModeRedTop", group = "Autonomous")
-public class AutonomousOpModeRedTop extends AutonomousOpMode {
+public class AutonomousOpModeRedTop extends BaseOpMode {
 
 
     private int elevatorLevel = -3333333;
@@ -34,8 +35,6 @@ public class AutonomousOpModeRedTop extends AutonomousOpMode {
 
     public void init(TeamState teamState, RouteState routeState) {
         super.init();
-        this.teamState = teamState;
-        this.routeState = routeState;
         driveSystem.initMotors();
         vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
         tensorFlow = new TensorFlow(vuforia);
