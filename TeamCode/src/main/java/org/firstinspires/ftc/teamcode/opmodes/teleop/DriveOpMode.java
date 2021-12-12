@@ -30,6 +30,7 @@ public abstract class DriveOpMode extends BaseOpMode {
         telemetry.addData("intake", "right bumper cntrl 2");
         telemetry.addData("outtake", "left bumper contrl 2");
         telemetry.addData("carousel", "right stick button cntrl 2");
+        telemetry.addData("bruh", armSystem.getSensorAsAnalogInput0());
 
        /* telemetry.addData("See: ", armSystem.getSensorAsAnalogInput0());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
@@ -61,16 +62,18 @@ public abstract class DriveOpMode extends BaseOpMode {
 
 
         /*if (gamepad2.y){
-            armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
+            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_TOP);
             telemetry.addData("ACTIVE", "armSystem, TOP");
         } else if (gamepad2.a){
-            armSystem.moveToPosition(ArmSystem.LEVEL_INTAKE);
-            telemetry.addData("ACTIVE", "armSystem, BOTTOM");
+            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_INTAKE);
+            telemetry.addData("ACTIVE", "armSystem, INTAKE");
         } else if (gamepad2.x){
-            armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
+            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_BOTTOM);
+            telemetry.addData("ACTIVE", "armSystem, BOTTOM");
         } else if (gamepad2.b){
-            armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
-        }*/ if (gamepad2.dpad_up) {
+            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_CAROUSEL);
+            telemetry.addData("ACTIVE", "armSystem, CAROUSEL");
+        } else*/ if (gamepad2.dpad_up) {
             armSystem.move_up();
             telemetry.addData("ACTIVE", "armSystem up");
         } else if (gamepad2.dpad_down){

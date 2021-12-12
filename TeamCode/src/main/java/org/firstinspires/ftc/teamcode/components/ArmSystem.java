@@ -30,7 +30,7 @@ public class ArmSystem {
 //    private final Servo releaser;
 
     public static final double LEVEL_TOP = 0.65;
-    public static final double LEVEL_CAROUSEL = 1.115;
+    public static final double LEVEL_CAROUSEL = 1.091;
     public static final double LEVEL_BOTTOM = 1.786;
     public static final double LEVEL_INTAKE = 2.65;
 
@@ -61,7 +61,7 @@ public class ArmSystem {
     }
 
     //high - 0.65
-    //carousel - 1.16
+    //carousel - 1.25
     // bottom - 1.786
     //lolo - 2.65
 
@@ -83,7 +83,7 @@ public class ArmSystem {
     public void move_up() {
         if (notTooHigh()){
             elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            elevatorMotor.setPower(1.0);
+            elevatorMotor.setPower(0.55);
         }
     }
 
@@ -93,11 +93,24 @@ public class ArmSystem {
     public void move_down() {
         if (notTooLow()){
             elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            elevatorMotor.setPower(-0.75);
+            elevatorMotor.setPower(-0.2);
         }
     }
 
     public void moveToPosition(double voltage){
+        if (getSensorAsAnalogInput0() < voltage) {
+            while (getSensorAsAnalogInput0() < voltage) {
+                move_down();
+            }
+        } else if (getSensorAsAnalogInput0() > voltage) {
+            while (getSensorAsAnalogInput0() > voltage) {
+                move_up();
+            }
+        }
+        stop();
+    }
+
+    public void moveToPositionTeleOp(double voltage){
         if (getSensorAsAnalogInput0() < voltage) {
             while (getSensorAsAnalogInput0() < voltage) {
                 move_down();

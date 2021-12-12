@@ -156,7 +156,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(78, rotateSpeed)) {
+                if (driveSystem.turn(102, rotateSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
