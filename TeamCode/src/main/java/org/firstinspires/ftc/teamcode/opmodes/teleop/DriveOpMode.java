@@ -22,16 +22,9 @@ public abstract class DriveOpMode extends BaseOpMode {
     }
 
     @Override
-    public void init_loop(){
-        telemetry.addData("Position: ", armSystem.getElevatorMotor().getCurrentPosition());
-        telemetry.addData("Voltage ", armSystem.sensorAsAnalogInput0.getVoltage());
-
-    }
-
-    @Override
     public void loop() {
 
-        telemetry.addData("See: ", PotentiometerSystem.sensorAsAnalogInput0.getVoltage());
+        telemetry.addData("See: ", armSystem.getSensorAsAnalogInput0());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
         telemetry.addData("elevator-motor", armSystem.getElevatorMotor().getCurrentPosition());
         telemetry.addData("motor-back-left", driveSystem.motors.get(DriveSystem.MotorNames.BACKLEFT).getCurrentPosition());

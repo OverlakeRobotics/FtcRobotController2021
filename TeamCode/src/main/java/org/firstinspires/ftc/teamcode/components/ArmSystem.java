@@ -109,4 +109,10 @@ public class ArmSystem {
         elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elevatorMotor.setPower(0.25);
     }
+
+    public void moveTop() {
+        while (sensorAsAnalogInput0.getVoltage() != 0.77) {
+            move_up();
+        }
+    }
 }
