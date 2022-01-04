@@ -92,6 +92,7 @@ public class IntakeSystem {
 
     public void setIdle(){
         setPower(0);
+        currentState = IntakeState.IDLE;
     }
 
     /**

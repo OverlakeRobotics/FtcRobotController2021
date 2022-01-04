@@ -80,6 +80,25 @@ public class ArmSystem {
     /**
      * Moves arm up
      */
+
+    /**
+     * Intakes rings
+     */
+    public void moveUp() {
+        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() + 200);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setPower(1.0);
+    }
+
+    /**
+     * Intakes rings
+     */
+    public void moveDown() {
+        elevatorMotor.setTargetPosition(elevatorMotor.getCurrentPosition() - 80);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setPower(-1.0);
+
+    }
     public void move_up() {
         if (notTooHigh()){
             elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
