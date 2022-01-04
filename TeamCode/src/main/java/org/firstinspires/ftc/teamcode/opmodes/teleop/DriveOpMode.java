@@ -48,28 +48,34 @@ public abstract class DriveOpMode extends BaseOpMode {
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
         if (gamepad2.y){ // top-most
+            //armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
+            telemetry.addData("set to move up", "top-button clicked:");
             aBoolean = 1; // set it to go up
         }
-        else if (gamepad2.x){ // bottom-most
+        else if (gamepad2.a){ // bottom-most
+            //armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
+            telemetry.addData("set to move down", "bottom-button clicked:");
             aBoolean = -1; //set it to go down
         }
         else{
             // if not being pressed don't do anything
         }
-
-
-        if (aBoolean == 1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_TOP){ // if we're below top and we can move up
-            armSystem.moveUp(); // move up
+        if (aBoolean != 0) {
+            if (aBoolean == 1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_TOP) { // if we're below top and we can move up
+                telemetry.addData("set to move up, below top", "moving up");
+                armSystem.getElevatorMotor().setPower(1);
+                //armSystem.moveUp(); // move up
+            } else if (aBoolean == -1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_INTAKE) { //if we're above intake and we can move down
+                telemetry.addData("set to move down, above bottom", "moving down");
+                armSystem.getElevatorMotor().setPower(-1);
+                //armSystem.moveDown(); // move down
+            } else {
+                telemetry.addData("too much", "ain't goldilocks");
+                //armSystem.stop();
+                aBoolean = 0; // if we're in a scenario where we can't do anything, stop moving and stop the "loop"
+                bBoolean = 0;
+            }
         }
-        else if (aBoolean == -1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_INTAKE){ //if we're above intake and we can move down
-            armSystem.moveDown(); // move down
-        }
-        else{
-            armSystem.stop();
-            aBoolean = 0; // if we're in a scenario where we can't do anything, stop moving and stop the "loop"
-            bBoolean = 0;
-        }
-
 
         if (gamepad2.a){ //if a is pressed (carousel)
             aBoolean = 0;
