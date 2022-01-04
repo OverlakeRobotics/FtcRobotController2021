@@ -156,7 +156,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_ONE:
-                if (driveSystem.turn(102, rotateSpeed)) {
+                if (driveSystem.turn(102, rotateSpeed)) { // [TODO - degrees needs to change, AC]
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_CAROUSEL_TWO);
@@ -195,7 +195,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 break;
 
             case PARK_IN_BOTTOM_WAREHOUSE:
-                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) { // [TODO - distance should increase, AC}
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.COMPLETE);
