@@ -129,7 +129,7 @@ public abstract class DriveOpMode extends BaseOpMode {
             turnTableSystem.moveCounter();
             telemetry.addData("ACTIVE", "turntable counterclockwise");
         } else {
-            turnTableSystem.stop();
+            //turnTableSystem.stop();
         }
 
 
