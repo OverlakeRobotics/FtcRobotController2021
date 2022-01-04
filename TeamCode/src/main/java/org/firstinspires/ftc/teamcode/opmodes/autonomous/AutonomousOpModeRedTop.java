@@ -59,6 +59,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     @Override
     public void start() {
         super.start();
+        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         newGameState(GameState.SCAN_INITIAL);
     }
 

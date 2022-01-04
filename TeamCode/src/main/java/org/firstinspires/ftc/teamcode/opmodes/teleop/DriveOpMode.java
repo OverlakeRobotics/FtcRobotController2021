@@ -152,9 +152,17 @@ public abstract class DriveOpMode extends BaseOpMode {
             armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_CAROUSEL);
             telemetry.addData("ACTIVE", "armSystem, CAROUSEL");
         } else*/ if (gamepad2.dpad_up) {
+            aBoolean = 0; // arm keep movin up-top/bottom
+            bBoolean = 0; //we ain't moving
+            cBoolean = 0;
+            dBoolean = 0;
             armSystem.moveUp();
             telemetry.addData("ACTIVE", "armSystem up");
         } else if (gamepad2.dpad_down){
+            aBoolean = 0; // arm keep movin up-top/bottom
+            bBoolean = 0; //we ain't moving
+            cBoolean = 0;
+            dBoolean = 0;
             armSystem.moveDown();
             telemetry.addData("ACTIVE", "armSystem down");
         } else {

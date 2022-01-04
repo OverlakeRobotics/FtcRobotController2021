@@ -58,6 +58,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     @Override
     public void start() {
         super.start();
+        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         newGameState(GameState.SCAN_INITIAL);
     }
 
@@ -172,13 +173,13 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (22.5 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
+                if (driveSystem.driveToPosition((int) (22.5 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.75)) {
                     driveSystem.setMotorPower(0);
                     armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                     //armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
-                    newGameState(GameState.SPIN_CAROUSEL);
                     baseTime = 0;
+                    newGameState(GameState.SPIN_CAROUSEL);
                 }
                 break;
             case SPIN_CAROUSEL:
