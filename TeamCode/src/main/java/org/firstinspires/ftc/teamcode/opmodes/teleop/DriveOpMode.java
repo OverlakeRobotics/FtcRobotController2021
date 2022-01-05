@@ -51,76 +51,115 @@ public abstract class DriveOpMode extends BaseOpMode {
             //armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
             telemetry.addData("set to move up", "top-button clicked:");
             aBoolean = 1; // set it to go up
+            bBoolean = 0;
         }
         else if (gamepad2.a){ // bottom-most
             //armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
             telemetry.addData("set to move down", "bottom-button clicked:");
             aBoolean = -1; //set it to go down
+            bBoolean = 0;
         }
         else{
-            // if not being pressed don't do anything
+            // if not being pressed don't do anything to the booleans
         }
-        if (aBoolean != 0) {
-            if (aBoolean == 1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_TOP) { // if we're below top and we can move up
+
+        if (gamepad2.x){ //if x is pressed (carousel)
+            telemetry.addData("set to move to carousel", "carousel-button clicked:");
+            aBoolean = 0;
+            bBoolean = 1; // 1 represents carousel
+            cBoolean = armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_CAROUSEL ? 1 : -1; // up or down of the carousel
+        }
+        else if (gamepad2.b){ // (bottom level)
+            telemetry.addData("set to move to carousel", "carousel-button clicked:");
+            aBoolean = 0;
+            bBoolean = -1; // -1 represents bottom level
+            dBoolean = armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_BOTTOM ? 1 : -1; // up or down of the shared-level
+        }
+        else{
+
+        }
+
+        /*** DPAD/MANUAL CONTROLS **/
+
+        if (gamepad2.dpad_up && armSystem.notTooHigh()) {
+            telemetry.addLine("can go up");
+            aBoolean = 0; // arm keep movin up-top/bottom
+            bBoolean = 0; //we ain't moving
+            cBoolean = 0;
+            dBoolean = 0;
+            armSystem.moveUp();
+            telemetry.addData("ACTIVE", "armSystem up");
+        } else if (gamepad2.dpad_down && armSystem.notTooLow()){
+            aBoolean = 0; // arm keep movin up-top/bottom
+            telemetry.addLine("can go down");
+            bBoolean = 0; //we ain't moving
+            cBoolean = 0;
+            dBoolean = 0;
+            armSystem.moveDown();
+            telemetry.addData("ACTIVE", "armSystem down");
+        } else if (gamepad2.left_stick_button){
+            telemetry.addLine("set to stop");
+            aBoolean = 0; // arm keep movin up-top/bottom
+            bBoolean = 0; //we ain't moving
+            cBoolean = 0;
+            dBoolean = 0;
+            armSystem.stop();
+            armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
+
+        /*** if aBoolean - or if "y" or "a" had been clicked at some point **/
+
+        if (aBoolean != 0) /*** set to move up or down to topmost ***/{
+
+            if (aBoolean == 1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_TOP) { /** if we're below top and we can move up **/
                 telemetry.addData("set to move up, below top", "moving up");
-                armSystem.getElevatorMotor().setPower(1);
-                //armSystem.moveUp(); // move up
-            } else if (aBoolean == -1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_INTAKE) { //if we're above intake and we can move down
+                //armSystem.getElevatorMotor().setPower(1);
+                armSystem.moveUp(); // move up
+            } else if (aBoolean == -1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_INTAKE) { /** if we're above intake and we can move down **/
                 telemetry.addData("set to move down, above bottom", "moving down");
-                armSystem.getElevatorMotor().setPower(-1);
-                //armSystem.moveDown(); // move down
+                //armSystem.getElevatorMotor().setPower(-1);
+                armSystem.moveDown(); // move down
             } else {
                 telemetry.addData("too much", "ain't goldilocks");
-                //armSystem.stop();
+                armSystem.stop();
                 aBoolean = 0; // if we're in a scenario where we can't do anything, stop moving and stop the "loop"
                 bBoolean = 0;
             }
         }
 
-        if (gamepad2.a){ //if a is pressed (carousel)
-            aBoolean = 0;
-            bBoolean = 1; // 1 represents carousel
-            cBoolean = armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_CAROUSEL ? 1 : -1; // true or false
-        }
-        else if (gamepad2.b){ // (bottom level)
-            aBoolean = 0;
-            bBoolean = -1; // -1 represents bottom level
-            dBoolean = armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_BOTTOM ? 1 : -1; // true or false
-        }
-        else{
-
-        }
-
         if (bBoolean != 0){ // if we want to move in the up-down context
             aBoolean = 0; //not moving through there
-            if (bBoolean == 1){
+            if (bBoolean == 1) /** moving to carousel **/{
                 if (cBoolean == 1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_CAROUSEL){
-                    armSystem.moveUp();
+                    armSystem.moveDown();
                 }
                 else if (cBoolean == -1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_CAROUSEL){
-                    armSystem.moveDown();
+                    armSystem.moveUp();
                 }
                 else{
                     armSystem.stop();
                     bBoolean = 0;
-                    cBoolean = 0;
+                    //cBoolean = 0;
                 }
             }
             else if (bBoolean == -1){
                 if (dBoolean == 1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_BOTTOM){
-                    armSystem.moveUp();
+                    armSystem.moveDown();
                 }
                 else if (dBoolean == -1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_BOTTOM){
-                    armSystem.moveDown();
+                    armSystem.moveUp();
                 }
                 else{
                     armSystem.stop();
                     bBoolean = 0;
-                    dBoolean = 0;
+                    //dBoolean = 0;
                 }
             }
 
         }
+
+        /*** TURNTABLE COMPONENTS - WORKING WELL **/
 
         if (gamepad2.dpad_right){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_0);
@@ -135,40 +174,10 @@ public abstract class DriveOpMode extends BaseOpMode {
             turnTableSystem.moveCounter();
             telemetry.addData("ACTIVE", "turntable counterclockwise");
         } else {
-            //turnTableSystem.stop();
+
         }
 
-
-        /*if (gamepad2.y){
-            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_TOP);
-            telemetry.addData("ACTIVE", "armSystem, TOP");
-        } else if (gamepad2.a){
-            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_INTAKE);
-            telemetry.addData("ACTIVE", "armSystem, INTAKE");
-        } else if (gamepad2.x){
-            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_BOTTOM);
-            telemetry.addData("ACTIVE", "armSystem, BOTTOM");
-        } else if (gamepad2.b){
-            armSystem.moveToPositionTeleOp(ArmSystem.LEVEL_CAROUSEL);
-            telemetry.addData("ACTIVE", "armSystem, CAROUSEL");
-        } else*/ if (gamepad2.dpad_up) {
-            aBoolean = 0; // arm keep movin up-top/bottom
-            bBoolean = 0; //we ain't moving
-            cBoolean = 0;
-            dBoolean = 0;
-            armSystem.moveUp();
-            telemetry.addData("ACTIVE", "armSystem up");
-        } else if (gamepad2.dpad_down){
-            aBoolean = 0; // arm keep movin up-top/bottom
-            bBoolean = 0; //we ain't moving
-            cBoolean = 0;
-            dBoolean = 0;
-            armSystem.moveDown();
-            telemetry.addData("ACTIVE", "armSystem down");
-        } else {
-            armSystem.stop();
-            armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
+        /*** INTAKE SYSTEM - WORKING FINE **/
 
         if (gamepad2.right_bumper) {
             intakeSystem.take_in();
@@ -183,11 +192,11 @@ public abstract class DriveOpMode extends BaseOpMode {
             intakeSystem.setIdle();
         }
 
+        /*** DRIVESYSTEM + TELEMETRY - WORKING FINE ***/
         driveSystem.drive(rx, -lx, ly);
-
-        /*telemetry.addData("rx", rx);
+        telemetry.addData("rx", rx);
         telemetry.addData("lx", lx);
-        telemetry.addData("ly", ly);*/
+        telemetry.addData("ly", ly);
         telemetry.addData("TIME_ELAPSED_MILSEC", elapsedTime.milliseconds());
         telemetry.update();
     }

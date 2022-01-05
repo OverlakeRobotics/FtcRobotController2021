@@ -153,7 +153,8 @@ public class AutonomousOpModeBlueTop extends BaseOpMode {
                 break;
 
             case PARK_IN_TOP_WAREHOUSE_ONE:
-                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed)) {
+                    driveSystem.stopAndReset();
                     newGameState(GameState.PARK_IN_TOP_WAREHOUSE_TWO);
                 }
                 break;
