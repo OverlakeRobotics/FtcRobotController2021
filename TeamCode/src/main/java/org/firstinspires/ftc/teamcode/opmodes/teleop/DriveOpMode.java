@@ -81,7 +81,7 @@ public abstract class DriveOpMode extends BaseOpMode {
 
         /*** DPAD/MANUAL CONTROLS **/
 
-        if (gamepad2.dpad_up && armSystem.notTooHigh()) {
+        if (gamepad2.dpad_up /*&& armSystem.notTooHigh()*/) {
             telemetry.addLine("can go up");
             aBoolean = 0; // arm keep movin up-top/bottom
             bBoolean = 0; //we ain't moving
@@ -89,7 +89,7 @@ public abstract class DriveOpMode extends BaseOpMode {
             dBoolean = 0;
             armSystem.moveUp();
             telemetry.addData("ACTIVE", "armSystem up");
-        } else if (gamepad2.dpad_down && armSystem.notTooLow()){
+        } else if (gamepad2.dpad_down /*&& armSystem.notTooLow()*/){
             aBoolean = 0; // arm keep movin up-top/bottom
             telemetry.addLine("can go down");
             bBoolean = 0; //we ain't moving
