@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +18,10 @@ import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
 import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 @Autonomous(name = "RED, TOP", group = "Autonomous")
 public class AutonomousOpModeRedTop extends BaseOpMode {
@@ -59,7 +65,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     @Override
     public void start() {
         super.start();
-        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
+        //armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
         newGameState(GameState.SCAN_INITIAL);
     }
 
@@ -68,6 +74,11 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
         telemetry.addData("voltage", armSystem.getSensorAsAnalogInput0());
+        for (Map.Entry<DriveSystem.MotorNames, DcMotor> motor : driveSystem.motors.entrySet()) {
+            Log.d("CURRENT POSITION", String.valueOf(motor.getValue().getCurrentPosition()));
+            Log.d("CURRENT POSITION", String.valueOf(motor.getValue().getTargetPosition()));
+        }
+
         telemetry.update();
 
         armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -157,12 +168,15 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
 
             case PARK_IN_TOP_WAREHOUSE_ONE:
                 if (driveSystem.driveToPosition((int) (0.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed)) {
+                    Log.d("", "Part ONE - RIGHT");
+                    driveSystem.stopAndReset();
                     newGameState(GameState.PARK_IN_TOP_WAREHOUSE_TWO);
                 }
                 break;
 
             case PARK_IN_TOP_WAREHOUSE_TWO:
                 if (driveSystem.driveToPosition((int) (3 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed)) {
+                    Log.d("", "Part TWO - FORWARD");
                     newGameState(GameState.COMPLETE);
                 }
                 break;
