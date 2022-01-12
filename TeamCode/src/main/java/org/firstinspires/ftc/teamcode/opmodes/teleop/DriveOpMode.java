@@ -104,7 +104,6 @@ public abstract class DriveOpMode extends BaseOpMode {
             cBoolean = 0;
             dBoolean = 0;
             armSystem.stop();
-            armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
 
@@ -167,12 +166,6 @@ public abstract class DriveOpMode extends BaseOpMode {
         } else if (gamepad2.dpad_left){
             turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
             telemetry.addData("ACTIVE", "turnTableSystem left");
-        } else if (gamepad1.right_bumper){
-            turnTableSystem.moveClock();
-            telemetry.addData("ACTIVE", "turntable clockwise");
-        } else if (gamepad1.left_bumper){
-            turnTableSystem.moveCounter();
-            telemetry.addData("ACTIVE", "turntable counterclockwise");
         } else {
 
         }

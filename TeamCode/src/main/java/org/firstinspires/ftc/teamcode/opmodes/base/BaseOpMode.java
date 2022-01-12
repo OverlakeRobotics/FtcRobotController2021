@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.components.ImuSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
+import org.firstinspires.ftc.teamcode.helpers.GameState;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -48,6 +49,7 @@ public abstract class BaseOpMode extends OpMode {
         intakeSystem.initMotors();
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
+        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
     }
 
 

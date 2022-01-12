@@ -62,12 +62,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     }
 
     @Override
-    public void start() {
-        super.start();
-        newGameState(GameState.SCAN_INITIAL);
-    }
-
-    @Override
     public void loop() {
         telemetry.addData("GameState", currentGameState);
         telemetry.addData("elevatorLevel", elevatorLevel);
