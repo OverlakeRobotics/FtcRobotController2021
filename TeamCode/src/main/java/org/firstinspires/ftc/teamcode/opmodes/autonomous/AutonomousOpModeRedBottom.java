@@ -167,7 +167,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (0.36 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.75)) {
+                if (driveSystem.driveToPosition((int) (0.37 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.75)) {
                     driveSystem.setMotorPower(0);
                     armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                     //armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
