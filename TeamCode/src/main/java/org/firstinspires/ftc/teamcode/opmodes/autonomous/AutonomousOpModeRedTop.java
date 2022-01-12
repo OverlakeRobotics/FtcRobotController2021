@@ -53,6 +53,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
+        currentGameState = GameState.SCAN_INITIAL;
     }
 
     @Override
@@ -60,13 +61,6 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
         super.init_loop();
         primary_scan = tensorFlow.getInference().size() > 0;
         telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        //armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
-        newGameState(GameState.SCAN_INITIAL);
     }
 
     @Override

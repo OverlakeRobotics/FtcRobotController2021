@@ -46,6 +46,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
+        currentGameState = GameState.SCAN_INITIAL;
     }
 
     @Override
@@ -53,13 +54,6 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
         super.init_loop();
         primary_scan = tensorFlow.getInference().size() > 0;
         telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
-        newGameState(GameState.SCAN_INITIAL);
     }
 
     @Override
@@ -94,7 +88,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY:
-                if (driveSystem.driveToPosition((int) ((Constants.tileWidth - 5) * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition(((int) (0.9 * (Constants.tileWidth - 5) * Constants.mmPerInch)), DriveSystem.Direction.FORWARD, driveSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_TWO);
@@ -173,7 +167,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (22.5 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.75)) {
+                if (driveSystem.driveToPosition((int) (0.36 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.75)) {
                     driveSystem.setMotorPower(0);
                     armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
                     //armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -209,7 +203,6 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 driveSystem.setMotorPower(0);
                 turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
                 armSystem.stop();
-                telemetry.speak("among us among us among us");
                 stop();
                 break;
         }

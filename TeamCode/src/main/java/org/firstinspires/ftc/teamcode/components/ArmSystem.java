@@ -29,10 +29,10 @@ public class ArmSystem {
     private boolean bool = false;
 //    private final Servo releaser;
 
-    public static final double LEVEL_TOP = 0.65;
-    public static final double LEVEL_CAROUSEL = 1.091;
-    public static final double LEVEL_BOTTOM = 1.786;
-    public static final double LEVEL_INTAKE = 2.65;
+    public static final double LEVEL_TOP = 0.65 - 0.441;
+    public static final double LEVEL_CAROUSEL = 0.473; //1.091 - 0.441; // 0.124
+    public static final double LEVEL_BOTTOM = 1.786 - 0.441;
+    public static final double LEVEL_INTAKE = 2.65 - 0.441;
 
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
 
@@ -66,11 +66,11 @@ public class ArmSystem {
     //lolo - 2.65
 
     public boolean notTooHigh(){
-        return (sensorAsAnalogInput0.getVoltage() >= LEVEL_TOP);
+        return (sensorAsAnalogInput0.getVoltage() > LEVEL_TOP);
     }
 
     public boolean notTooLow(){
-        return (sensorAsAnalogInput0.getVoltage() <= LEVEL_INTAKE);
+        return (sensorAsAnalogInput0.getVoltage() < LEVEL_INTAKE);
     }
 
     public double getSensorAsAnalogInput0() {
@@ -99,7 +99,7 @@ public class ArmSystem {
         elevatorMotor.setPower(-1.0);
 
     }
-    public void move_up() {
+    public void move_up() { // TODO
         if (notTooHigh()){
             elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             elevatorMotor.setPower(0.55);
@@ -109,7 +109,7 @@ public class ArmSystem {
     /**
      * Moves arm down
      */
-    public void move_down() {
+    public void move_down() { // TODO
         if (notTooLow()){
             elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             elevatorMotor.setPower(-0.2);
@@ -117,12 +117,12 @@ public class ArmSystem {
     }
 
     public void moveToPosition(double voltage){
-        if (getSensorAsAnalogInput0() < voltage) {
-            while (getSensorAsAnalogInput0() < voltage) {
+        if (getSensorAsAnalogInput0() <= voltage) {
+            while (getSensorAsAnalogInput0() <= voltage) {
                 move_down();
             }
-        } else if (getSensorAsAnalogInput0() > voltage) {
-            while (getSensorAsAnalogInput0() > voltage) {
+        } else if (getSensorAsAnalogInput0() >= voltage) {
+            while (getSensorAsAnalogInput0() >= voltage) {
                 move_up();
             }
         }
@@ -134,7 +134,7 @@ public class ArmSystem {
             while (getSensorAsAnalogInput0() < voltage) {
                 move_down();
             }
-        } else if (getSensorAsAnalogInput0() > voltage) {
+        } if (getSensorAsAnalogInput0() > voltage) {
             while (getSensorAsAnalogInput0() > voltage) {
                 move_up();
             }

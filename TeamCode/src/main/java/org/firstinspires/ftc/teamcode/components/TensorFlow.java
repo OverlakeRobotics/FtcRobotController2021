@@ -57,15 +57,7 @@ public class TensorFlow {
      * Activates TensorFlow
      */
     public void activate() {
-        /*if(x == 1){
-            tfod.setClippingMargins(100, 50, 100, 2 * 433);
-        }
-        else if (x == 2){
-            tfod.setClippingMargins(100, 50 + 433, 100, 1 * 433);
-        }
-        else if (x == 3){
-            tfod.setClippingMargins(100, 50 + 2 * 433, 100, 0);
-        }*/
+
 
         if (tfod != null) {
             tfod.activate();
