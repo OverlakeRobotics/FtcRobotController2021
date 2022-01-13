@@ -47,8 +47,6 @@ public abstract class DriveOpMode extends BaseOpMode {
         float lx = (float) Math.pow(gamepad1.left_stick_x, 3);
         float ly = (float) Math.pow(gamepad1.left_stick_y, 3);
 
-        // bababooey
-
         if (gamepad2.y){ // top-most
             //armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
             telemetry.addData("set to move up", "top-button clicked:");

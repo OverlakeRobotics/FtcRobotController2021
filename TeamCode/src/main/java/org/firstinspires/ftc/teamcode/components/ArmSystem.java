@@ -30,7 +30,7 @@ public class ArmSystem {
 //    private final Servo releaser;
 
     public static final double LEVEL_TOP = 0.65 - 0.441;
-    public static final double LEVEL_CAROUSEL = 0.473; //1.091 - 0.441; // 0.124
+    public static final double LEVEL_CAROUSEL = 1.091 - 0.441; // 0.124
     public static final double LEVEL_BOTTOM = 1.786 - 0.441;
     public static final double LEVEL_INTAKE = 2.65 - 0.441;
 
@@ -117,12 +117,12 @@ public class ArmSystem {
     }
 
     public void moveToPosition(double voltage){
-        if (getSensorAsAnalogInput0() <= voltage) {
-            while (getSensorAsAnalogInput0() <= voltage) {
+        if (getSensorAsAnalogInput0() < voltage) {
+            while (getSensorAsAnalogInput0() < voltage) {
                 move_down();
             }
-        } else if (getSensorAsAnalogInput0() >= voltage) {
-            while (getSensorAsAnalogInput0() >= voltage) {
+        } else if (getSensorAsAnalogInput0() > voltage) {
+            while (getSensorAsAnalogInput0() > voltage) {
                 move_up();
             }
         }
