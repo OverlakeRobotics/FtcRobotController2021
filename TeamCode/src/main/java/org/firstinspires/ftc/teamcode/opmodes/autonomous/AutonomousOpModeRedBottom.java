@@ -38,7 +38,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
         super.init();
         driveSystem.initMotors();
         vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
-        tensorFlow = new TensorFlow(vuforia);
+        tensorFlow = new TensorFlow(hardwareMap);
         vuforia.activate();
         tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
