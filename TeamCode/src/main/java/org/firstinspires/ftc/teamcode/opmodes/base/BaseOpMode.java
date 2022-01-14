@@ -49,7 +49,7 @@ public abstract class BaseOpMode extends OpMode {
         intakeSystem.initMotors();
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
-        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
+        //armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
     }
 
 

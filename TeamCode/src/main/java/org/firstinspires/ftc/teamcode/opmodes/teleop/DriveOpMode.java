@@ -97,7 +97,7 @@ public abstract class DriveOpMode extends BaseOpMode {
             dBoolean = 0;
             armSystem.moveDown();
             telemetry.addData("ACTIVE", "armSystem down");
-        } else if (gamepad2.left_stick_button){
+        } else if (aBoolean == 0 & bBoolean == 0){
             telemetry.addLine("set to stop");
             aBoolean = 0; // arm keep movin up-top/bottom
             bBoolean = 0; //we ain't moving

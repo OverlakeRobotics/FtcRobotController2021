@@ -32,7 +32,7 @@ public class ArmSystem {
     public static final double LEVEL_TOP = 0.65 - 0.441;
     public static final double LEVEL_CAROUSEL = 1.091 - 0.441; // 0.124
     public static final double LEVEL_BOTTOM = 1.786 - 0.441;
-    public static final double LEVEL_INTAKE = 2.65 - 0.441;
+    public static final double LEVEL_INTAKE = 1.786 - 0.441;
 
     // use potentiamotor to detect voltage, then do from there is brian's suggestion
 
