@@ -72,6 +72,12 @@ public class IntakeSystem {
             motorRight.setPower(-0.31);
     }
 
+    public void spit_out(double power) {
+        currentState = IntakeState.SPIT_OUT;
+        motorLeft.setPower(power);
+        motorRight.setPower(-power);
+    }
+
     /**
      * Intakes rings
      */
