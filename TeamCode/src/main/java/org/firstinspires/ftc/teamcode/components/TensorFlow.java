@@ -95,6 +95,7 @@ public class TensorFlow {
                     90, // secondAngle
                     0, // thirdAngle
                     true); // useCompetitionFieldTargetLocations
+            vuforiaFreightFrenzy.activate();
             // Set min confidence threshold to 0.7
             tfodFreightFrenzy.initialize(vuforiaFreightFrenzy, (float) 0.7, true, true);
             // Initialize TFOD before waitForStart.
@@ -114,6 +115,7 @@ public class TensorFlow {
     public void shutdown() {
         if (tfodFreightFrenzy != null) {
             tfodFreightFrenzy.deactivate();
+            vuforiaFreightFrenzy.deactivate();
         }
     }
 

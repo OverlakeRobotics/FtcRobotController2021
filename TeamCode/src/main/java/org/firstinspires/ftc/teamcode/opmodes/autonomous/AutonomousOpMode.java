@@ -29,7 +29,7 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     private GameState currentGameState;
     public RouteState routeState;
     protected TeamState teamState;
-    private Vuforia vuforia;
+    //private Vuforia vuforia;
     private TensorFlow tensorFlow;
 
     private static final double driveSpeed = 0.5;
@@ -43,9 +43,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         this.teamState = teamState;
         this.routeState = routeState;
         driveSystem.initMotors();
-        vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
+        //vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
         tensorFlow = new TensorFlow(hardwareMap);
-        vuforia.activate();
+        //vuforia.activate();
         tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
