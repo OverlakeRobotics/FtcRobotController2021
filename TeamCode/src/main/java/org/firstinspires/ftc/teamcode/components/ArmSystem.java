@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 /***
  *  one motor - to change elevation
  *  POTENTIAL second motor - to change distance/length arm is reaching out
@@ -30,7 +28,7 @@ public class ArmSystem {
 //    private final Servo releaser;
 
     public static final double LEVEL_TOP = 0.65 - 0.441;
-    public static final double LEVEL_CAROUSEL = 1.091 - 0.441; // 0.124
+    public static final double LEVEL_CAROUSEL = 1.1091 - 0.441; // 0.124
     public static final double LEVEL_BOTTOM = 1.786 - 0.441;
     public static final double LEVEL_INTAKE = 1.786 - 0.441;
 

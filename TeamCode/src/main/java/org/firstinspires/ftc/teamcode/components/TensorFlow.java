@@ -69,7 +69,7 @@ public class TensorFlow {
     public void activate() {
 
 
-        if (tfodFreightFrenzy != null) {
+        if (tfodFreightFrenzy == null) {
             List<Recognition> recognitions;
             int index;
 

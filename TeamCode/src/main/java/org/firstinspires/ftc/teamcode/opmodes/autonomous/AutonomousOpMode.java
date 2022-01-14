@@ -52,6 +52,8 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
         intakeSystem.initMotors();
         turnTableSystem = new TurnTableSystem(hardwareMap.get(DcMotor.class, Constants.ROTATOR_MOTOR));
+        armSystem.moveToPosition(ArmSystem.LEVEL_CAROUSEL);
+        armSystem.stop();
     }
 
     @Override
