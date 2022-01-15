@@ -12,15 +12,10 @@ import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
-import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
-import org.firstinspires.ftc.teamcode.helpers.RouteState;
-import org.firstinspires.ftc.teamcode.helpers.TeamState;
 import org.firstinspires.ftc.teamcode.opmodes.base.BaseOpMode;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 @Autonomous(name = "RED, TOP", group = "Autonomous")
@@ -34,7 +29,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     private boolean secondary_scan;
 
     private GameState currentGameState;
-    private Vuforia vuforia;
+    //private Vuforia vuforia;
     private TensorFlow tensorFlow;
 
     private static final double driveSpeed = 0.5;
@@ -44,9 +39,9 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     public void init() {
         super.init();
         driveSystem.initMotors();
-        vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
+        //vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
         tensorFlow = new TensorFlow(hardwareMap);
-        vuforia.activate();
+        //vuforia.activate();
         tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
