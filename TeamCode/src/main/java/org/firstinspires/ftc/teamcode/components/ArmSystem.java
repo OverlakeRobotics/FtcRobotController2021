@@ -28,7 +28,7 @@ public class ArmSystem {
 //    private final Servo releaser;
 
     public static final double LEVEL_TOP = 0.65 - 0.441;
-    public static final double LEVEL_CAROUSEL = 1.1091 - 0.441; // 0.124
+    public static final double LEVEL_CAROUSEL = 0.49;//1.1091 - 0.441; // 0.124
     public static final double LEVEL_BOTTOM = 1.786 - 0.441;
     public static final double LEVEL_INTAKE = 1.786 - 0.441;
 
