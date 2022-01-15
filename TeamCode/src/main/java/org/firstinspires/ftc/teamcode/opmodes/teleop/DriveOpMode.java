@@ -34,6 +34,7 @@ public abstract class DriveOpMode extends BaseOpMode {
         telemetry.addData("outtake", "left bumper contrl 2");
         telemetry.addData("carousel", "right stick button cntrl 2");
         telemetry.addData("bruh", armSystem.getSensorAsAnalogInput0());
+        telemetry.addData("position", imuSystem.imu.getPosition());
 
        /* telemetry.addData("See: ", armSystem.getSensorAsAnalogInput0());
         telemetry.addData("rotatorMotor", turnTableSystem.getPosition());
@@ -143,10 +144,10 @@ public abstract class DriveOpMode extends BaseOpMode {
                 }
             }
             else if (bBoolean == -1){
-                if (dBoolean == 1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_BOTTOM){
+                if (dBoolean == 1 && armSystem.getSensorAsAnalogInput0() < ArmSystem.LEVEL_BOTTOM) {
                     armSystem.moveDown();
                 }
-                else if (dBoolean == -1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_BOTTOM){
+                else if (dBoolean == -1 && armSystem.getSensorAsAnalogInput0() > ArmSystem.LEVEL_BOTTOM) {
                     armSystem.moveUp();
                 }
                 else{
