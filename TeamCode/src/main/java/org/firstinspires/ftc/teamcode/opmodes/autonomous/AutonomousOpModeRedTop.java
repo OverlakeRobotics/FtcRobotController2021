@@ -55,7 +55,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     public void init_loop() {
         super.init_loop();
         primary_scan = tensorFlow.getInference().size() > 0;
-        telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
+        telemetry.addData("DUCK?", tensorFlow.seesDuck());
     }
 
     @Override

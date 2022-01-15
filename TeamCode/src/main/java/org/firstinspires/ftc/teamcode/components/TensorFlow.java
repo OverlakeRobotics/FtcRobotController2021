@@ -119,6 +119,10 @@ public class TensorFlow {
         }
     }
 
+    public boolean seesDuck(){
+        return getInference().get(0).getLabel().equals(LABELS[1]) || getInference().get(0).getLabel().equals(LABELS[2]);
+    }
+
     /**
      * Returns the target region currently selected
      * @return the target region currently selected
