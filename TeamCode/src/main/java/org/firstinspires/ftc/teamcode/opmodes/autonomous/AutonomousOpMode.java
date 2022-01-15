@@ -4,13 +4,11 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
 import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
-import org.firstinspires.ftc.teamcode.components.Vuforia;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
 import org.firstinspires.ftc.teamcode.helpers.RouteState;
@@ -29,7 +27,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     private GameState currentGameState;
     public RouteState routeState;
     protected TeamState teamState;
-    private Vuforia vuforia;
     private TensorFlow tensorFlow;
 
     private static final double driveSpeed = 0.5;
@@ -43,9 +40,9 @@ public abstract class AutonomousOpMode extends BaseOpMode {
         this.teamState = teamState;
         this.routeState = routeState;
         driveSystem.initMotors();
-        vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
+        //vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
         tensorFlow = new TensorFlow(hardwareMap);
-        vuforia.activate();
+        //vuforia.activate();
         tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
@@ -228,9 +225,6 @@ public abstract class AutonomousOpMode extends BaseOpMode {
     public void stop() {
         super.stop();
         tensorFlow.shutdown();
-        /*if (tensorflowNew != null) {
-            tensorflowNew.shutdown();
-        }*/
     }
 
     /**
