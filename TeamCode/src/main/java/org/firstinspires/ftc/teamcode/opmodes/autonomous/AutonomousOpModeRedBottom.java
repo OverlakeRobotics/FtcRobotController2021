@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.components.ArmSystem;
 import org.firstinspires.ftc.teamcode.components.DriveSystem;
 import org.firstinspires.ftc.teamcode.components.IntakeSystem;
+import org.firstinspires.ftc.teamcode.components.TensorFlow;
 import org.firstinspires.ftc.teamcode.components.TurnTableSystem;
 import org.firstinspires.ftc.teamcode.helpers.Constants;
 import org.firstinspires.ftc.teamcode.helpers.GameState;
@@ -24,7 +25,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
 
     private GameState currentGameState;
     //private Vuforia vuforia;
-    //private TensorFlow tensorFlow;
+    private TensorFlow tensorFlow;
 
     private static final double driveSpeed = 0.5;
     private static final double rotateSpeed = 0.25;
@@ -34,9 +35,9 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
         super.init();
         driveSystem.initMotors();
         //vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
-        //tensorFlow = new TensorFlow(hardwareMap);
+        tensorFlow = new TensorFlow(hardwareMap);
         //vuforia.activate();
-        //tensorFlow.activate();
+        tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
@@ -52,7 +53,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     public void init_loop() {
         super.init_loop();
         //primary_scan = tensorFlow.getInference().size() > 0;
-        //telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
+        telemetry.addData("DUCK?", tensorFlow.getInference().size() > 0);
     }
 
     @Override
