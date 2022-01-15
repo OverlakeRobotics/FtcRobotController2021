@@ -33,8 +33,8 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     public void init() {
         super.init();
         driveSystem.initMotors();
-        tensorFlow = new TensorFlow(hardwareMap);
-        tensorFlow.activate();
+        //tensorFlow = new TensorFlow(hardwareMap);
+        //tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
@@ -47,8 +47,8 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
     @Override
     public void init_loop() {
         super.init_loop();
-        primary_scan = tensorFlow.getInference().size() > 0;
-        telemetry.addData("DUCK?", tensorFlow.seesDuck());
+        primary_scan = true;
+        //telemetry.addData("DUCK?", tensorFlow.seesDuck());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                     }
                     newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_SECONDARY);
                 } else {
-                    secondary_scan = tensorFlow.getInference().size() > 0;
+                    //secondary_scan = tensorFlow.getInference().size() > 0;
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY:
@@ -133,7 +133,7 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
                 if (elapsedTime.seconds() < baseTime + 2.0) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
-                    intakeSystem.spit_out(0.9);
+                    intakeSystem.spit_out(0.75); // requries testings
                 } else {
                     intakeSystem.setPower(0);
                     while (turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {

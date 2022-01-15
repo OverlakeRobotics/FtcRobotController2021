@@ -40,9 +40,9 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
         super.init();
         driveSystem.initMotors();
         //vuforia = new Vuforia(hardwareMap.get(WebcamName.class, "Webcam 1"),0 );
-        tensorFlow = new TensorFlow(hardwareMap);
+        //tensorFlow = new TensorFlow(hardwareMap);
         //vuforia.activate();
-        tensorFlow.activate();
+        //tensorFlow.activate();
         armSystem = new ArmSystem(hardwareMap.get(DcMotor.class, Constants.ELEVATOR_MOTOR), hardwareMap.get(AnalogInput.class, "p"));
         armSystem.initMotors();
         intakeSystem = new IntakeSystem(hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR1), hardwareMap.get(DcMotor.class, Constants.INTAKE_MOTOR2));
@@ -54,9 +54,17 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     @Override
     public void init_loop() {
         super.init_loop();
-        primary_scan = tensorFlow.getInference().size() > 0;
-        telemetry.addData("DUCK?", tensorFlow.seesDuck());
+        primary_scan = true;
+        //primary_scan = tensorFlow.getInference().size() > 0;
+        //telemetry.addData("DUCK?", tensorFlow.seesDuck());
     }
+
+    @Override
+    public void start() {
+        super.start();
+        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY);
+    }
+
 
     @Override
     public void loop() {
@@ -74,7 +82,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
 
         switch (currentGameState) {
             case DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY:
-                if (driveSystem.driveToPosition((int) (2.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed)) {
+                if (driveSystem.driveToPosition((int) (3.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.COMPLETE);
@@ -92,7 +100,7 @@ public class AutonomousOpModeRedTop extends BaseOpMode {
     @Override
     public void stop() {
         super.stop();
-        tensorFlow.shutdown();
+        //tensorFlow.shutdown();
     }
 
     /**

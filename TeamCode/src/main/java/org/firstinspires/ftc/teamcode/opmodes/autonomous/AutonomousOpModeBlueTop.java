@@ -50,7 +50,13 @@ public class AutonomousOpModeBlueTop extends BaseOpMode {
     public void init_loop() {
         super.init_loop();
         primary_scan = tensorFlow.getInference().size() > 0;
-        telemetry.addData("DUCK?", tensorFlow.seesDuck());
+        //telemetry.addData("DUCK?", tensorFlow.seesDuck());
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        newGameState(GameState.DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY);
     }
 
     @Override
@@ -64,9 +70,15 @@ public class AutonomousOpModeBlueTop extends BaseOpMode {
 
         switch (currentGameState) {
             case DRIVE_TO_ALLIANCE_HUB_ONE_PRIMARY:
-                if (driveSystem.driveToPosition((int) (2.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) {
-                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                if (driveSystem.driveToPosition((int) (1.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) {
+                    driveSystem.turn(-90, 0.75);
+                    //driveSystem.driveToPosition((int) (1.5 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.RIGHT, driveSpeed);
+                    armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
                     armSystem.stop();
+                    armSystem.moveToPosition(ArmSystem.LEVEL_BOTTOM);
+                    armSystem.stop();
+                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    //armSystem.stop();
                     newGameState(GameState.COMPLETE);
                 }
                 break;
