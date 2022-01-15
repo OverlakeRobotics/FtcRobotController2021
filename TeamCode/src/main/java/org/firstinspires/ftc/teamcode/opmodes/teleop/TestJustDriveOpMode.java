@@ -19,6 +19,11 @@ public class TestJustDriveOpMode extends OpMode{
         public void init() {
 
             Map<DriveSystem.MotorNames, DcMotor> motors = new EnumMap<>(DriveSystem.MotorNames.class);
+            motors.put(DriveSystem.MotorNames.FRONTRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_RIGHT));
+            motors.put(DriveSystem.MotorNames.FRONTLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_FRONT_LEFT));
+            motors.put(DriveSystem.MotorNames.BACKRIGHT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_RIGHT));
+            motors.put(DriveSystem.MotorNames.BACKLEFT, hardwareMap.get(DcMotor.class, Constants.MOTOR_BACK_LEFT));
+
             driveSystem = new DriveSystem(motors, hardwareMap.get(BNO055IMU.class, Constants.IMU));
         }
 
