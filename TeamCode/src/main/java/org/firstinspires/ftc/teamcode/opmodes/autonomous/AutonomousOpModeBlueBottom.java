@@ -105,7 +105,7 @@ public class AutonomousOpModeBlueBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_ALLIANCE_HUB_TWO:
-                if (driveSystem.driveToPosition((int) (0.75 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed * 0.25)) {
+                if (driveSystem.driveToPosition((int) (1 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.LEFT, driveSpeed * 0.25)) {
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     armSystem.stop();
                     newGameState(GameState.ROTATE_TURNTABLE);
@@ -140,7 +140,7 @@ public class AutonomousOpModeBlueBottom extends BaseOpMode {
                 if (elapsedTime.seconds() < baseTime + 2.0) {
                     //armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     //armSystem.stop();
-                    intakeSystem.spit_out();
+                    intakeSystem.spit_out(1);
                 } else {
                     intakeSystem.setPower(0);
                     while (turnTableSystem.getPosition() != TurnTableSystem.LEVEL_0) {
@@ -173,7 +173,7 @@ public class AutonomousOpModeBlueBottom extends BaseOpMode {
                 }
                 break;
             case DRIVE_TO_CAROUSEL_THREE:
-                if (driveSystem.driveToPosition((int) (6.25 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
+                if (driveSystem.driveToPosition((int) (6.45 * Constants.mmPerInch), DriveSystem.Direction.FORWARD, driveSpeed * 0.5)) {
                     driveSystem.setMotorPower(0);
                     newGameState(GameState.SPIN_CAROUSEL);
                     baseTime = 0;
