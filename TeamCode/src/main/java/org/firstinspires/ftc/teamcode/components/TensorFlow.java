@@ -120,7 +120,16 @@ public class TensorFlow {
     }
 
     public boolean seesDuck(){
-        return getInference().get(0).getLabel().equals(LABELS[1]) || getInference().get(0).getLabel().equals(LABELS[2]);
+        List<Recognition> recognitions = getInference();
+        if(recognitions.size() > 0) {
+            for (int i = 0; i < recognitions.size(); i++) {
+                String label = recognitions.get(i).getLabel();
+                if (label.equals(LABELS[1]) || label.equals(LABELS[2])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
