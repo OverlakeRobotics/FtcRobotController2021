@@ -190,17 +190,16 @@ public class AutonomousOpModeRedBottom extends BaseOpMode {
             case PARK_IN_BOTTOM_WAREHOUSE:
                 if (driveSystem.driveToPosition((int) (0.65 * Constants.tileWidth * Constants.mmPerInch), DriveSystem.Direction.BACKWARD, driveSpeed)) { // [TODO - distance should increase, AC}
                     armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
+                    armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    driveSystem.setMotorPower(0);
+                    turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
                     armSystem.stop();
                     newGameState(GameState.COMPLETE);
                 }
                 break;
 
             case COMPLETE:
-                armSystem.moveToPosition(ArmSystem.LEVEL_TOP);
-                armSystem.getElevatorMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                driveSystem.setMotorPower(0);
-                turnTableSystem.moveToPosition(TurnTableSystem.LEVEL_90);
-                armSystem.stop();
                 stop();
                 break;
         }
