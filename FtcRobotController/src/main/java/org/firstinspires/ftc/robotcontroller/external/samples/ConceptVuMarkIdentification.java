@@ -28,6 +28,8 @@
  */
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -66,7 +68,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @TeleOp(name="Concept: VuMark Id", group ="Concept")
-@Disabled
+
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -102,7 +104,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code on the next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+        parameters.vuforiaLicenseKey = "Ad0Srbr/////AAABmdpa0/j2K0DPhXQjE2Hyum9QUQXZO8uAVCNpwlogfxiVmEaSuqHoTMWcV9nLlQpEnh5bwTlQG+T35Vir8IpdrSdk7TctIqH3QBuJFdHsx5hlcn74xa7AiQSJgUD/n7JJ2zJ/Er5Hc+b+r616Jf1YU6RO63Ajk5+TFB9N3a85NjMD6eDm+C6f14647ELnmGC03poSOeczbX7hZpIEObtYdVyKZ2NQ/26xDfSwwJuyMgUHwWY6nl6mk0GMnIGvu0/HoGNgyR5EkUQWyx9XlmxSrldY7BIEVkiKmracvD7W9hEGZ2nPied6DTY5RFNuFX07io6+I59/d7291NXKVMDnFAqSt4a2JYsECv+j7b25S0mD";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -118,12 +120,12 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
 
 
         /**
-         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * Load the data s et containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
@@ -142,8 +144,8 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            Log.i("test", vuMark.toString());
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
